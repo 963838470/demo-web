@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Document</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        #container { overflow: hidden; padding-left: 220px; /* 宽度大小等与边栏宽度大小*/ }
+        * html #container { height: 1%; /* So IE plays nice */ }
+        #content { background-color: #0ff; width: 100%; border-left: 220px solid #f00; /* 宽度大小等与边栏宽度大小*/ margin-left: -220px; /* 宽度大小等与边栏宽度大小*/ float: right; }
+        #sidebar { position: relative; background-color: #f00; width: 220px; float: left; margin-left: -220px; /* 宽度大小等与边栏宽度大小*/ }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="sidebar">Left Sidebar</div>
+        <div id="content" style="height: 213px;">Main Content</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>全屏切换</title>
+	<style>
+		html,body {
+			width:100%;
+			height:100%;
+		}
+		/* 全屏样式 */
+		html:-moz-full-screen {  
+			background: red;  
+		}  
+		html:-webkit-full-screen {  
+			background: red;  
+		}  
+		html:fullscreen {  
+			background: red;  
+		}
+	</style>
+    <script type="text/javascript">
+    //进入全屏
+    function enterFullScreen() {
+        var ele = document.getElementById("ddd");
+        if (ele.requestFullscreen) {
+            ele.requestFullscreen();
+        } else if (ele.mozRequestFullScreen) {
+            ele.mozRequestFullscreen();
+        } else if (ele.webkitRequestFullscreen) {	// chrome
+            ele.webkitRequestFullScreen();
+        } else if(ele.msRequestFullscreen) {	// ie11
+			ele.msRequestFullscreen();
+		} else {
+			var wsh = new ActiveXObject("WScript.Shell");  
+			wsh.sendKeys("{F11}"); 
+		}
+    }
+    //退出全屏
+    function exitFullScreen() {
+        var ele = document;
+        if (ele.exitFullscreen) {
+            ele.exitFullscreen();
+        } else if (ele.mozCancelFullScreen) {
+            ele.mozCancelFullScreen();
+        } else if (ele.webkitExitFullscreen) {	// chrome
+            ele.webkitExitFullscreen();
+        } else if (ele.msExitFullscreen) {	// ie11
+            ele.msExitFullscreen();
+        } else {
+			var wsh = new ActiveXObject("WScript.Shell");  
+			wsh.sendKeys("{F11}"); 
+		}
+    }
+	// ie11 
+	// document.documentElement.msRequestFullscreen();
+	// document.msExitFullscreen();
+	// chrome
+	// document.documentElement.webkitRequestFullscreen();
+	// document.webkitCancelFullscreen();
+    </script>
+</head>
+<body style="background-color:white;">
+	<div>这是菜单，全屏看不到</div>
+    <div id="ddd" style="width:90%;height:90%;border:1px solid red;background-color:white;">
+        <a href="javascript:;" onclick="enterFullScreen()">进入全屏</a>
+        &nbsp;
+        <a href="javascript:;" onclick="exitFullScreen()">退出全屏</a>
+    </div>
+</body>
+</html>

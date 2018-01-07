@@ -1,0 +1,282 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>打印模板页面</title>
+    <style>
+        /* 限制宽度、内容垂直居中 */
+        body { width: 800px; margin-left: auto; margin-right: auto; }
+        #tip p { color: red; font-size: 12px; }
+        /*打印内容的样式*/
+        .table_print { border-collapse: collapse; border-spacing: 0; width: 100%; text-align: center; }
+            .table_print td, .table_print th { border: #000000 solid 1px; height: 22px; min-height: 22px; }
+        .border_bottom_hid { border-bottom-style: hidden; }
+        .border_hid { border-style: hidden; }
+        .title { font-size: 24px; font-weight: bold; }
+        .write { min-height: 25px !important; }
+        /*按钮样式*/
+        .button { display: inline-block; zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */ *display: inline; vertical-align: baseline; margin: 0 2px; outline: none; cursor: pointer; text-align: center; text-decoration: none; font: 14px/100% Arial, Helvetica, sans-serif; padding: .5em 2em .55em; text-shadow: 0 1px 1px rgba(0,0,0,.3); -webkit-border-radius: .5em; -moz-border-radius: .5em; border-radius: .5em; -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2); -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2); box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+            .button:hover { text-decoration: none; }
+            .button:active { position: relative; top: 1px; }
+        .white { color: #606060; border: solid 1px #b7b7b7; background: #fff; background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed)); background: -moz-linear-gradient(top, #fff, #ededed); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed'); }
+            .white:hover { background: #ededed; background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc)); background: -moz-linear-gradient(top, #fff, #dcdcdc); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dcdcdc'); }
+            .white:active { color: #999; background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#fff)); background: -moz-linear-gradient(top, #ededed, #fff); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff'); }
+        .medium { font-size: 12px; padding: .4em 1.5em .42em; }
+    </style>
+    <style media="print">
+        .noprint { display: none; }
+    </style>
+    <script>
+        // 操作提示隐藏显示切换
+        function openTip() {
+            tipDiv = document.getElementById("tip");
+            if (tipDiv.style.display == 'none') {
+                tipDiv.style.display = 'block';
+            }
+            else {
+                tipDiv.style.display = 'none';
+            }
+        }
+
+        // IE、Chorme显示的按钮不同
+        function ShowBtn() {
+            // 如果为ie
+            if ((navigator.userAgent.indexOf('MSIE') >= 0) || (navigator.userAgent.indexOf('Trident') >= 0)) {
+                document.getElementById("btnChrome").style.display = "none";
+            } else {
+                document.getElementById("btnIe").style.display = "none";
+            }
+        }
+
+        // 页面加载完成时触发事件
+        window.onload = ShowBtn;
+    </script>
+</head>
+<body>
+    <div id="btnIe" class="noprint">
+        <object id="printWB" style="display: none" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" height="0"></object>
+        <input type="button" class="button white medium" value="打印设置" onclick="printWB.ExecWB(8, 1);" />
+        <input type="button" class="button white medium" value="打印预览" onclick="printWB.ExecWB(7, 1);" />
+        <input type="button" class="button white medium" value="直接打印" onclick="printWB.ExecWB(6, 1);" />
+        <input type="button" class="button white medium" value="关闭窗口" onclick="printWB.ExecWB(45, 1);" />
+        <input type="button" class="button white medium" value="操作提示" onclick="openTip()" />
+        <div id="tip" style="display: none;">
+            <fieldset>
+                <legend style="font-size: small; color: red;">操作提示</legend>
+                <p>操作方法有两种，请根据实际情况自行选择:</p>
+                <p>1、使用以上按钮打印。如果无法使用以上4个按钮，可以尝试按以下步骤设置：</p>
+                <p>浏览器设置（工具）-->Internet选项-->安全-->自定义级别-->“对未标记为可安全执行脚本的ActiveX控件初始化并执行脚本”设置为启用或提示</p>
+                <p>2、右键单击页面-->打印预览-->格式调整-->打印</p>
+            </fieldset>
+        </div>
+    </div>
+    <div id="btnChrome" class="noprint">
+        <input type="button" class="button white medium" value="打印预览" onclick="window.print();" />
+        <input type="button" class="button white medium" value="关闭窗口" onclick="window.close()" />
+    </div>
+    <br />
+    <div id="print" style="font-size: 14px; font-family: STSong;">
+        <table class="table_print border_bottom_hid">
+            <tr>
+                <th colspan='6' class="title">天窗作业命令确认表</th>
+            </tr>
+            <tr>
+                <td>工作领导人</td>
+                <td colspan='2'>防护人</td>
+                <td>天窗日期</td>
+                <td colspan='2'>2016-08-31</td>
+            </tr>
+            <tr>
+                <th colspan='6'>封锁命令</th>
+            </tr>
+            <tr>
+                <td>命令号</td>
+                <td></td>
+                <td>发令时间</td>
+                <td class='write'></td>
+                <td>封锁结束时间</td>
+                <td></td>
+            </tr>
+            <tr>
+                <th colspan='6'>停电命令</th>
+            </tr>
+            <tr>
+                <td rowspan='2' style='width: 22%'>命令号</td>
+                <td rowspan='2' style='width: 19%'></td>
+                <td style='width: 10%'>发令时间</td>
+                <td style='width: 18%' class='write'></td>
+                <td style='width: 14%'>要求完成时间</td>
+                <td style='width: 17%'></td>
+            </tr>
+            <tr>
+                <td>批准时间</td>
+                <td class='write'></td>
+                <td>消令时间</td>
+                <td></td>
+            </tr>
+            <tr>
+                <th colspan='6'>进出栏栅登记时间</th>
+            </tr>
+            <tr>
+                <td>上道进入栏栅时间</td>
+                <td colspan='2' class='write'></td>
+                <td>下道出去栏栅时间</td>
+                <td colspan='2'></td>
+            </tr>
+        </table>
+        <table class="table_print border_bottom_hid">
+            <tr>
+                <th colspan='6' class="title">天窗作业工作领导人确认单</th>
+            </tr>
+            <tr>
+                <td style='width: 17%'>项目</td>
+                <td style='width: 17%'>是否通知作业</td>
+                <td style='width: 16%'>是否通知停止作业</td>
+                <td style='width: 17%'>是否撤离高空</td>
+                <td style='width: 16%'>是否出栏栅</td>
+                <td style='width: 17%'>备注</td>
+            </tr>
+            <tr>
+                <td class='write'>梯车组2(李铭)</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <table class="table_print">
+            <tr>
+                <th colspan='11' class="title">上下道物料单</th>
+            </tr>
+            <tr>
+                <th rowspan='2' style='width: 15%'>工具、材料名称</th>
+                <th rowspan='2' style='width: 14%'>规格型号</th>
+                <th rowspan='2' style='width: 5%'>携带数量</th>
+                <th colspan='2' style='width: 16%'>出库确认</th>
+                <th colspan='2' style='width: 17%'>进工作门确认</th>
+                <th colspan='2' style='width: 16%'>出工作门确认</th>
+                <th colspan='2' style='width: 17%'>入库确认</th>
+            </tr>
+            <tr>
+                <td style='width: 5%'>数量</td>
+                <td style='width: 11%'>确认人及时间</td>
+                <td style='width: 5%'>数量</td>
+                <td style='width: 12%'>确认人及时间</td>
+                <td style='width: 5%'>数量</td>
+                <td style='width: 11%'>确认人及时间</td>
+                <td style='width: 5%'>数量</td>
+                <td style='width: 12%'>确认人及时间</td>
+            </tr>
+            <tr>
+                <td class='write'>&nbsp;</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td rowspan='10'></td>
+                <td></td>
+                <td rowspan='10'></td>
+                <td></td>
+                <td rowspan='10'></td>
+                <td></td>
+                <td rowspan='10'></td>
+            </tr>
+            <tr>
+                <td class='write'>&nbsp;</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='write'>&nbsp;</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='write'>&nbsp;</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='write'>&nbsp;</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='write'>&nbsp;</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='write'>&nbsp;</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='write'>&nbsp;</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='write'></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='write'></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <div>
+            <div style='margin: 20px; float: left;'>
+                <div>车梯状态检查:</div>
+                <br style='margin: 20px;' />
+                工作领导人:
+            </div>
+            <div style='margin: 20px 200px; float: right;'>
+                <div>检查人:</div>
+                <br style='margin: 20px;' />
+                <div>跟班干部:</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

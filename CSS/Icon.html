@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>图片</title>
+    <style>
+        .wall { position: absolute; }
+        .icon-hot { position: absolute; width: 28px; height: 11px; margin: -6px 0 0 2px; background: url(./img/hot.gif); }
+        .icon-recom { position: absolute; padding: 5px; background-color: #f60; color: #fff; font-size: 12px; }
+        .bg { width: 400px; height: 200px; background: url(./img/bg1.png) center center no-repeat; background-size: cover; }
+        /*margin-left:400 - 36 px*/
+        .icon-vip { position: absolute; width: 36px; height: 36px; margin-left: 364px; background: url(./img/vip.gif); }
+        .redStar { margin: 0 5px; font-family: simsun; color: #f30; }
+        .regist-star { position: absolute; margin-left: -1em; font-family: simsun; color: #f30; }
+        input { height: 30px; line-height: 30px; }
+        /*定义滚动条宽高及背景，宽高分别对应横竖滚动条的尺寸*/
+        .scrollbar::-webkit-scrollbar { width: 16px; height: 16px; background-color: #a8a8a8; }
+        /*定义滚动条的轨道，内阴影及圆角*/
+        .scrollbar::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3); border-radius: 10px; background-color: #f5f5f5; }
+        /*定义滑块，内阴影及圆角*/
+        .scrollbar::-webkit-scrollbar-thumb { /*width: 10px;*/ height: 20px; border-radius: 10px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3); background-color: #555; }
+    </style>
+</head>
+<body class="scrollbar" style="height: 1900px;">
+    <div>
+        <h1>hotIcon</h1>
+        热销商品<i class="icon-hot"></i>
+    </div>
+
+    <div class="bg">
+        <span class="icon-recom">推荐</span>
+        <i class="icon-vip"></i>
+    </div>
+
+    <div>
+        <h1>必填项红*右对齐</h1>
+        热销商品<span class="redStar">*</span><input type="text" value="看看对齐了没有" />
+    </div>
+    <div style="margin-left: 50px;">
+        <h1>必填项红*左对齐</h1>
+        <span class="regist-star">*</span>热销商品<input type="text" value="看看对齐了没有" />
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    html {
+        height: auto;
+    }
+
+    #container {
+        background: #ffe3a6;
+    }
+    
+    #wrapper {
+        display: inline-block;
+        border-left: 200px solid #d4c376;
+        /*==此值等于左边栏的宽度值==*/
+        position: relative;
+        vertical-align: bottom;
+    }
+    
+    #sidebar {
+        float: left;
+        width: 200px;
+        margin-left: -200px;
+        /*==此值等于左边栏的宽度值==*/
+        position: relative;
+    }
+    
+    #main {
+        float: left;
+    }
+    
+    #maing,#sidebar {
+        min-height: 200px;
+        height: auto !important;
+        height: 200px;
+    }
+</style>
+
+<body>
+    <div id="container">
+        <div id="wrapper">
+            <div id="sidebar">Left Sidebar</div>
+            <div id="main">Main Content</div>
+        </div>
+    </div>
+</body>
+
+</html>
