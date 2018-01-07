@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        * { padding: 0; margin: 0; }
+        body { background: #d5dee7; }
+        .boxgrid { width: 720px; height: 701px; border: solid 2px #8399af; position: relative; }
+        .car { position: absolute; top: 0; left: 720px; }
+    </style>
+    <script src="http://cdn.bootcss.com/jquery/1.10.1/jquery.js"></script>
+    <script>
+        $(function () {
+            $(".boxgrid").hover(function () {
+                $(".car").animate({ left: "0" }, { duration: 300 });
+            }, function () {
+                $(".car").animate({ left: "720px" }, { duration: 300 });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="boxgrid">
+        <img class="car" src="http://img.mukewang.com/5343d553000107a107200701.jpg" width="350" height="341" />
+        <img src="http://img.mukewang.com/5343d56b0001ccfb07200701.jpg" width="350" height="341" />
+    </div>
+</body>
+</html>
