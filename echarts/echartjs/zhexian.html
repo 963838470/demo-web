@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+<body style="text-align: center;">
+    <div id="main" style="width: 1200px; height: 400px; border: 1px solid gray; margin-left: auto; margin-right: auto;"></div>
+
+    <!-- ECharts单文件引入 -->
+    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+    <script>
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        // 使用
+        require(
+            [
+                'echarts',
+                'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
+            ],
+            function (ec) {
+                // 基于准备好的dom，初始化echarts图表
+                var myChart = ec.init(document.getElementById('main'));
+
+                var option = {
+                    tooltip: {
+                        show: true
+                    },
+                    legend: {
+                        data: ['销量']
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            "name": "销量",
+                            "type": "bar",
+                            "data": [5, 20, 40, 10, 10, 20]
+                        }
+                    ]
+                };
+
+                // 为echarts对象加载数据 
+                myChart.setOption(option);
+            }
+        );
+    </script>
+</body>
+</html>

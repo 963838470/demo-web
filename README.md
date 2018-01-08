@@ -6,3 +6,5 @@
 [五子棋](https://963838470.github.io/demo-web/CSS/gobang.html)
 ## Metro
 [Metro后台页面风格](https://963838470.github.io/demo-web/Metro/)
+## echart
+[echartjs demo](https://963838470.github.io/demo-web/echarts/echartjs/loading.html)

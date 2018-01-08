@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>矩形图</title>
+    <!--<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>-->
+    <link rel="shortcut icon" type="image/x-icon" href="../1.png" media="screen" />
+    <script src="../Script/echarts/build/dist/echarts.js"></script>
+</head>
+<body style="text-align: center;">
+    <div id="main" style="width: 1200px; height: 400px; border: 1px solid gray; margin-left: auto; margin-right: auto; border-radius: 10px;"></div>
+    <span id="fontSpan" style="color: red;"></span>
+    <script>
+        var timeTicket = null;
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: '../Script/echarts/build/dist'
+            }
+        });
+
+        // 使用
+        require(
+            [
+                'echarts',
+                'echarts/chart/treemap' // 按需加载
+            ],
+            function (echarts) {
+                // 基于准备好的dom，初始化图表
+                var myChart = echarts.init(document.getElementById('main'), 'macarons');
+
+                var option = {
+                    title: {
+                        text: '手机占有率',
+                        subtext: '虚构数据'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{b}: {c}"
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            mark: { show: true },
+                            dataView: { show: true, readOnly: false },
+                            restore: { show: true },
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    calculable: false,
+                    series: [
+                        {
+                            name: '矩形图',
+                            type: 'treemap',
+                            itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: true,
+                                        formatter: "{b}: {c}"
+                                    },
+                                    textStyle: {
+                                        align: 'center',
+                                        baseline: 'middle'
+                                    },
+                                    borderWidth: 1
+                                },
+                                emphasis: {
+                                    label: {
+                                        show: true
+                                    }
+                                }
+                            },
+                            center: [
+    "50%",
+    "50%"
+                            ],
+                            data: [
+                                {
+                                    name: '三星',
+                                    value: 6
+                                },
+                                {
+                                    name: '小米',
+                                    value: 4
+                                },
+                                {
+                                    name: '苹果',
+                                    value: 4
+                                },
+                                {
+                                    name: '华为',
+                                    value: 2
+                                },
+                                {
+                                    name: '联想',
+                                    value: 2
+                                },
+                                {
+                                    name: '魅族',
+                                    value: 1
+                                },
+                                {
+                                    name: '中兴',
+                                    value: 1
+                                }
+                            ]
+                        }
+                    ]
+                };
+
+                // 为echarts对象加载数据 
+                myChart.setOption(option);
+            }
+        );
+    </script>
+</body>
+</html>
