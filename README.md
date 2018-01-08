@@ -7,4 +7,4 @@
 ## Metro
 [Metro后台页面风格](https://963838470.github.io/demo-web/Metro/)
 ## echart
-[echartjs demo](https://963838470.github.io/demo-web/echarts/echartjs/loading.html)
+[echartjs demo](https://963838470.github.io/demo-web/echarts/echartjs/Loading.html)
