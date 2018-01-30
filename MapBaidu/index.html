@@ -32,6 +32,18 @@
         map.addControl(new BMap.ScaleControl());
         map.addControl(new BMap.OverviewMapControl());
         map.addControl(new BMap.MapTypeControl());
+
+        function setWorker(point) {  // 创建图标对象   
+            var myIcon = new BMap.Icon("worker.png", new BMap.Size(48, 48));
+            // 创建标注对象并添加到地图   
+            var marker = new BMap.Marker(point, { icon: myIcon });
+            map.addOverlay(marker);
+        }
+        // 随机向地图添加10个标注
+        for (var i = 0; i < 10; i++) {
+            var point = new BMap.Point(113.3536841793 + Math.random() * 0.04, 23.1497890420 + Math.random() * 0.02);
+            setWorker(point);
+        }
     </script>
 </body>
 
