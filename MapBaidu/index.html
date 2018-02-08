@@ -26,7 +26,7 @@
     <script type="text/javascript"> 
         var map = new BMap.Map("container"); // 创建地图实例
         map.enableScrollWheelZoom(true); // 开启鼠标滚轮缩放
-        var point = new BMap.Point(113.3536841793, 23.1497890420); // 创建点坐标 (经度纬度)
+        var point = new BMap.Point(113.3536841793, 23.1497890420); // 创建点坐标 (经度lng 纬度lat)
         map.centerAndZoom(point, 15); // 初始化地图，设置中心点坐标和地图级别
         map.addControl(new BMap.NavigationControl());
         map.addControl(new BMap.ScaleControl());
