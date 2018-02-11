@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title> New Document </title>
+    <meta name="Generator" content="EditPlus">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <meta charset="utf-8" content="">
+    <style type="text/css">
+        .tab {
+            width: 150px;
+            height: 60px;
+            border: 1px solid #aaa;
+            border-bottom: none;
+            float: left;
+            text-align: center;
+            line-height: 60px;
+
+            cursor: pointer;
+        }
+
+        #tab1,
+        #page1 {
+            background: #faa;
+        }
+
+        #tab2,
+        #page2 {
+            background: #afa;
+        }
+
+        #tab3,
+        #page3 {
+            background: #aaf;
+        }
+
+        .pageContainer {
+            position: relative;
+            clear: both;
+        }
+
+        .page {
+            position: absolute;
+            width: 455px;
+            height: 200px;
+            border: 1px solid #aaa;
+        }
+
+        .topPage {
+            z-index: 1;
+        }
+    </style>
+    <script type="text/javascript">
+        function showPage(num) {
+            //1先要把其他标签页得class改为page
+            //2把待显示的标签页的小高改为toppage
+            var container = document.getElementsByClassName('pageContainer')[0];
+            var divlist = container.getElementsByTagName('div')
+            for (var i = 0; i < divlist.length; i++) {
+                var classNode = document.createAttribute('class');
+                classNode.value = 'page';
+                divlist[i].setAttributeNode(classNode);
+            }
+            var pageDiv = document.getElementById('page' + num);
+            var classNode = document.createAttribute('class');
+            classNode.value = 'page topPage';
+            pageDiv.setAttributeNode(classNode);
+        }
+    </script>
+</head>
+
+
+<body>
+    <h2>多标签页效果</h2>
+    <div id="tab1" class="tab" onclick="showPage(1)">10元套餐</div>
+    <div id="tab2" class="tab" onclick="showPage(2)">50元套餐</div>
+    <div id="tab3" class="tab" onclick="showPage(3)">100元套餐</div>
+    <div class="pageContainer">
+        <div id="page1" class="page topPage">10元套餐详情
+        </div>
+        <div id="page2" class="page">50元套餐详情
+        </div>
+        <div id="page3" class="page">100元套餐详情
+        </div>
+</body>
+
+</html>
