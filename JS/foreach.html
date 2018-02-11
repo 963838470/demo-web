@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>foreach</title>
+    <script>
+        var lines = [
+            {
+                "name": "线别",
+                "child": [
+                    {
+                        "name": "股道行别",
+                        "child": [
+                            {
+                                "name": "设备类型",
+                                "child": [
+                                    {
+                                        "id": 277403,
+                                        "name": "F001",
+                                        "start": "90.381",
+                                        "end": "90.381"
+                                    },
+                                    {
+                                        "id": 277404,
+                                        "name": "F003",
+                                        "start": "90.43",
+                                        "end": "90.43"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "设备类型",
+                                "child": [
+                                    {
+                                        "id": 137713,
+                                        "name": "K722",
+                                        "start": "90.381",
+                                        "end": "90.381"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                ]
+            }
+        ]
+    </script>
+</head>
+
+<body>
+    <script>
+        var array = [
+            [1, 2, 3, 4, 5],
+            [6, 7, 8, 9, 10],
+            [1, 12, 13, 14, 15],
+            [1, 22, 23, 24, 25]
+        ];
+        var mapArray = [{
+            name: "陈达",
+            child: [
+                { name: "张三" },
+                { name: "李四" },
+                { name: "王五" },
+                { name: "何六" },
+                { name: "赵七" }
+            ]
+        }]
+
+        // ie8+
+        var newa = array.filter(function (a) {
+            return a.filter(function (n) {
+                return n == 1;
+            }).length > 0;
+        })
+        //console.log(JSON.stringify(newa));
+
+        var newb = mapArray.map(function (user) {
+            return user.child.map(function (u) {
+                return u;
+            });
+        })
+        //console.log(JSON.stringify(newb));
+
+        var li = lines.map(function (line) {
+            return {
+                name: line.name,
+                child: line.child.map(function (track) {
+                    return {
+                        name: track.name,
+                        child: track.child.map(function (category) {
+                            return {
+                                name: category.name,
+                                child: category.child.filter(function (device) {
+                                    return device.name.indexOf("00") > -1;
+                                })
+                            };
+                        })
+                    };
+                })
+            };
+        })
+        console.log(JSON.stringify(lines) + '\n\n');
+        console.log(JSON.stringify(li));
+    </script>
+</body>
+
+</html>
