@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Regex</title>
+</head>
+
+<body>
+    <script>
+        array = ['F0034', 'FR983', 'F987', 'F123', 'KF234', 'F01', 'K34', 'L089', 'F-123'];
+        split = "F001~F999";
+        var NumRange = split.split("~");
+        if (NumRange.length >= 2) {
+            var prefix = NumRange[0].match(/^.+?(?=\d+$)/)[0];
+            debugger;
+        }
+
+
+    </script>
+</body>
+
+</html>
