@@ -45,6 +45,10 @@
                         ]
                     },
                 ]
+            },
+            {
+                "name": "线别2",
+                "child": []
             }
         ]
     </script>
@@ -85,22 +89,35 @@
         //console.log(JSON.stringify(newb));
 
         var li = lines.map(function (line) {
-            return {
+            var _showLine = false;
+            var _line = {
                 name: line.name,
                 child: line.child.map(function (track) {
-                    return {
+                    var _showTrack = false;
+                    var _track = {
                         name: track.name,
                         child: track.child.map(function (category) {
-                            return {
+                            var _showCategory = false;
+                            var _category = {
                                 name: category.name,
                                 child: category.child.filter(function (device) {
-                                    return device.name.indexOf("00") > -1;
+                                    if (device.name.indexOf("00") > -1) {
+                                        _showCategory = true;
+                                        _showTrack = true;
+                                        _showLine = true;
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
                                 })
-                            };
+                            }
+                            return _showCategory ? _category : [];
                         })
                     };
+                    return _showTrack ? _track : [];
                 })
             };
+            return _showLine ? _line : [];
         })
         console.log(JSON.stringify(lines) + '\n\n');
         console.log(JSON.stringify(li));
