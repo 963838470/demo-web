@@ -11,14 +11,21 @@
 <body>
     <script>
         array = ['F0034', 'FR983', 'F987', 'F123', 'KF234', 'F01', 'K34', 'L089', 'F-123'];
-        split = "F001~F999";
-        var NumRange = split.split("~");
+        split = "F001~F234";
+        var NumRange = split.split('~');
         if (NumRange.length >= 2) {
             var prefix = NumRange[0].match(/^.+?(?=\d+$)/)[0];
-            debugger;
+            if (prefix != null) {
+                var start = parseInt(NumRange[0].replace(prefix, ''));
+                var end = parseInt(NumRange[1].replace(prefix, ''));
+                var nnn = array.filter(element => {
+                    if (parseInt(element.replace(prefix, '')) >= start && parseInt(element.replace(prefix, '')) <= end) {
+                        return true;
+                    }
+                    return false;
+                });
+            }
         }
-
-
     </script>
 </body>
 
