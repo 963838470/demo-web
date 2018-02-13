@@ -1,0 +1,89 @@
+<html>
+
+<head>
+	<title>跑马灯</title>
+	<script src="jquery.js" type="text/javascript"></script>
+
+	<script type="text/javascript"> 
+		(function ($) {
+			$.fn.extend({
+				RollTitle: function (opt, callback) {
+					if (!opt) var opt = {};
+					var _this = this;
+					_this.timer = null;
+					_this.lineH = _this.find("li:first").height();
+					_this.line = opt.line ? parseInt(opt.line, 15) : parseInt(_this.height() / _this.lineH, 10);
+					_this.speed = opt.speed ? parseInt(opt.speed, 10) : 3000, //���ٶȣ���ֵԽ���ٶ�Խ�������� 
+						_this.timespan = opt.timespan ? parseInt(opt.timespan, 13) : 5000; //������ʱ������� 
+					if (_this.line == 0) this.line = 1;
+					_this.upHeight = 0 - _this.line * _this.lineH;
+					_this.scrollUp = function () {
+						_this.animate({
+							marginTop: _this.upHeight
+						}, _this.speed, function () {
+							for (i = 1; i <= _this.line; i++) {
+								_this.find("li:first").appendTo(_this);
+							}
+							_this.css({ marginTop: 0 });
+						});
+					}
+					_this.hover(function () {
+						clearInterval(_this.timer);
+					}, function () {
+						_this.timer = setInterval(function () { _this.scrollUp(); }, _this.timespan);
+					}).mouseout();
+				}
+			})
+		})(jQuery); 
+	</script>
+
+	<script LANGUAGE="JavaScript"> 
+		var Mes = new Array();
+		Mes[0] = "12 ";
+		Mes[1] = "34 ";
+		Mes[2] = "56";
+		var place = 1;
+		var i = 0;
+		function scroll() {
+			window.status = Mes[i].substring(0, place);
+			if (place >= Mes[i].length) {
+				if (i < 2) {
+					i++;
+					place = 1;
+					window.setTimeout("scroll()", 50);
+				}
+				else {
+					i = 0;
+					place = 1;
+					window.setTimeout("scroll()", 50);
+				}
+			}
+			else {
+				place++;
+				window.setTimeout("scroll()", 50);
+			}
+		} 
+	</script>
+</head>
+<form name="shooterform" method="get">
+
+	<body onload="scroll();">
+
+		<body>
+			<ul id="RunTopic">
+				<li>11111</li>
+				<li>22222</li>
+				<li>33333</li>
+				<li>44444</li>
+				<li>55555</li>
+			</ul>
+		</body>
+		<script type="text/javascript"> 
+			$(document.body).ready(function () {
+				$("#RunTopic").RollTitle({ line: 1, speed: 200, timespan: 500 });
+			}); 
+		</script>
+	</body>
+</form>
+
+</html>
