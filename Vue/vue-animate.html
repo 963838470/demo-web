@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>动画</title>
+    <style>
+        html,
+        body,
+        #app {
+            width: 100%;
+            height: 100%;
+        }
+
+        #ad-box {
+            width: 200px;
+            height: 200px;
+            position: fixed;
+            right: 0;
+            bottom: 50%;
+            background: #cccccc;
+        }
+
+        #ad {
+            width: 100%;
+            height: 100%;
+            background: gray;
+            transition: opacity 1.5s
+        }
+
+        .fade-enter-active,
+        .fade-leave-active {
+            opacity: 1
+        }
+
+        .fade-enter,
+        .fade-leave-active {
+            opacity: 0
+        }
+    </style>
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div id="ad-box" @mouseenter='show=true' @mouseleave='show=false'>
+            我是放广告的父盒子
+            <transition name='fade'>
+                <div id='ad' v-show='show'>我是广告</div>
+            </transition>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                show: false
+            }
+        })
+    </script>
+</body>
+</html>
