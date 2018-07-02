@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>栈</title>
+</head>
+<body>
+  <script>
+    function Stack() {
+      let items = [];
+      this.push = function (element) {
+        items.push(element);
+      };
+      this.pop = function () {
+        return items.pop();
+      }
+      this.peek = function () {
+        return items[items.length - 1];
+      }
+      this.isEmpty = function () {
+        return items.length <= 0;
+      }
+      this.clear = function () {
+        items = [];
+      }
+      this.size = function () {
+        return items.length;
+      }
+    }
+    var stack = new Stack();
+    console.log(stack.isEmpty());
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+    console.log(stack.peek());
+    stack.push(4);
+    stack.push(5);
+    console.log(stack.size());
+    console.log(stack.isEmpty());
+    console.log(stack.peek());
+    stack.pop();
+    console.log(stack.size());
+    console.log(stack.isEmpty());
+    console.log(stack.peek());
+
+    // 10进制转2进制
+    function divideBy2(num) {
+      var array = [];
+      while (num > 0) {
+        rem = Math.floor(num % 2);
+        array.push(num % 2)
+        num = Math.floor(num / 2);
+      }
+      return array.reverse().join("");
+    }
+
+    function baseConverter(decNumber, base) {
+      var remStack = new Stack(),
+        rem,
+        baseString = '',
+        digits = '0123456789ABCDEF'; //{6}
+      while (decNumber > 0) {
+        rem = Math.floor(decNumber % base);
+        remStack.push(rem);
+        decNumber = Math.floor(decNumber / base);
+      }
+      while (!remStack.isEmpty()) {
+        baseString += digits[remStack.pop()]; //{7}
+      }
+      return baseString;
+    }
+    console.log(divideBy2(100))
+    console.log(baseConverter(100, 2))
+  </script>
+</body>
+</html>
