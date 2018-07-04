@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Vue触发事件</title>
+  <script src="./vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <ul>
+      <li v-for="u in users">
+        {{ u }}
+      </li>
+    </ul>
+    <button @click="change">改变</button>
+    <ul>
+      <li v-for="(value,key) in user">
+        {{ key }}:{{ value }}
+      </li>
+    </ul>
+    <button @click="change2">改变</button>
+  </div>
+  <script>
+    var app = new Vue({
+      el: "#app",
+      data: {
+        users: [
+          "张三",
+          "李四",
+          "王五"
+        ],
+        user: {
+          name: "何六",
+          sex: "男"
+        }
+      },
+      methods: {
+        change() {
+          // 直接操作数组的索引无法触发双向绑定
+          //this.users[0] = "老大"; 
+          this.$set(this.users, 0, "老大")
+          console.log(this.users)
+        },
+        change2() {
+          // 直接新增属性无法触发双向绑定
+          //this.user.age = 11;
+          this.$set(this.user, "age", 11)
+          console.log(this.user)
+        }
+      }
+    })
+  </script>
+</body>
+</html>
