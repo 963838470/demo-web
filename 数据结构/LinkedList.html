@@ -30,7 +30,29 @@
         }
         length++;
       };
-      this.insert = function (position, element) { };
+      this.insert = function (position, element) {
+        if (position >= 0 && position <= length) {
+          let node = new Node(element),
+            current = head,
+            previous,
+            index = 0;
+          if (position == 0) {
+            node.next = current;
+            head = node;
+          } else {
+            while (position > index++) {
+              previous = current;
+              current = current.next;
+            }
+            node.next = current;
+            previous.next = node;
+          }
+          length++;
+          return true;
+        } else {
+          return false;
+        }
+      };
       this.removeAt = function (position) {
         if (position > -1 && position < length) {
           let current = head,
@@ -52,17 +74,63 @@
         }
       };
       this.remove = function (element) { };
-      this.indexOf = function (element) { };
-      this.isEmpty = function () { };
-      this.size = function () { };
-      this.getHead = function () { };
-      this.toString = function () { };
-      this.print = function () { };
+      this.indexOf = function (element) {
+        let current = head,
+          index = -1;
+        while (current) {
+          index++;
+          if (current.element === element) {
+            return index;
+          }
+          current = current.next;
+        }
+        return -1;
+      };
+      this.isEmpty = function () {
+        return length <= 0;
+      };
+      this.size = function () {
+        return length;
+      };
+      this.getHead = function () {
+        return head;
+      };
+      this.toString = function () {
+        let current = head,
+          string = '';
+        while (current) {
+          string += current.element + (current.next ? ',' : '');
+          current = current.next;
+        }
+        return string;
+      };
+      this.print = function () {
+        let temp = [];
+        let current = head;
+        while (current) {
+          temp.push(current.element);
+          current = current.next;
+        }
+        console.log(temp.join(","))
+      };
     }
 
     let list = new LinkedList();
     list.append(15);
+    list.print();
     list.append(10);
+    list.print();
+    list.insert(1, 123);
+    console.log(list.indexOf(15))
+    console.log(list.indexOf(123))
+    console.log(list.indexOf(10))
+    console.log(list.indexOf(11))
+    list.print();
+    list.removeAt(0);
+    list.print();
+    console.log(list.toString())
+    console.log(list.size())
+    console.log(list.getHead())
   </script>
 </body>
 </html>
