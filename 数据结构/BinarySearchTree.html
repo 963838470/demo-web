@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>二叉搜索树</title>
+</head>
+<body>
+  <script>
+    function BinarySearchTree() {
+      var Node = function (key) { // 键
+        this.key = key;
+        this.left = null;
+        this.right = null;
+      }
+      var root = null;
+      var _insertNode = function (node, newNode) {
+        if (node.key < newNode.key) {
+          if (node.right == null) {
+            node.right = newNode;
+          } else {
+            _insertNode(node.right, newNode);
+          }
+        } else {
+          if (node.left == null) {
+            node.left = newNode;
+          } else {
+            _insertNode(node.left, newNode);
+          }
+        }
+      }
+      var _inOrderTraverseNode = function (node, callback) {
+        if (node != null) {
+          _inOrderTraverseNode(node.left, callback);
+          callback(node.key);
+          _inOrderTraverseNode(node.right, callback);
+        }
+      }
+      var _preOrderTraverseNode = function (node, callback) {
+        if (node != null) {
+          callback(node.key);
+          _preOrderTraverseNode(node.left, callback);
+          _preOrderTraverseNode(node.right, callback);
+        }
+      }
+      var _postOrderTraverseNode = function (node, callback) {
+        if (node != null) {
+          _postOrderTraverseNode(node.left, callback);
+          _postOrderTraverseNode(node.right, callback);
+          callback(node.key);
+        }
+      }
+      var _minNode = function (node) {
+        if (node.left == null) {
+          return node.key;
+        } else {
+          return _minNode(node.left);
+        }
+      }
+      var _maxNode = function (node) {
+        if (node.right == null) {
+          return node.key;
+        } else {
+          return _maxNode(node.right);
+        }
+      }
+      var _searchNode = function (node, key) {
+        if (node == null) {
+          return false;
+        } else if (node.key > key) {
+          return _searchNode(node.left, key);
+        } else if (node.key < key) {
+          return _searchNode(node.right, key);
+        } else {
+          return true;
+        }
+      }
+      var _findMinNode = function (node) {
+        while (node && node.left !== null) {
+          node = node.left;
+        }
+        return node;
+      };
+      var _removeNode = function (node, key) {
+        if (node.key == null) {
+          return null;
+        } else if (node.key > key) {
+          node.left = _removeNode(node.left, key);
+          return node;
+        } else if (node.key < key) {
+          node.right = _removeNode(node.right, key);
+          return node;
+        } else {
+          if (node.left == null && node.right == null) {
+            return null;
+          } else if (node.left == null) {
+            node = node.right;
+            return node;
+          } else if (node.right == null) {
+            node = node.left;
+            return node;
+          } else {
+            var aux = _findMinNode(node.right);
+            node.key = aux.key;
+            node.right = _removeNode(node.right, aux.key);
+            return node;
+          }
+        }
+        return node;
+      }
+      // 暴露出去的方法
+      this.insert = function (key) {
+        var newNode = new Node(key);
+        if (root == null) {
+          root = newNode;
+        } else {
+          _insertNode(root, newNode);
+        }
+      }
+      this.search = function (key) {
+        return _searchNode(root, key);
+      }
+      this.inOrderTraverse = function (callback) { // 中序遍历是一种以上行顺序访问BST所有节点的遍历方式，也就是以从最小到最大的顺序访问所有节点。
+        _inOrderTraverseNode(root, callback);
+      }
+      this.preOrderTraverse = function (callback) { // 先序遍历是以优先于后代节点的顺序访问每个节点的。先序遍历的一种应用是打印一个结构化的文档。
+        _preOrderTraverseNode(root, callback);
+      }
+      this.postOrderTraverse = function (callback) { // 后序遍历则是先访问节点的后代节点，再访问节点本身。后序遍历的一种应用是计算一个目录和它的子目录中所有文件所占空间的大小。
+        _postOrderTraverseNode(root, callback);
+      }
+      this.min = function () {
+        return _minNode(root);
+      }
+      this.max = function () {
+        return _maxNode(root);
+      }
+      this.remove = function (key) {
+        root = _removeNode(root, key);
+      }
+      this.print = function () {
+        console.log(root);
+      }
+    }
+
+    function printNode(value) {
+      console.log(value);
+    }
+    var tree = new BinarySearchTree();
+    tree.insert(11);
+    tree.insert(7);
+    tree.insert(15);
+    tree.insert(5);
+    tree.insert(3);
+    tree.insert(9);
+    tree.insert(8);
+    tree.insert(10);
+    tree.insert(13);
+    tree.insert(12);
+    tree.insert(14);
+    tree.insert(20);
+    tree.insert(18);
+    tree.insert(25);
+    tree.insert(6);
+    tree.print();
+    tree.inOrderTraverse(printNode);
+    console.log("...inOrderTraverse...")
+    tree.preOrderTraverse(printNode);
+    console.log("...preOrderTraverse...")
+    tree.postOrderTraverse(printNode);
+    console.log("...postOrderTraverse...")
+    console.log("min:" + tree.min())
+    console.log("max:" + tree.max())
+    console.log("3存在吗？" + tree.search(3))
+    console.log("7存在吗？" + tree.search(7))
+    console.log("16存在吗？" + tree.search(16))
+  </script>
+</body>
+</html>

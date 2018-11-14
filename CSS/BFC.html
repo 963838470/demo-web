@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>块级格式化上下文 (Block Formatting Contexts)</title>
+  <style>
+    .block {
+      width: 100px;
+      height: 100px;
+      background: lightblue;
+      margin: 100px;
+    }
+  </style>
+</head>
+<body>
+  <p>具有 BFC 特性的元素可以看作是隔离了的独立容器，容器里面的元素不会在布局上影响到外面的元素，并且 BFC 具有普通容器所没有的一些特性。</p>
+  <p>通俗一点来讲，可以把 BFC 理解为一个封闭的大箱子，箱子内部的元素无论如何翻江倒海，都不会影响到外部。</p>
+  <p>
+    三、触发 BFC 只要元素满足下面任一条件即可触发 BFC 特性：
+    <ul>
+      <li>body 根元素</li>
+      <li>浮动元素：float 除 none 以外的值</li>
+      <li>绝对定位元素：position (absolute、fixed)</li>
+      <li>display 为 inline-block、table-cell、flex</li>
+      <li>overflow 除了 visible 以外的值 (hidden、auto、scroll)</li>
+    </ul>
+  </p>
+  <fieldset>
+    <legend>BFC 可以阻止元素被浮动元素覆盖</legend>
+    <div>
+      <div style="height: 100px;width: 100px;float: left;background: lightblue">我是一个左浮动的元素</div>
+      <div style="width: 200px; height: 200px;background: #eee;/* overflow:  hidden; */">我是一个没有设置浮动, 也没有触发 BFC 元素, width: 200px; height:200px; background: #eee;</div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>同一个 BFC 下外边距会发生折叠</legend>
+    <div>
+      <div class="block"></div>
+      <div class="block"></div>
+    </div>
+  </fieldset>
+</body>
+</html>

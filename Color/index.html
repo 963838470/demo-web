@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+
+    ul {
+      list-style: none;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      width: 200px;
+      height: 200px;
+      float: left;
+      margin: 10px;
+    }
+  </style>
+  <script src="../Vue/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <ul>
+      <li v-for="c in colors" :style="{ background: c.rgb }">
+        <h4>{{ c.rgb }}</h4>
+        <h4 v-html="c.desc"></h4>
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    new Vue({
+      el: "#app",
+      data: {
+        colors: [
+          { rgb: "lightgray", desc: "浅灰色<br>适合边框<br>#D3D3D3<br>rgb(211,211,211)" },
+          { rgb: "#BCBCBC", desc: "忽略性文本" },
+          { rgb: "#CDCDCD", desc: "忽略性文本" },
+        ]
+      }
+    })
+  </script>
+</body>
+</html>

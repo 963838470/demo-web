@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>图</title>
+  <script>
+    function Dictionary() {
+      var items = {};
+      this.set = function (key, value) {
+        items[key] = value;
+      }
+      this.delete = function (key) {
+        if (this.has(key)) {
+          delete items[key];
+          return true;
+        }
+        return false;
+      }
+      this.has = function (key) {
+        return key in items;
+      }
+      this.get = function (key) {
+        return items[key];
+      }
+      this.clear = function () {
+        items = {};
+      }
+      this.size = function () {
+        return Object.keys(items).length;
+      }
+      this.keys = function () {
+        return Object.keys(items);
+      }
+      this.values = function () {
+        var values = [];
+        for (var key in items) {
+          if (this.has(key)) {
+            values.push(items[key]);
+          }
+        }
+        return values;
+      }
+      this.getItems = function () {
+        return items;
+      }
+    }
+  </script>
+</head>
+<body>
+  <script>
+    function Graph() {
+      var vertices = [];
+      var adjList = new Dictionary();
+      this.addVertex = function (v) {
+        vertices.push(v);
+        adjList.set(v, []);
+      }
+      this.addEdge = function (v, w) {
+        adjList.get(v).push(w);
+        adjList.get(w).push(v);
+      };
+      this.toString = function () {
+        var s = '';
+        for (var i = 0; i < vertices.length; i++) { //{10}
+          s += vertices[i] + ' -> ';
+          var neighbors = adjList.get(vertices[i]); //{11}
+          for (var j = 0; j < neighbors.length; j++) { //{12}
+            s += neighbors[j] + ' ';
+          }
+          s += '\n'; //{13}
+        }
+        return s;
+      };
+    }
+
+    var graph = new Graph();
+    var myVertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+    for (var i = 0; i < myVertices.length; i++) {
+      graph.addVertex(myVertices[i]);
+    }
+    graph.addEdge('A', 'B');
+    graph.addEdge('A', 'C');
+    graph.addEdge('A', 'D');
+    graph.addEdge('C', 'D');
+    graph.addEdge('C', 'G');
+    graph.addEdge('D', 'G');
+    graph.addEdge('D', 'H');
+    graph.addEdge('B', 'E');
+    graph.addEdge('B', 'F');
+    graph.addEdge('E', 'I');
+    console.log(graph.toString())
+  </script>
+</body>
+</html>
