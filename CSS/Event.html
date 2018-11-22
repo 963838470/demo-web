@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>事件冒泡、事件捕获</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+
+      #parent {
+        height: 300px;
+        border: 1px solid gray;
+      }
+      .child {
+        clear: both;
+        height: 100px;
+        position: relative;
+        border: 1px solid red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="parent">
+      <span>parent</span>
+      <div id="child" class="child"><span>child</span></div>
+    </div>
+
+    <script>
+      var model = false // false为事件冒泡，true为事件捕获
+
+      document.addEventListener(
+        "click",
+        function(e) {
+          alert("document事件被触发")
+        },
+        model
+      )
+      document.getElementsByTagName("html")[0].addEventListener(
+        "click",
+        function(e) {
+          alert("html事件被触发")
+        },
+        model
+      )
+      document.getElementsByTagName("body")[0].addEventListener(
+        "click",
+        function(e) {
+          alert("body事件被触发")
+        },
+        model
+      )
+      document.getElementById("parent").addEventListener(
+        "click",
+        function(e) {
+          alert("parent事件被触发，" + this.id)
+        },
+        model
+      )
+      document.getElementById("child").addEventListener(
+        "click",
+        function(e) {
+          alert("child事件被触发，" + this.id)
+        },
+        model
+      )
+    </script>
+  </body>
+</html>
