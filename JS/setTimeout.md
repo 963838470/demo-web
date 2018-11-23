@@ -1,6 +1,6 @@
-# setTimeout时间设置为0详细解析
+# [setTimeout时间设置为0详细解析](https://github.com/wugenshui/demo-web/blob/master/JS/setTimeout.md)
 
-## 开胃菜，setTimeout为何物?
+## 1. 开胃菜，setTimeout为何物?
 
 #### 首先看一下w3school上面对于setTimeout的解释
 
@@ -14,7 +14,7 @@ setTimeout(function(){
 
 正常情况下，我是setTimeout 这句话并不会马上输出而是等1000毫秒以后会在浏览器的控制台输出。
 
-## 主菜，js是单线程的
+## 2. 主菜，js是单线程的
 
 OK，看一个例子，这个例子的输出结果是什么？
 
@@ -40,9 +40,9 @@ console.log(3);
 
 setTimeout(fn,0)的含义是，指定某个任务在主线程最早可得的空闲时间执行，也就是说，尽可能早得执行。它在"任务队列"的尾部添加一个事件，因此要等到同步任务和"任务队列"现有的事件都处理完，才会得到执行。
 
-## 甜品，setTimeout的妙用
+## 3. 甜品，setTimeout的妙用
 
-## 1. 函数去抖
+* 函数去抖
 
 让一个函数在一定间隔内没有被调用时，才开始执行被调用方法。比如当你在使用 google 搜索内容的时候，有些关键词输入到一半，谷歌会展示一个可选列表，根据你当前输入的内容作出的一个猜测联想。需要监听文字改变，每一次改变都会调用一次回调函数，现在需要的一种实现是在用户停止键盘事件一段时间后，去发送一个请求。
 
@@ -55,7 +55,7 @@ var debounce = function(method, context) {
 }
 ```
 
-## 2. 轮询任务
+* 轮询任务
 
 js中可以使用setInterval开启轮询，但是这种存在一个问题就是执行间隔往往就不是你希望的间隔时间。
 
@@ -68,7 +68,7 @@ setTimeout(function () {
 }, 100);
 ```
 
-## 3. 延迟js引擎执行
+* 延迟js引擎执行
 
 ```js
 var div = document.createElement('div');
