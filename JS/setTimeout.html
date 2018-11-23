@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      fieldset {
+        border: 1px solid lightgray;
+      }
+
+      blockquote {
+        width: 95%;
+        margin: 0px auto 10px;
+        padding: 4px;
+        background: rgb(61, 71, 75);
+        border-left: 4px solid rgb(116, 205, 230);
+      }
+
+      pre,
+      code {
+        width: 95%;
+        margin: 0 auto 10px;
+        padding: 4px;
+        line-height: 20px;
+        clear: both;
+        font-size: 14px;
+        background: #ffffff;
+        border-left: 3px solid #6ce26c;
+      }
+    </style>
+  </head>
+  <body>
+    <fieldset>
+      <legend>开胃菜，setTimeout为何物?</legend>
+      <blockquote>setTimeout(fn,millisec) 方法用于在指定的毫秒数后调用函数或计算表达式。</blockquote>
+      <pre>
+          setTimeout(function(){
+            console.log('我是setTimeout');
+           }, 1000);
+      </pre>
+    </fieldset>
+  </body>
+</html>
