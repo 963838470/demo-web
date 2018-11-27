@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <style>
+      select {
+        width: 300px;
+      }
+    </style>
+    <script src="http://cdn.bootcss.com/jquery/1.10.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+  </head>
+  <body>
+    <select class="js-example-basic-single" name="state">
+        <option></option>
+      <!-- <option value="AL">Alabama</option>
+      <option value="WY">Wyoming</option> -->
+    </select>
+
+    <script>
+      $(document).ready(function() {
+        $(".js-example-basic-single").select2({
+          data: [
+            {
+              id: 1,
+              text: "Option 1"
+            },
+            {
+              id: 2,
+              text: "Option 2",
+            },
+            {
+              id: 3,
+              text: "Option 3",
+            }
+          ]
+        })
+      })
+    </script>
+  </body>
+</html>
