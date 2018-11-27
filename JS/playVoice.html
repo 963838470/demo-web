@@ -7,10 +7,17 @@
     <title>Document</title>
   </head>
   <body>
-    <input id="txt" type="text" value="你好，欢迎登陆系统" /> <button type="button" onclick="baidu()">百度</button>
+    <h4 onclick="change()">播报语音</h4> <input id="txt" type="text" value="你好，欢迎登陆系统" /> <br />
+    <button type="button" onclick="voice1()">百度(原)</button>
+    <button type="button" onclick="voice2()">百度(洪亮女声)</button>
+    <button type="button" onclick="voice3()">百度(男声)</button>
 
     <script>
-      function baidu() {
+      // text 文字
+      // ctp 客户端类型选择，web端填写固定值1
+      // pdt 311：洪亮女声 1:男声
+      // cuid 用户唯一标识，用来区分用户，计算UV值。建议填写能区分用户的机器 MAC 地址或 IMEI 码，长度为60字符以内
+      function voice1() {
         var txt = document.getElementById("txt").value
         if (txt != null && txt.length > 0) {
           var url = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&text=" + encodeURI(txt)
@@ -18,6 +25,33 @@
           n.src = url
           n.play()
         }
+      }
+
+      function voice2() {
+        var txt = document.getElementById("txt").value
+        if (txt != null && txt.length > 0) {
+          var url = "http://tts.baidu.com/text2audio?cuid=baiduid&lan=zh&ctp=1&pdt=311&tex=" + encodeURI(txt)
+          var n = new Audio(url)
+          n.src = url
+          n.play()
+        }
+      }
+
+      function voice3() {
+        var txt = document.getElementById("txt").value
+        if (txt != null && txt.length > 0) {
+          var url =
+            "http://tts.baidu.com/text2audio?idx=1&tex=" +
+            encodeURI(txt) +
+            "&cuid=baidu_speech_demo&cod=2&lan=zh&ctp=1&pdt=1&spd=5&vol=5&pit=5&per=3"
+          var n = new Audio(url)
+          n.src = url
+          n.play()
+        }
+      }
+
+      function change() {
+        document.getElementById("txt").value = "您有一张未完成派工单!"
       }
     </script>
   </body>
