@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input id="txt" type="text" value="你好，欢迎登陆系统" /> <button type="button" onclick="baidu()">百度</button>
+
+    <script>
+      function baidu() {
+        var txt = document.getElementById("txt").value
+        if (txt != null && txt.length > 0) {
+          var url = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&text=" + encodeURI(txt)
+          var n = new Audio(url)
+          n.src = url
+          n.play()
+        }
+      }
+    </script>
+  </body>
+</html>
