@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="common.css" />
   </head>
   <body>
-    <img src="tu.jpg" alt="yanshi" />
     <canvas id="canvas" width="600" height="400"></canvas>
 
     <script>
@@ -17,10 +16,14 @@
 
       var img = new Image()
       img.src = "tu.jpg"
-      ctx.drawImage(img, 0, 0)
-      ctx.drawImage(img, 50, 50, 100, 100)
-      ctx.drawImage(img, 125, 125)
-      ctx.drawImage(img, 210, 210)
+      var imgWidth = 110
+      var imgHeight = 120
+      setTimeout(function() {
+        ctx.drawImage(img, 0, 0, imgWidth, imgHeight)
+        ctx.drawImage(img, 50, 50, imgWidth, imgHeight)
+        ctx.drawImage(img, 125, 125, imgWidth, imgHeight)
+        ctx.drawImage(img, 210, 210, imgWidth, imgHeight)
+      }, 10)
     </script>
   </body>
 </html>
