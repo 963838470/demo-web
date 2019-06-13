@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>填充图片</title>
+    <link rel="stylesheet" href="common.css" />
+  </head>
+  <body>
+    <canvas id="canvas" width="600" height="400"></canvas>
+
+    <script>
+      var canvas = document.getElementById("canvas")
+      var ctx = canvas.getContext("2d")
+
+      var img = new Image()
+      img.src = "tu.jpg"
+      var imgWidth = 110
+      var imgHeight = 120
+      setTimeout(function() {
+        ctx.drawImage(img, 0, 0, imgWidth, imgHeight)
+        ctx.drawImage(img, 50, 50, imgWidth, imgHeight)
+        ctx.drawImage(img, 125, 125, imgWidth, imgHeight)
+        ctx.drawImage(img, 210, 210, imgWidth, imgHeight)
+      }, 10)
+    </script>
+  </body>
+</html>
