@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>三维电子沙盘系统</title>
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css" />
+    <link href="style/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./style/font-awesome.css" />
+    <link rel="stylesheet" href="./style/index.css" />
+  </head>
+  <body>
+    <div class="header">
+      <h1 class="title">三维电子沙盘系统</h1>
+    </div>
+    <div class="body">
+      <div class="sidebar">
+        <ul id="nav">
+          <li class="has_sub project">
+            <a href="#" id="startBtn">
+              <i class="icon-list-alt"></i> 水利工程
+              <span class="pull-right">
+                <i class="icon-chevron-right"></i>
+              </span>
+            </a>
+            <ul style="display: block;">
+              <!--<li>
+                          <a href="javascript:void(0);" id="showKML">采砂整治</a>
+                      </li>-->
+              <li>
+                <a href="javascript:void(0);" id="portal1">防洪工程</a>
+              </li>
+              <li>
+                <a href="javascript:void(0);" id="route">行进路线</a>
+              </li>
+            </ul>
+          </li>
+          <li class="has_sub user">
+            <a href="#">
+              <i class="icon-user"></i> 现场作业
+              <span class="pull-right">
+                <i class="icon-chevron-right"></i>
+              </span>
+            </a>
+            <ul style="display: block;"></ul>
+          </li>
+        </ul>
+      </div>
+      <div id="viewDiv"></div>
+      <div class="toggle-map"><button data-type="y">卫星图</button><button data-type="p">道路图</button></div>
+      <div class="div-monitor">
+        <div class="monitor-header">
+          <div class="monitor-title">实时视频</div>
+          <img class="monitor-close" src="./image/closeBtn.png" />
+        </div>
+        <iframe
+          class="monitor-player"
+          frameborder="0"
+          scrolling="no"
+          allowfullscreen="true"
+          webkitallowfullscreen="true"
+          mozallowfullscreen="true"
+        ></iframe>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="copy-right">Copyright © 1997-2017 华微软件版权所有 | 华微软件设计制作维护 版本:Beta1</div>
+    </div>
+
+    <script src="./js/jquery.js"></script>
+    <script src="https://js.arcgis.com/4.5/"></script>
+    <script src="./js/index.js"></script>
+  </body>
+</html>
