@@ -54,7 +54,8 @@ require([
   "esri/layers/SceneLayer",
   "esri/symbols/PictureMarkerSymbol",
   "esri/tasks/Locator",
-  "dojo/domReady!"
+  "dojo/domReady!",
+  "dojo/on"
 ], function(
   Map,
   esriConfig,
@@ -76,7 +77,8 @@ require([
   LabelClass,
   SceneLayer,
   PictureMarkerSymbol,
-  Locator
+  Locator,
+  on
 ) {
   var map, view
   var TintLayer = BaseTileLayer.createSubclass({
@@ -411,6 +413,48 @@ require([
         heading: 0,
         tilt: 80
       })
+
+      var point = {
+        type: "point",
+        longitude: 111.611,
+        latitude: 26.2
+      }
+
+      var simpleMarkerSymbol = {
+        type: "simple-marker",
+        color: [226, 119, 40], // orange
+        outline: {
+          color: [255, 255, 255], // white
+          width: 1
+        }
+      }
+
+      var pointGraphic = new Graphic({
+        type: "my-simple-marke",
+        geometry: point,
+        symbol: simpleMarkerSymbol
+      })
+
+      view.graphics.add(pointGraphic)
+
+      // Get the screen point from the view's click event
+      view.on("click", function(event) {
+        var screenPoint = {
+          x: event.x,
+          y: event.y
+        }
+        // Search for graphics at the clicked location
+        view.hitTest(screenPoint).then(function(response) {
+          var result = response.results[0]
+
+          if (result) {
+            var lon = result.mapPoint.longitude
+            var lat = result.mapPoint.latitude
+
+            console.log("Hit surface at (" + lon + ", " + lat + "), graphic:", result.graphic || "none")
+          }
+        })
+      })
     })
 
     // 点击弹出坐标
@@ -438,16 +482,16 @@ require([
           .html()
           .indexOf("在线") > -1
       ) {
-        pointArray.push(
-          new Graphic({
-            geometry: {
-              type: "point",
-              longitude: $(this).attr("data-x"),
-              latitude: $(this).attr("data-y")
-            },
-            symbol: pointStyle
-          })
-        )
+        var graphic = new Graphic({
+          geometry: {
+            type: "point",
+            longitude: $(this).attr("data-x"),
+            latitude: $(this).attr("data-y")
+          },
+          symbol: pointStyle
+        })
+
+        pointArray.push(graphic)
 
         pointArray.push(
           new Graphic({
