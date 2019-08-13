@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>加载图层</title>
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="http://www.cdtye.com:6040/arcgis_js_api/4x/4.11/esri/css/main.css" />
+    <link href="style/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./style/font-awesome.css" />
+
+    <style>
+      html, body, #viewDiv {
+          padding: 0;
+          margin: 0;
+          position:absolute;
+          top:0;
+          left:0;
+          right:0;
+          bottom:0;
+          overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="body">
+      <div id="viewDiv"></div>
+    </div>
+
+    <script src="./js/jquery.js"></script>
+    <script src="http://www.cdtye.com:6040/arcgis_js_api/4x/4.11/dojo/dojo.js"></script>
+    <script>
+      // 菜单
+      $(document).ready(function() {
+        $.ajaxSetup({ cache: false })
+      })
+
+      // 地图
+      require([
+        "esri/Map",
+        "esri/Basemap",
+        "esri/config",
+        "esri/request",
+        "esri/Color",
+        "esri/Graphic",
+        "esri/WebScene",
+        "esri/geometry/Point",
+        "esri/views/MapView",
+        "esri/views/SceneView",
+        "esri/layers/MapImageLayer",
+        "esri/widgets/LayerList",
+        "esri/widgets/ScaleBar",
+        "esri/widgets/BasemapToggle",
+        "esri/layers/BaseTileLayer",
+        "esri/layers/KMLLayer",
+        "esri/layers/GraphicsLayer",
+        "esri/layers/FeatureLayer",
+        "esri/layers/support/LabelClass",
+        "esri/layers/SceneLayer",
+        "esri/layers/WMTSLayer",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/tasks/Locator",
+        "dojo/domReady!",
+        "dojo/on"
+      ], function(
+        Map,
+        Basemap,
+        esriConfig,
+        esriRequest,
+        Color,
+        Graphic,
+        WebScene,
+        Point,
+        MapView,
+        SceneView,
+        MapImageLayer,
+        LayerList,
+        ScaleBar,
+        BasemapToggle,
+        BaseTileLayer,
+        KMLLayer,
+        GraphicsLayer,
+        FeatureLayer,
+        LabelClass,
+        SceneLayer,
+        WMTSLayer,
+        PictureMarkerSymbol,
+        Locator,
+        on
+      ) {
+
+ var map = new Map({
+      basemap: "hybrid"
+    });
+
+
+    var view = new MapView({
+      container: "viewDiv",
+      map: map,
+      center: [113.2682, 23.136], // longitude, latitude
+      zoom: 10
+    });
+
+     var trailheadsLayer = new FeatureLayer({
+        url: "http://www.cdtye.com:6080/arcgis/rest/services/ChinaRailway/MapServer/5"
+      });
+      map.add(trailheadsLayer);
+
+
+        // var view
+        // var defaultBasemap = new Basemap({})
+        // defaultBasemap.baseLayers.push(
+        //   new WMTSLayer({ url: "http://www.cdtye.com:6080/arcgis/rest/services/BASE_VECTOR/MapServer/WMTS/1.0.0/WMTSCapabilities.xml" })
+        // )
+        // var map = new Map({ basemap: defaultBasemap })
+        // view = new MapView({
+        //   container: "viewDiv",
+        //   map: map,
+        //   center:[113.663221, 34.7568711],
+        //   zoom: 14,
+        //   extends:{ 'xmin': 8222082, 'ymin': 2456877, 'xmax': 14846879, 'ymax': 6626854, 'spatialReference': { 'wkid': 3857 }}
+        // })
+
+      })
+    </script>
+  </body>
+</html>
