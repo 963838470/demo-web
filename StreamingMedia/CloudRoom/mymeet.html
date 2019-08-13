@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html>
+  <script>
+    console.log(/\w+.html$/.exec(window.location.href)[0])
+    if (navigator.userAgent.includes("Mobile") && !window.location.href.includes("m_")) {
+      // 移动端打开pc页面
+      console.log("true")
+      window.location.href = "m_" + /\w+.html$/.exec(window.location.href)[0]
+    } else if (!navigator.userAgent.includes("Mobile") && window.location.href.includes("m_")) {
+      // pc端打开移动端页面
+      console.log("false")
+      window.location.href = /\w+.html$/.exec(window.location.href)[0].replace("m_", "")
+    }
+  </script>
+
+  <head>
+    <meta charset="UTF-8" />
+    <title>云屋Meeting Demo</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="keywords" content="云屋webRTC" />
+    <meta name="description" content="云屋webRTC" />
+    <link rel="shortcut icon" href="./image/meeting/favicon.ico" />
+    <link rel="stylesheet" href="./lib/layui/css/layui.css" />
+    <link rel="stylesheet" href="./css/meeting.css" />
+  </head>
+
+  <body>
+    <!-- 浏览器不支持提示 开始 -->
+    <div class="alert-wrapper" style="display: none">
+      <div class="mask"></div>
+      <div class="alert-box alert-box-1">
+        <div class="alert-header">
+          <div class="title">提示</div>
+          <div class="close" id="wrapperCloseBtn"></div>
+        </div>
+        <div class="alert-body">
+          <div class="check-compatibility">
+            <i class="icon-tip"></i>
+            <div class="tip-content">
+              <div class="c1">当前浏览器不支持WebRTC，无法正常使用H5音视频功能。</div>
+              <div class="c3">请下载最新Chrome浏览器后重新打开此页面。</div>
+            </div>
+          </div>
+        </div>
+        <div class="alert-footer">
+          <button class="btn btn-longer f-mgr-10" id="downloadChromeBtn">立即下载</button>
+          <button class="btn btn-cancle" id="laterDownloadBtn">稍后下载</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      // IE浏览器提示不受支持
+      if (navigator.userAgent.indexOf("MSIE") > -1 || navigator.userAgent.indexOf("Trident") > -1) {
+        $(".alert-wrapper").show()
+        $("#downloadChromeBtn").click(function() {
+          window.location.href = "https://www.baidu.com/s?wd=chrome"
+        })
+        $("#laterDownloadBtn").click(function() {
+          $(".alert-wrapper").hide()
+        })
+        $("#wrapperCloseBtn").click(function() {
+          $(".alert-wrapper").hide()
+        })
+      }
+    </script>
+    <!-- 浏览器不支持提示 结束 -->
+
+    <!-- 登录界面 开始 -->
+    <!-- <div id="page_login" oncontextmenu="return false;" onselectstart="return false" style="display:block"> -->
+    <div id="page_login" style="display:block">
+      <div class="login_cont">
+        <div class="login_top_logo">
+          <img class="login_logo" src="./image/meeting/icon2_03.png" alt="" />
+        </div>
+        <div class="login_form">
+          <div class="form_label">请输入房间号</div>
+          <div class="form_dec">
+            <span>如果该房间存在，您将自动加入正在进行的房间；</span>
+            <span>如果该房间不存在，请点击下面的【创建房间】按钮，</span>
+            <span>创建并自动加入到一个新的房间；</span>
+          </div>
+          <div class="form_input">
+            <input type="text" id="g_meet_id" placeholder="请输入房间号" value="" />
+          </div>
+          <div class="enmeet_btn">进入房间</div>
+          <div class="login_order">
+            <span class="line"></span>
+            <span class="text">或者</span>
+            <span class="line"></span>
+          </div>
+          <div class="crmeet_btn">创建房间</div>
+          <div class="loginSet">
+            <div id="login_sel" onselectstart="return false">登录设置</div>
+            <div class="logset_hide">
+              <div class="form_input">
+                <label for="server_add">服务器地址：</label>
+                <input type="text" id="server_add" value="10.0.30.99:543" />
+              </div>
+              <div class="form_input">
+                <label for="cr_account">用&emsp;户&emsp;名：</label>
+                <input type="text" id="cr_account" value="demo@cloudroom.com" />
+              </div>
+              <div class="form_input">
+                <label for="comp_psdw">密&emsp;&emsp;&emsp;码：</label>
+                <input type="password" id="comp_psdw" value="123456" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 登录界面 结束 -->
+
+    <!-- 会议界面 开始 -->
+    <div id="page_meeting" style="display:none">
+      <div class="page_meet_head por">
+        <div class="w">
+          <div class="page_meet_logo"><img src="./image/meeting/icon-user.png" alt="" />云屋视频会议Demo</div>
+          <div class="page_meet_id">
+            <span id="meetNickName">昵称：xxxx</span>&ensp;&ensp;
+            <span id="meetId">房间号：88888888</span>
+          </div>
+          <div id="page_meet_record" class="page_meet_record icon">
+            <button id="recordBtn"><span>录制</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="por main">
+        <div class="page_meet_cont">
+          <div class="page_meet_view">
+            <div class="page_meet_video">
+              <div class="page_screen" style="display:block">
+                <div class="screenbox screenBox1"></div>
+                <div class="screenbox screenBox2"></div>
+                <div class="screenbox screenBox3"></div>
+                <div class="screenbox screenBox4"></div>
+                <div class="screenbox screenBox5"></div>
+                <div class="screenbox screenBox6"></div>
+                <div class="screenbox screenBox7"></div>
+                <div class="screenbox screenBox8"></div>
+                <div class="screenbox screenBox9"></div>
+              </div>
+              <div class="page_chat_box">
+                <ul>
+                  <!-- <span>乖乖兔：这是干啥呢</span> -->
+                </ul>
+              </div>
+            </div>
+            <div class="page_screen_share"></div>
+            <div class="page_meet_chat">
+              <input type="text" name="chat_msg" placeholder="请输入你的文字聊天内容" />
+              <span id="sendMsg">发送</span>
+            </div>
+            <div class="page_meet_tools por">
+              <ul class="page_meet_tool">
+                <li id="open_chat">
+                  <img src="./image/meeting/meet_chat.png" />
+                  <span>聊天</span>
+                </li>
+                <li id="open_mic">
+                  <img src="./image/meeting/meet_voice1.png" class="disabled" />
+                  <span>开关麦克风</span>
+                </li>
+                <li id="open_cam">
+                  <img src="./image/meeting/meet_camer1.png" class="disabled" />
+                  <span>开关摄像头</span>
+                </li>
+                <li id="open_screen">
+                  <img src="./image/meeting/meet_screen.png" />
+                  <span>屏幕共享</span>
+                </li>
+                <li id="open_set">
+                  <img src="./image/meeting/meet_set.png" />
+                  <span>设置</span>
+                </li>
+              </ul>
+              <div class="page_meet_close"></div>
+            </div>
+            <div class="page_open_set">
+              <div class="page_set_title">
+                设置
+                <img src="./image/meeting/close_page.png" />
+              </div>
+              <div class="page_set_form">
+                <label>摄像头：</label>
+                <select id="select_cam"></select>
+              </div>
+              <div class="page_set_form">
+                <label>扬声器：</label>
+                <select id="select_speaker"></select>
+              </div>
+              <div class="page_set_form">
+                <label>麦克风：</label>
+                <select id="select_mic"></select>
+              </div>
+              <div class="page_set_form">
+                <label>分辨率：</label>
+                <select id="select_size">
+                  <option value="8" selected="true">640*360</option>
+                  <option value="10">853*480</option>
+                  <option value="12">1280*720</option>
+                  <option value="13">1920*1080</option>
+                </select>
+              </div>
+              <div class="page_set_form">
+                <label>帧&nbsp;&nbsp;率：</label>
+                <select id="select_frame">
+                  <option value="5">5帧/秒</option>
+                  <option value="10">10帧/秒</option>
+                  <option value="15">15帧/秒</option>
+                  <option value="20" selected="true">20帧/秒</option>
+                  <option value="25">25帧/秒</option>
+                  <option value="30">30帧/秒</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 会议界面 结束 -->
+
+    <!-- 设置rem根字体大小 -->
+    <script type="text/javascript">
+      document.documentElement.style.fontSize = window.innerHeight
+        ? Math.ceil((window.innerHeight / 950) * 100) + "px"
+        : Math.ceil((document.documentElement.clientHeight / 950) * 100) + "px"
+      window.onresize = function() {
+        document.documentElement.style.fontSize = window.innerHeight
+          ? Math.ceil((window.innerHeight / 950) * 100) + "px"
+          : Math.ceil((document.documentElement.clientHeight / 950) * 100) + "px"
+      }
+    </script>
+
+    <!-- <script>
+        var global = {window:window}; // 兼容泰岳自己开发的浏览器
+    </script> -->
+
+    <script type="text/javascript" src="./lib/md5.js"></script>
+    <script type="text/javascript" src="./lib/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="./lib/rem.min.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js"></script>
+
+    <script type="text/javascript" src="./SDK/rtcsdk.min.js"></script>
+  </body>
+
+  <script>
+    var g_server_addr //服务地址
+    var cr_account = "demo@cloudroom.com" //用户名
+    var cr_psw = "123456" //登录密码
+
+    var enmeet_type //入会方式 1 房间号入会  2创建会议
+    var g_nick_name = null //登录者昵称
+    var g_user_id = null // 登录者id
+    var g_is_login = false //是否登录了
+    var g_is_init = false //sdk是否已初始化
+    var g_meet_id = "" //房间号
+    var g_meet_pwd //会议密码
+    var g_is_meeting = false //会议是否在进行中
+    var g_IMChatId = null //IM聊天消息id
+    var g_curCam = null //当前摄像头
+    var g_curSpeaker = null //当前扬声器
+    var g_curMic = null //当前麦克风
+    var g_curSize = null //当前视频尺寸
+    var g_curFrame = null //当前帧率
+    var g_isStartedScreenShare = false //是否已经有人在共享屏幕了
+    var g_isScreenSharing = false //是否正在共享自己的屏幕
+
+    var g_meet_video = {} // 会议内所有的video对象
+    var g_meet_screen = {} // 会议内所有的screen对象
+    var g_members = [] // 会议内成员
+    var g_loading_index = -1
+    var g_loading_deleted = false
+
+    //视频状态码
+    var g_camStatus = {
+      open: 3,
+      close: 2
+    }
+    //麦克风状态码
+    var g_micStatus = {
+      open: 3,
+      close: 2
+    }
+
+    // 昵称样式
+    var nicknameStyle = {
+      left: "10px",
+      top: "10px",
+      backgroundColor: "rgba(0, 0, 0, .7)",
+      padding: "0 10px",
+      borderRadius: "15px",
+      display: "block"
+    }
+
+    $(function() {
+      // 下拉框选择
+      $("#login_sel").click(function() {
+        if ($(".logset_hide").css("display") == "none") {
+          $(".login_cont").css("top", "-230px")
+          $("#login_sel").css("background-image", 'url("./image/meeting/55.png")')
+          $(".logset_hide").show()
+        } else {
+          $(".login_cont").css("top", "0")
+          $("#login_sel").css("background-image", 'url("./image/meeting/icon2_06.png")')
+          $(".logset_hide").hide()
+        }
+      })
+
+      //房间号入会
+      $(".enmeet_btn").click(function() {
+        var meeting_id = $("#g_meet_id").val()
+        if (meeting_id == "") {
+          console.log("房间号不能为空！")
+          return
+        } else if (meeting_id.length !== 8) {
+          console.log("请输入正确的8位房间号！")
+          return
+        } else {
+          g_meet_id = meeting_id
+          loginFunc(1)
+        }
+      })
+
+      //创建会议
+      $(".crmeet_btn").click(function() {
+        loginFunc(2)
+      })
+
+      //鼠标移入效果
+      $(".page_meet_tool li")
+        .mouseover(function() {
+          $(this)
+            .find("span")
+            .show()
+          $(this)
+            .find("span")
+            .show()
+            .siblings()
+            .find("span")
+            .hide()
+        })
+        .mouseout(function() {
+          $(this)
+            .find("span")
+            .hide()
+          $(this)
+            .siblings()
+            .find("span")
+            .hide()
+        })
+    })
+
+    /* ********************************** 公共方法 ********************************** */
+    // 即将离开当前页面(刷新或关闭)
+    window.onbeforeunload = window.onpagehide = function() {
+      if (g_is_meeting) {
+        $(".page_meet_close").click()
+      }
+
+      if (g_is_login) {
+        CRVideo_Logout()
+        CRVideo_Uninit()
+      }
+    }
+    // 按键F5 刷新
+    document.onkeydown = function(e) {
+      var ev = window.event || e
+      var code = ev.keyCode || ev.which
+      if (code == 116) {
+        // F5
+        if (ev.preventDefault) {
+          ev.preventDefault()
+          location.replace(location.href)
+        } else {
+          ev.keyCode = 0
+          ev.returnValue = false
+          location.replace(location.href)
+        }
+      }
+    }
+    // 页面加载先载入本地存储的房间号
+    $("#g_meet_id").val(sessionStorage.getItem("CRMeeting_meetingID"))
+
+    // 服务器地址
+    g_server_addr = "www.cloudroom.com" //服务地址
+    $("#server_add").val(g_server_addr)
+
+    $("#server_add").change(function() {
+      sessionStorage.setItem("CRServerAdd", this.value)
+    })
+
+    function adjustmentStyle(number) {
+      if (number == 1) {
+        // 1分屏
+
+        $(".page_screen")
+          .removeClass()
+          .addClass("page_screen screenOne")
+        $(".page_screen")
+          .children()
+          .eq(0)
+          .show()
+          .nextAll()
+          .hide()
+      } else if (number == 2) {
+        // 2分屏
+
+        $(".page_screen")
+          .removeClass()
+          .addClass("page_screen screenTwo")
+        $(".page_screen")
+          .children()
+          .eq(1)
+          .show()
+          .prevAll()
+          .show()
+        $(".page_screen")
+          .children()
+          .eq(1)
+          .show()
+          .nextAll()
+          .hide()
+      } else if (number > 2 && number < 5) {
+        // 4分屏
+
+        $(".page_screen")
+          .removeClass()
+          .addClass("page_screen screenFour")
+        $(".page_screen")
+          .children()
+          .eq(3)
+          .show()
+          .prevAll()
+          .show()
+        $(".page_screen")
+          .children()
+          .eq(3)
+          .show()
+          .nextAll()
+          .hide()
+      } else if (number > 4 && number < 10) {
+        // 9分屏
+
+        $(".page_screen")
+          .removeClass()
+          .addClass("page_screen screenNine")
+        $(".page_screen")
+          .children()
+          .show()
+      }
+    }
+
+    function createUserIcon(userId) {
+      console.log("createUserIcon; " + userId)
+
+      var html = [
+        '<div class="deviceStatus" data-userId="' + userId + '">',
+        '<div class="deviceIcon deviceCam"></div>',
+        '<div class="deviceIcon deviceMic"></div>',
+        '<div class="deviceIcon devicePhoto"></div>',
+        "</div>"
+      ].join("")
+
+      $("#video" + userId)
+        .parent()
+        .parent()
+        .append($(html))
+    }
+
+    /* ********************************** 登录系统 ********************************** */
+    CRVideo_EnableLog2File(false, false) // 是否开启日志上传,是否开启控制台打印
+
+    // 登录操作函数
+    function loginFunc(type) {
+      console.log("登录操作函数loginFunc执行，type=" + (type == "1" ? "加入会议" : "创建会议"))
+      g_nick_name = "H5_1234"
+      g_user_id = "USER_ID123456789"
+      $("#meetNickName").text("昵称：" + g_nick_name)
+
+      enmeet_type = type
+
+      if ($("#server_add").val() != "") {
+        g_server_addr = $("#server_add").val()
+      }
+      if ($("#cr_account").val() != "") {
+        cr_account = $("#cr_account").val()
+      }
+      if ($("#comp_psdw").val() != "") {
+        cr_psw = md5($("#comp_psdw").val())
+      } else {
+        cr_psw = md5(cr_psw)
+      }
+
+      //初始化sdk
+      var result = CRVideo_Init() //初始化sdk
+      if (result == CRVideo_NOERR) {
+        console.log(
+          "初始化sdk成功: " +
+            JSON.stringify({
+              g_server_addr: g_server_addr,
+              cr_account: cr_account,
+              cr_psw: cr_psw,
+              g_nick_name: g_nick_name,
+              g_user_id: g_user_id
+            })
+        )
+        //登录
+        CRVideo_SetServerAddr(g_server_addr) // 设置服务器地址
+        CRVideo_Login(cr_account, cr_psw, g_nick_name, g_user_id, "") // 登录callserver
+      }
+    }
+    // 登录成功
+    CRVideo_LoginSuccess.callback = function(usrID, cookie) {
+      g_is_login = true
+      if (enmeet_type == 1) {
+        //房间号入会
+        CRVideo_EnterMeeting(g_meet_id, "", g_user_id, g_nick_name)
+      } else {
+        //创建会议并入会
+        CRVideo_CreateMeeting(g_server_addr, cr_account, cr_psw, "H5_Meeting")
+      }
+    }
+    // 登录失败
+    CRVideo_LoginFail.callback = function(sdkErr, cookie) {
+      g_is_init = false
+      g_is_login = false
+      sdkErr == 7 ? (sdkErr = "用户名或密码错误！") : sdkErr
+      sdkErr == 2 ? (sdkErr = "帐号不存在！") : sdkErr
+      sdkErr == 202 ? (sdkErr = "登录服务器异常！") : sdkErr
+      if (enmeet_type == 1) {
+        console.log("进入房间失败，请重新进入: " + sdkErr)
+      } else {
+        console.log("创建房间失败，请稍后再试: " + sdkErr)
+      }
+    }
+
+    /* ********************************** 会议 ********************************** */
+    // 通知创建会议成功
+    CRVideo_CreateMeetingSuccess.callback = function(meetObj, cookie) {
+      console.log("会议创建成功：" + JSON.stringify(meetObj))
+      // 拿到房间号之后进入会议
+      g_meet_id = meetObj.ID
+      g_meet_pwd = meetObj.pswd
+      CRVideo_EnterMeeting(g_meet_id, g_meet_pwd, g_user_id, g_nick_name)
+    }
+
+    // 进入会议后的操作函数
+    function enterMeetFun(userId) {
+      var nickname = CRVideo_GetMemberNickName(userId) || userId
+      g_members.push({
+        userID: userId,
+        nickName: nickname
+      })
+      var videoObj = "video" + userId
+      g_meet_video[videoObj] = CRVideo_CreatVideoObj({
+        poster: "./image/meeting/be_closed.jpg",
+        objectFit: "cover" //object-fit属性
+      })
+      g_meet_video[videoObj].videoEle = g_meet_video[videoObj].handler()
+
+      for (var i = 0; i < 9; i++) {
+        if (
+          $(".page_screen")
+            .children()
+            .eq(i)
+            .html()
+            .indexOf("待进入...") > -1
+        ) {
+          $(".page_screen")
+            .children()
+            .eq(i)
+            .html(g_meet_video[videoObj].handler())
+          break
+        }
+      }
+
+      //刷新人数样式
+      adjustmentStyle(g_members.length)
+
+      // 放置video标签
+      g_meet_video[videoObj].setVideo(userId)
+      setTimeout(function() {
+        createUserIcon(userId)
+        // 设置状态图标
+        let aStatus = CRVideo_GetAudioStatus(userId)
+        CRVideo_AudioStatusChanged.callback(userId, 0, aStatus)
+        let vStatus = CRVideo_GetVideoStatus(userId)
+        CRVideo_VideoStatusChanged.callback(userId, 0, vStatus)
+      }, 1000)
+
+      // 设置昵称样式
+      g_meet_video[videoObj].setNickNameStyle(nicknameStyle)
+      if (userId == g_user_id) {
+        g_meet_video[videoObj].setNickNameContent("我")
+      }
+
+      $("#video" + g_user_id)
+        .parent()
+        .parent()
+        .addClass("screen_self")
+    }
+
+    // 进入会议的结果
+    CRVideo_EnterMeetingRslt.callback = function(sdkErr) {
+      $("#open_mic")
+        .children("img")
+        .attr("src", "./image/meeting/meet_voice1.png")
+      $("#open_cam")
+        .children("img")
+        .attr("src", "./image/meeting/meet_camer1.png")
+
+      $("#select_cam").val("")
+      $("#select_speaker").val("")
+      $("#select_mic").val("")
+      $("#select_size").val("")
+      $("#select_frame").val(20)
+
+      if (sdkErr == 0) {
+        updateRecordStatue() //查询并更新云端录制状态
+        sessionStorage.setItem("CRMeeting_meetingID", g_meet_id)
+        $("#g_meet_id").val(g_meet_id)
+
+        g_members = []
+        $(".page_screen")
+          .removeClass()
+          .addClass("page_screen")
+        for (var i = 0; i < 9; i++) {
+          $(".page_screen")
+            .children()
+            .eq(i)
+            .html("待进入...")
+        }
+
+        console.log("(demo) Enter Meeting Success !")
+
+        $("#meetId").text("房间号：" + g_meet_id)
+        $("#page_login").hide()
+        $("#page_meeting").css("display", "flex")
+
+        g_is_meeting = true
+
+        var members = CRVideo_GetAllMembers() // 获取会议内所有成员
+
+        if (members.length > 0) {
+          members.forEach(function(ele, index) {
+            debugger
+            enterMeetFun(ele.userID)
+          })
+        }
+
+        // 更新所有媒体设备的信息，摄像头、麦克风、扬声器
+        // 系统枚举设备需要时间，需要做延时处理
+        setTimeout(function() {
+          updateDevicesInfo()
+        }, 1000)
+      } else {
+        if (enmeet_type == 1) {
+          console.log("进入房间失败！请检查房间号是否正确。")
+        } else {
+          console.log("创建会议失败！请稍后再试。")
+        }
+      }
+    }
+
+    // 通知有人进入会议
+    CRVideo_UserEnterMeeting.callback = function(id) {
+      console.log("用户" + id + " 进入会议")
+      debugger
+      enterMeetFun(id)
+      if (id != g_user_id) {
+        console.log(CRVideo_GetMemberNickName(id) + " 进入房间 ...", 2000)
+        console.log(CRVideo.allMemberInfo)
+        updateRecordCFG()
+      }
+    }
+
+    // 通知有人离开会议
+    CRVideo_UserLeftMeeting.callback = function(id, reson) {
+      var removeIndex = null
+      g_members.forEach(function(item, index) {
+        if (id == item.userID) {
+          removeIndex = index
+          delete g_meet_video["video" + id]
+          var $leaveObj = $("#video" + id)
+            .parent()
+            .parent()
+            .html("待进入...")
+          $(".page_screen").append($leaveObj)
+        }
+      })
+      if (id != g_user_id) {
+        g_members.forEach(function(member) {
+          if (member.userID == id) {
+            console.log(member.nickName + " 离开房间 ...", 2000)
+          }
+        })
+      }
+      g_members.splice(removeIndex, 1)
+      //刷新人数样式
+      adjustmentStyle(g_members.length)
+      updateRecordCFG()
+      // console.log(CRVideo.allMemberInfo);
+      // console.log("6666 \r\n" + g_members);
+    }
+
+    // 通知会议结束
+    CRVideo_NotifyMeetEnded.callback = function(id) {
+      console.log("<p>当前房间已被关闭！</p><p>请重新创建房间或进入其它正在进行中的房间。</p>", function() {
+        // window.location.reload(); // 刷新当前页面
+      })
+    }
+
+    // 通知会议内主视频变化
+    CRVideo_NotifyMainVideoChanged.callback = function(userID) {
+      console.log(
+        "(demo) NotifyMainVideoChanged: " +
+          JSON.stringify({
+            userID
+          })
+      )
+    }
+
+    /* ********************************** 聊天 ********************************** */
+
+    // 开启聊天窗口
+    $("#open_chat").click(function() {
+      if ($(".page_meet_chat").css("display") == "none") {
+        $(".page_meet_chat").show()
+        $(".page_chat_box").show()
+      } else {
+        $(".page_meet_chat").hide()
+        $(".page_chat_box").hide()
+      }
+    })
+
+    /* ********************************** 设置面板 ********************************** */
+
+    // 打开设置窗口
+    $("#open_set").click(function() {
+      if ($(".page_open_set").css("display") == "none") {
+        updateDevicesInfo()
+        $(".page_open_set").show()
+      } else {
+        $(".page_open_set").hide()
+      }
+    })
+
+    // 关闭设置页面
+    $(".page_set_title").click(function() {
+      $(".page_open_set").hide()
+    })
+
+    // 更新所有媒体设备的信息，摄像头、麦克风、扬声器
+    var updateTimes = 0
+
+    function updateDevicesInfo() {
+      // 麦克风
+      var audioCfg = CRVideo_GetAudioCfg() // 获取当前音频设备参数
+      var micArr = CRVideo_GetAudioMicNames()
+
+      var micArrOptionsStr = ""
+      for (var i = 0; i < micArr.length; i++) {
+        if (micArr[i].micId == "" && updateTimes < 10) {
+          setTimeout(function() {
+            updateDevicesInfo()
+            updateTimes++
+          }, 1000)
+          return
+        }
+        if (audioCfg.micId == micArr[i].id) {
+          micArrOptionsStr += '<option value="' + micArr[i].id + '" selected="true">' + micArr[i].name + "</option>"
+        } else {
+          micArrOptionsStr += '<option value="' + micArr[i].id + '" >' + micArr[i].name + "</option>"
+        }
+      }
+      $("#select_mic").html(micArrOptionsStr)
+      g_curMic = $("#select_mic").val()
+
+      // 扬声器
+      var spkerArr = CRVideo_GetAudioSpkNames()
+      var spkerArrOptionsStr = ""
+      for (var i = 0; i < spkerArr.length; i++) {
+        if (audioCfg.speakerId == spkerArr[i].id) {
+          spkerArrOptionsStr +=
+            '<option value="' + spkerArr[i].id + '" selected="true">' + spkerArr[i].name + "</option>"
+        } else {
+          spkerArrOptionsStr += '<option value="' + spkerArr[i].id + '" >' + spkerArr[i].name + "</option>"
+        }
+      }
+      $("#select_speaker").html(spkerArrOptionsStr)
+      g_curSpeaker = $("#select_speaker").val()
+
+      // 摄像头
+      var videoID = CRVideo_GetDefaultVideo(g_user_id)
+      var videoList = CRVideo_GetAllVideoInfo(g_user_id)
+      var videoListOptionsStr = ""
+      videoList.forEach(function(item) {
+        if (item.id == videoID) {
+          videoListOptionsStr += '<option value="' + item.id + '" selected="selected" >' + item.name + "</option>"
+        } else {
+          videoListOptionsStr += '<option value="' + item.id + '" >' + item.name + "</option>"
+        }
+      })
+
+      $("#select_cam").html(videoListOptionsStr)
+    }
+
+    // 切换分辨率
+    $("#select_size").change(function() {
+      var cfg = {}
+      cfg.sizeType = +$("#select_size").val()
+      cfg.fps = +$("#select_frame").val()
+      console.log("(demo) setVideoCfg: " + JSON.stringify(cfg))
+      CRVideo_SetVideoCfg(cfg)
+    })
+
+    // 切换帧率
+    $("#select_frame").change(function() {
+      var cfg = {}
+      cfg.sizeType = +$("#select_size").val()
+      cfg.fps = +$("#select_frame").val()
+      console.log("(demo) setVideoCfg: " + JSON.stringify(cfg))
+      CRVideo_SetVideoCfg(cfg)
+    })
+
+    // 切换摄像头
+    $("#select_cam").change(function() {
+      var selectId = this.value
+      if (selectId != g_curCam) {
+        CRVideo_SetDefaultVideo(g_user_id, $("#select_cam").val())
+        g_curCam = +selectId
+      }
+    })
+
+    // 设置视频参数的结果
+    CRVideo_SetVideoCfgRslt.callback = function(curWidth, curHeight) {
+      var setWidth = $("#select_size option:selected")
+        .text()
+        .split("*")[0]
+      var setHeight = $("#select_size option:selected")
+        .text()
+        .split("*")[1]
+      if (parseInt(setWidth) != curWidth || parseInt(setHeight) != curHeight) {
+        for (var i = 0; i < $("#select_size option").length; i++) {
+          var w = $("#select_size option")[i].innerText.split("*")[0]
+          var h = $("#select_size option")[i].innerText.split("*")[1]
+          if (parseInt(h) == curHeight || parseInt(w) == curWidth) {
+            $("#select_size option")[i].selected = true
+          }
+        }
+      }
+    }
+
+    // 切换扬声器
+    $("#select_speaker").change(function() {
+      // setAudioCfg()
+      var cfg = {}
+      cfg.speakerId = $("#select_speaker").val()
+      console.log("(demo) set speaker: " + JSON.stringify(cfg))
+      CRVideo_SetAudioCfg(cfg)
+    })
+
+    // 切换麦克风
+    $("#select_mic").change(function() {
+      // setAudioCfg()
+      var cfg = {}
+      cfg.micId = $("#select_mic").val()
+      console.log("(demo) set mic: " + JSON.stringify(cfg))
+      CRVideo_SetAudioCfg(cfg)
+    })
+
+    /* ********************************** 屏幕共享 ********************************** */
+
+    // 点击屏幕共享按钮
+    $("#open_screen").click(function() {
+      if (g_isStartedScreenShare == false && g_isScreenSharing == false) {
+        CRVideo_StartScreenShare()
+      } else if (g_isScreenSharing == true) {
+        CRVideo_StopScreenShare()
+        g_isScreenSharing = false
+      } else {
+        if ($(".page_screen_share").css("display") == "none") {
+          $(".page_screen_share").show()
+          $(".page_meet_video").hide()
+        } else {
+          $(".page_screen_share").hide()
+          $(".page_meet_video").show()
+        }
+      }
+    })
+
+    var g_screenShareObj = null
+    // SDK通知有人开启了屏幕共享
+    CRVideo_NotifyScreenShareStarted.callback = function(sharer) {
+      if (sharer != g_user_id) {
+        g_isStartedScreenShare = true
+
+        console.log("(demo) 开启了屏幕共享")
+
+        g_screenShareObj = CRVideo_CreatScreenShareObj({
+          poster: "./image/meeting/get_screen.jpg"
+        })
+        g_screenShareObj.id("screenShareObj")
+        $(".page_screen_share").html(g_screenShareObj.handler())
+
+        g_screenShareObj.setVideo(sharer + "screenShare")
+
+        // 设置昵称样式
+        g_screenShareObj.setNickNameStyle(nicknameStyle)
+        g_screenShareObj.setNickNameContent(CRVideo_GetMemberNickName(sharer) + "'s screen")
+
+        setTimeout(function() {
+          $(".page_meet_video").hide()
+          $(".page_screen_share").show()
+        }, 2000)
+
+        exitFullscreen()
+
+        requestVideoFullScreen()
+      } else {
+        g_isScreenSharing = true
+      }
+    }
+    // SDK通知屏幕共享关闭
+    CRVideo_NotifyScreenShareStopped.callback = function(user) {
+      console.log("(demo) 停止了屏幕共享")
+      g_isStartedScreenShare = false
+      g_isScreenSharing = false
+
+      $(".page_screen_share").hide()
+      $(".page_screen_share").html()
+      $(".page_meet_video").show()
+
+      getFullscreenElement()
+      exitFullscreen()
+      requestVideoFullScreen()
+    }
+    /* ********************************** 云端录制 ********************************** */
+    ;(function(win) {
+      var isRecordTime = true //是否录制时间
+      var isRecordName = true //是否录制名称
+      var isRecordOneself = false //只录制自己
+      var userRatio = 16 / 9 //成员视频的默认比例
+
+      var isSvrRecording //是否正在云端录制中
+      var isMyRecord //是否是自己点的录制按钮，自己在退出时将停止录制
+      var recordId = 0 //记录混图器ID
+      var timerId,
+        nowTime = 0
+
+      //推荐录制分辨率
+      var record_size_arr = [
+        [0, 0, 0],
+        [144, 80, 56],
+        [224, 128, 72],
+        [288, 160, 100],
+        [336, 192, 150],
+        [448, 256, 200],
+        [512, 288, 250],
+        [576, 320, 300],
+        [640, 360, 350],
+        [720, 400, 420],
+        [848, 480, 500],
+        [1024, 576, 650],
+        [1280, 720, 1000],
+        [1920, 1080, 2000]
+      ]
+
+      var $record = $("#page_meet_record")
+
+      //更新云端录制状态
+      function updateRecordStatue() {
+        //     0, 没有创建
+        //     1, 正在开启
+        //     2, 正在运行
+        //     4, 正在结束
+        var status = CRVideo_GetSvrMixerState()
+        switch (status) {
+          case 0:
+            isSvrRecording = false
+            $("#recordBtn span").text("录制")
+            break
+          case 2:
+            isSvrRecording = true
+            $record.addClass("icon-recording")
+            $("#recordBtn span").text("录制中")
+            break
+          default:
+            isSvrRecording = false
+            break
+        }
+      }
+
+      //参数格式化
+      function updateRecordCFG(isOneSvr) {
+        if (isSvrRecording) {
+          var size = record_size_arr[12]
+          var w = size[0] //视频宽度
+          var h = size[1] //视频高度
+
+          var x, y //每行、每列视频个数
+          var width, height //每个成员视频宽度,每个成员视频高度
+          var left, top //在视频的x，y坐标存放录制内容
+          var AllMembers //用户数组存放
+
+          if (isRecordOneself) {
+            //只录制自己
+            var myinfo = CRVideo_GetMemberInfo(g_user_id)
+            AllMembers = [myinfo]
+          } else {
+            AllMembers = CRVideo_GetAllMembers()
+          }
+          if (AllMembers.length == 1) {
+            x = 1
+            y = 1
+            width = w
+            height = h
+            left = 0
+            top = 0
+          } else if (AllMembers.length <= 2) {
+            x = 2
+            y = 1
+            width = parseInt(w / x)
+            height = parseInt(width / userRatio)
+          } else if (AllMembers.length <= 4) {
+            x = 2
+            y = 2
+            width = parseInt(w / x)
+            height = parseInt(width / userRatio)
+          } else if (AllMembers.length <= 9) {
+            x = 3
+            y = 3
+            width = parseInt(w / x)
+            height = parseInt(h / y)
+          } else if (AllMembers.length > 9 || AllMembers.length <= 0) {
+            console.error("(demo) record More than 9 people")
+            return false
+          }
+
+          var recContents = []
+
+          AllMembers.forEach(function(item, i) {
+            var startTop = (h - height * y) / 2
+            var tmpTop = y == 1 ? 0 : parseInt(i / x)
+            top = startTop + tmpTop * height
+            left = (i % x) * width
+
+            var videoContent = {}
+            videoContent["type"] = 0 // 录视频
+            videoContent["left"] = left
+            videoContent["top"] = top
+            videoContent["width"] = width
+            videoContent["height"] = height
+            videoContent["param"] = {
+              camid: item.userID + "." + CRVideo_GetDefaultVideo(item.userID)
+            }
+            videoContent["keepAspectRatio"] = 1
+            recContents.push(videoContent)
+
+            if (isRecordTime) {
+              var videoStampContent = {}
+              //录制时间
+              videoStampContent["type"] = 4 // 加时间戳
+              videoStampContent["left"] = left + 35
+              videoStampContent["top"] = top + 3
+              videoStampContent["width"] = 175
+              videoStampContent["height"] = 32
+              videoStampContent["keepAspectRatio"] = 1
+              recContents.push(videoStampContent)
+            }
+            if (isRecordName) {
+              var videoTextContent = {}
+              videoTextContent["type"] = 7 //添加文本
+              videoTextContent["left"] = left + 40
+              videoTextContent["top"] = top + 30
+              videoTextContent["param"] = {
+                text: "<span style='font-size:14px;color:#e21918'>" + item.nickname + "</span>"
+              }
+              recContents.push(videoTextContent)
+            }
+          })
+
+          if (isOneSvr) {
+            return recContents
+          } else {
+            var MutiMixerContents = {
+              id: recordId,
+              recContents: recContents
+            }
+            CRVideo_UpdateSvrMixerContent(MutiMixerContents)
+          }
+        }
+      }
+
+      //清除计时器，退出会议时调用
+      function clearRecordTimer() {
+        clearInterval(timerId)
+        $record.removeClass("icon-recording").addClass("icon")
+      }
+
+      //停止云端录制
+      function stopRecord() {
+        if (isSvrRecording) {
+          isSvrRecording = false
+          CRVideo_StopSvrMixer()
+        }
+      }
+      //获取按钮是否用户自己点击的，退出房间时或者刷新页面将用来停止录制
+      function getMyClickRecord() {
+        return isMyRecord
+      }
+
+      win.CRVideo_SvrRecordStateChanged.callback = function(state) {
+        if (state == 1) {
+          nowTime = 0
+        }
+        if (state == 2) {
+          clearInterval(timerId)
+          timerId = setInterval(function() {
+            nowTime++
+            var second = nowTime % 60
+            var second_str = second >= 10 ? second.toString() : "0" + second
+            var minute = parseInt(nowTime / 60)
+            var minute_str = minute >= 10 ? minute.toString() : "0" + minute
+            $record
+              .addClass("icon icon-recording")
+              .find("#recordBtn span")
+              .text(minute_str + ":" + second_str)
+          }, 1000)
+          isSvrRecording = true
+        } else if (state == 0) {
+          if (timerId != -1) {
+            clearInterval(timerId)
+            timerId = -1
+          }
+          $record
+            .addClass("icon")
+            .removeClass("icon-recording")
+            .find("#recordBtn span")
+            .text("录制")
+          isSvrRecording = false
+          isMyRecord = false
+        }
+      }
+
+      $("#recordBtn").on("click", function() {
+        $that = $(this)
+        if (!isSvrRecording) {
+          //录制
+          var date = new Date()
+          var year = date.getFullYear()
+          var month = date.getMonth() + 1
+          var day = date.getDate()
+          var hour = date.getHours()
+          var minute = date.getMinutes()
+          var second = date.getSeconds()
+
+          month = month < 10 ? "0" + month : month
+          day = day < 10 ? "0" + day : day
+          hour = hour < 10 ? "0" + hour : hour
+          minute = minute < 10 ? "0" + minute : minute
+          second = second < 10 ? "0" + second : second
+
+          var recordName =
+            year + "-" + month + "-" + day + "_" + hour + "-" + minute + "-" + second + "_Webrtc_" + g_meet_id + ".mp4"
+          var size = record_size_arr[12]
+          var frame = 15
+
+          isSvrRecording = true
+          isMyRecord = true
+
+          var MutiMixerCfgs = {},
+            cfg = {},
+            MutiMixerContents = {},
+            MutiMixerOutputs = {},
+            output = []
+          MutiMixerCfgs.id = MutiMixerContents.id = MutiMixerOutputs.id = ++recordId
+          MutiMixerCfgs.cfg = cfg
+          MutiMixerOutputs.output = output
+          ;(cfg.width = size[0]),
+            (cfg.height = size[1]),
+            (cfg.frameRate = frame),
+            (cfg.bitRate = size[2] * 1000),
+            (cfg.defaultQP = 22),
+            (cfg.gop = 120)
+
+          content = updateRecordCFG(true)
+          MutiMixerContents.content = content
+
+          output.push({
+            type: 0, //保存文件类型
+            filename: "/" + year + "-" + month + "-" + day + "/" + recordName
+          })
+
+          // output.push({ //?
+          //     type: 1, //保存文件类型
+          //     liveUrl: 'rtmp://10.8.8.248:8511/live/'+new Date().getTime()
+          // });
+
+          CRVideo_StartSvrMixer(MutiMixerCfgs, MutiMixerContents, MutiMixerOutputs)
+
+          $("#recordBtn span").text("启动中")
+          $("#page_meet_record").removeClass("icon icon-recording")
+          if (timerId != -1) {
+            clearInterval(timerId)
+            timerId = -1
+          }
+        } else {
+          //结束录制
+          stopRecord()
+          $that.find("span").text("录制")
+          $("#page_meet_record")
+            .addClass("icon")
+            .removeClass("icon-recording")
+
+          if (timerId != -1) {
+            clearInterval(timerId)
+            timerId = -1
+          }
+        }
+      })
+
+      win.clearRecordTimer = clearRecordTimer
+      win.getMyClickRecord = getMyClickRecord
+      win.stopRecord = stopRecord
+      win.updateRecordStatue = updateRecordStatue
+      win.updateRecordCFG = updateRecordCFG
+    })(window)
+
+    /* ********************************** 音视频 ********************************** */
+
+    // 点击麦克风开关按钮
+    $("#open_mic").click(function() {
+      let $img = $(this).children("img")
+      if ($img.hasClass("disabled")) {
+        return
+      }
+
+      $deviceCam = $("[data-userid=" + g_user_id + "] .deviceMic")
+
+      var aStatus = CRVideo_GetAudioStatus(g_user_id)
+      console.log("(demo) Get audio status result: " + aStatus)
+      if (aStatus == 1 || aStatus == "VNULL") {
+        console.log("没有可打开的音频设备")
+      } else if (aStatus == 2 || aStatus == 0 || aStatus == "VUNKNOWN" || aStatus == "VCLOSE") {
+        CRVideo_OpenMic(g_user_id)
+        $img.addClass("disabled")
+        $deviceCam.addClass("disabled")
+        // $img.attr("src", "./image/meeting/meet_voice1.png");
+      } else if (aStatus == 3 || aStatus == "VOPEN") {
+        CRVideo_CloseMic(g_user_id)
+        $img.addClass("disabled")
+        $deviceCam.addClass("disabled")
+        $img.attr("src", "./image/meeting/meet_voice0.png")
+        $deviceCam.removeClass("deviceMicActive")
+      }
+    })
+
+    // 点击摄像头开关按钮
+    $("#open_cam").click(function() {
+      let $img = $(this).children("img")
+      if ($img.hasClass("disabled")) {
+        return
+      }
+      $deviceCam = $("[data-userid=" + g_user_id + "] .deviceCam")
+      var vStatus = CRVideo_GetVideoStatus(g_user_id)
+      console.log("(demo) Get video status result: " + vStatus)
+      if (vStatus == 1 || vStatus == "VNULL") {
+        console.log("没有可打开的视频设备")
+      } else if (vStatus == 2 || vStatus == 0 || vStatus == "VUNKNOWN" || vStatus == "VCLOSE") {
+        CRVideo_OpenVideo(g_user_id)
+        $img.addClass("disabled")
+        $deviceCam.addClass("disabled")
+        // $img.attr("src", "./image/meeting/meet_camer1.png");
+      } else if (vStatus == 3 || vStatus == "VOPEN") {
+        CRVideo_CloseVideo(g_user_id)
+        $img.addClass("disabled")
+        $deviceCam.addClass("disabled")
+        $img.attr("src", "./image/meeting/meet_camer0.png")
+        $deviceCam.removeClass("deviceCamActive")
+      }
+    })
+
+    //点击视频里的按钮
+    $(".page_meet_video").on("click", ".deviceIcon", function() {
+      var $that = $(this)
+      if ($that.hasClass("disabled")) {
+        return
+      }
+
+      $that.addClass("disabled")
+      var userId = $that.parent().data("userid")
+      if ($that.hasClass("deviceCam")) {
+        //点击了摄像头按钮
+        console.log("cam")
+        if ($that.hasClass("deviceCamActive")) {
+          //当前打开状态
+          CRVideo_CloseVideo(userId)
+          if (userId == g_user_id) {
+            $("#open_cam img").addClass("disabled")
+            $("#open_cam img").attr("src", "./image/meeting/meet_camer0.png")
+          }
+        } else {
+          //当前关闭状态
+          CRVideo_OpenVideo(userId)
+          if (userId == g_user_id) {
+            $("#open_cam img").addClass("disabled")
+          }
+        }
+      } else if ($that.hasClass("deviceMic")) {
+        //点击了麦克风按钮
+        console.log("mic")
+        if ($that.hasClass("deviceMicActive")) {
+          //当前打开状态
+          CRVideo_CloseMic(userId)
+          if (userId == g_user_id) {
+            $("#open_mic img").addClass("disabled")
+            $("#open_mic img").attr("src", "./image/meeting/meet_voice0.png")
+          }
+        } else {
+          //当前关闭状态
+          CRVideo_OpenMic(userId)
+          if (userId == g_user_id) {
+            $("#open_mic img").addClass("disabled")
+          }
+        }
+      }
+      if ($that.hasClass("devicePhoto")) {
+        //拍照
+        createPhoto($that)
+      }
+    })
+
+    //拍照
+    function createPhoto($that) {
+      $that.removeClass("disabled")
+      var video = $that
+        .parent()
+        .siblings(".CRVideo_VideoObj")
+        .children("video")[0]
+      if (!video.srcObject) {
+        console.log("无图像")
+        return
+      }
+      var div = document.createElement("div")
+      div.style.position = "fixed"
+      div.style.width = "100%"
+      div.style.height = "100%"
+      div.style.backgroundColor = "rgb(0,0,0,.4)"
+      div.style.top = "0"
+      div.style.left = "0"
+      div.style.zIndex = "999"
+
+      var photoWidth = video.clientWidth
+      var photoHeight = video.clientHeight
+      var videoWidth = video.videoWidth
+      var videoHeight = video.videoHeight
+
+      var canvas = document.createElement("canvas")
+      canvas.width = photoWidth
+      canvas.height = photoHeight
+
+      var wh, w, h
+      if (videoWidth >= videoHeight) {
+        wh = videoHeight
+        w = (videoWidth - videoHeight) / 2
+      } else {
+        wh = videoWidth
+        h = (videoHeight - videoWidth) / 2
+      }
+
+      canvas.getContext("2d").drawImage(video, w || 0, h || 0, wh, wh, 0, 0, photoWidth, photoHeight)
+
+      var img = document.createElement("img")
+      img.src = canvas.toDataURL("image/png")
+
+      // img.src = g_meet_video[video.id].savePicToBase64("png");
+
+      img.width = photoWidth
+      img.height = photoHeight
+      img.style.position = "absolute"
+      img.style.left = "50%"
+      img.style.top = "50%"
+      img.style.transform = "translate(-50%,-50%)"
+      img.style.boxShadow = "0 0 8px 1px rgb(0,0,0,.4)"
+      img.onclick = function(e) {
+        //阻止事件冒泡
+        e.stopPropagation()
+      }
+
+      div.onclick = function() {
+        div.remove(document.body)
+        delete div
+      }
+      div.appendChild(img)
+      document.body.appendChild(div)
+      canvas = null
+    }
+  </script>
+</html>
