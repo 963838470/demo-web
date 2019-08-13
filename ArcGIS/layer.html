@@ -52,6 +52,7 @@
         "esri/widgets/LayerList",
         "esri/widgets/ScaleBar",
         "esri/widgets/BasemapToggle",
+        "esri/widgets/BasemapGallery",
         "esri/layers/BaseTileLayer",
         "esri/layers/KMLLayer",
         "esri/layers/GraphicsLayer",
@@ -78,6 +79,7 @@
         LayerList,
         ScaleBar,
         BasemapToggle,
+        BasemapGallery,
         BaseTileLayer,
         KMLLayer,
         GraphicsLayer,
@@ -90,7 +92,7 @@
         on
       ) {
 
- var map = new Map({
+    var map = new Map({
       basemap: "hybrid"
     });
 
@@ -102,25 +104,31 @@
       zoom: 10
     });
 
-     var trailheadsLayer = new FeatureLayer({
-        url: "http://www.cdtye.com:6080/arcgis/rest/services/ChinaRailway/MapServer/5"
-      });
-      map.add(trailheadsLayer);
+    var trailheadsLayer = new FeatureLayer({
+      url: "http://www.cdtye.com:6080/arcgis/rest/services/ChinaRailway/MapServer/5"
+    });
+    map.add(trailheadsLayer);
 
+    // 隐藏放大缩小组件
+    view.ui._removeComponents(['zoom'])
 
-        // var view
-        // var defaultBasemap = new Basemap({})
-        // defaultBasemap.baseLayers.push(
-        //   new WMTSLayer({ url: "http://www.cdtye.com:6080/arcgis/rest/services/BASE_VECTOR/MapServer/WMTS/1.0.0/WMTSCapabilities.xml" })
-        // )
-        // var map = new Map({ basemap: defaultBasemap })
-        // view = new MapView({
-        //   container: "viewDiv",
-        //   map: map,
-        //   center:[113.663221, 34.7568711],
-        //   zoom: 14,
-        //   extends:{ 'xmin': 8222082, 'ymin': 2456877, 'xmax': 14846879, 'ymax': 6626854, 'spatialReference': { 'wkid': 3857 }}
-        // })
+    // 比例尺
+    var scalebar = new ScaleBar({ view: view })
+    view.ui.add(scalebar, "bottom-left");
+
+    // var view
+    // var defaultBasemap = new Basemap({})
+    // defaultBasemap.baseLayers.push(
+    //   new WMTSLayer({ url: "http://www.cdtye.com:6080/arcgis/rest/services/BASE_VECTOR/MapServer/WMTS/1.0.0/WMTSCapabilities.xml" })
+    // )
+    // var map = new Map({ basemap: defaultBasemap })
+    // view = new MapView({
+    //   container: "viewDiv",
+    //   map: map,
+    //   center:[113.663221, 34.7568711],
+    //   zoom: 14,
+    //   extends:{ 'xmin': 8222082, 'ymin': 2456877, 'xmax': 14846879, 'ymax': 6626854, 'spatialReference': { 'wkid': 3857 }}
+    // })
 
       })
     </script>
