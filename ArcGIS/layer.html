@@ -11,15 +11,17 @@
     <link rel="stylesheet" href="./style/font-awesome.css" />
 
     <style>
-      html, body, #viewDiv {
-          padding: 0;
-          margin: 0;
-          position:absolute;
-          top:0;
-          left:0;
-          right:0;
-          bottom:0;
-          overflow: hidden;
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
       }
     </style>
   </head>
@@ -63,6 +65,8 @@
         "esri/symbols/PictureMarkerSymbol",
         "esri/tasks/Locator",
         "dojo/domReady!",
+        "esri/identity/IdentityManager",
+        "esri/identity/ServerInfo",
         "dojo/on"
       ], function(
         Map,
@@ -89,47 +93,89 @@
         WMTSLayer,
         PictureMarkerSymbol,
         Locator,
+        domReady,
+        esriId,
+        ServerInfo,
         on
       ) {
+        var map = new Map({
+          basemap: "hybrid"
+        })
 
-    var map = new Map({
-      basemap: "hybrid"
-    });
+        var view = new MapView({
+          container: "viewDiv",
+          map: map,
+          center: [113.2682, 23.136], // longitude, latitude
+          zoom: 10
+        })
 
+        // 隐藏放大缩小组件
+        view.ui._removeComponents(["zoom"])
 
-    var view = new MapView({
-      container: "viewDiv",
-      map: map,
-      center: [113.2682, 23.136], // longitude, latitude
-      zoom: 10
-    });
+        // 比例尺
+        var scalebar = new ScaleBar({ view: view })
+        view.ui.add(scalebar, "bottom-left")
 
-    var trailheadsLayer = new FeatureLayer({
-      url: "http://www.cdtye.com:6080/arcgis/rest/services/ChinaRailway/MapServer/5"
-    });
-    map.add(trailheadsLayer);
+        //获取Token
 
-    // 隐藏放大缩小组件
-    view.ui._removeComponents(['zoom'])
+        esriConfig.request.corsEnabledServers.push("https://192.168.230.180:6443")
+        // esri.addProxyRule({
+        //   //urlPrefix: "https://192.168.230.180:6443/rest/services",
+        //   proxyUrl: "https://192.168.230.180:6443/rest/services"
+        // })
 
-    // 比例尺
-    var scalebar = new ScaleBar({ view: view })
-    view.ui.add(scalebar, "bottom-left");
+        $.post(
+          "https://192.168.230.180:6443/arcgis/tokens/",
+          {
+            request: "getToken",
+            username: "hw",
+            password: "hw2019",
+            expiration: "60",
+            f: "json"
+          },
+          "json"
+        ).success(function(data) {
+          console.log(data)
+          var resule = JSON.parse(data)
+          if (resule.token.length > 0) {
+            esriId.registerToken({ server: "https://192.168.230.180:6443/arcgis/rest/services", token: resule.token })
 
-    // var view
-    // var defaultBasemap = new Basemap({})
-    // defaultBasemap.baseLayers.push(
-    //   new WMTSLayer({ url: "http://www.cdtye.com:6080/arcgis/rest/services/BASE_VECTOR/MapServer/WMTS/1.0.0/WMTSCapabilities.xml" })
-    // )
-    // var map = new Map({ basemap: defaultBasemap })
-    // view = new MapView({
-    //   container: "viewDiv",
-    //   map: map,
-    //   center:[113.663221, 34.7568711],
-    //   zoom: 14,
-    //   extends:{ 'xmin': 8222082, 'ymin': 2456877, 'xmax': 14846879, 'ymax': 6626854, 'spatialReference': { 'wkid': 3857 }}
-    // })
+            var worldCitiesURL = "https://192.168.230.180:6443/arcgis/rest/services/gt/GT_RAILWAY_LINE/MapServer/0"
+            var layer = new FeatureLayer({ url: worldCitiesURL })
+            map.add(layer)
+          }
+        })
 
+        // var serverInfo = new ServerInfo()
+        // serverInfo.serverString = "https://192.168.230.180:6443/arcgis/rest/services" //这里配置ArcGIS Server的REST服务地址
+        // serverInfo.tokenServiceUrl = "https://192.168.230.180:6443/arcgis/tokens" //由于GIS Server和Portal联合了，所以使用Portal的token生成地址
+        // var userInfo = { username: "hw", password: "hw2019" } //这里填写Portal的用户和密码
+        // esriId.generateToken(serverInfo, userInfo).then(
+        //   function(data) {
+        //     // This is called when the promise resolves
+        //     var tokenValue = data.token
+        //     //注册Token，注册之后，在Portal里的所有资源，只要该用户由权限访问，就可以直接使用，之前的所有安全服务请求都将会把token值作为参数发送到服务器端
+        //     esriId.registerToken({ server: "https://192.168.230.180:6443/rest/services", token: tokenValue })
+        //   },
+        //   function(error) {
+        //     // This function is called when the promise is rejected
+        //     console.error(error) // Logs the error message
+        //   }
+        // )
+
+        // var view
+        // var defaultBasemap = new Basemap({})
+        // defaultBasemap.baseLayers.push(
+        //   new WMTSLayer({ url: "http://www.cdtye.com:6080/arcgis/rest/services/BASE_VECTOR/MapServer/WMTS/1.0.0/WMTSCapabilities.xml" })
+        // )
+        // var map = new Map({ basemap: defaultBasemap })
+        // view = new MapView({
+        //   container: "viewDiv",
+        //   map: map,
+        //   center:[113.663221, 34.7568711],
+        //   zoom: 14,
+        //   extends:{ 'xmin': 8222082, 'ymin': 2456877, 'xmax': 14846879, 'ymax': 6626854, 'spatialReference': { 'wkid': 3857 }}
+        // })
       })
     </script>
   </body>
