@@ -67,7 +67,9 @@
         "dojo/domReady!",
         "esri/identity/IdentityManager",
         "esri/identity/ServerInfo",
-        "dojo/on"
+        "dojo/on",
+
+        "esri/geometry/support/jsonUtils"
       ], function(
         Map,
         Basemap,
@@ -96,17 +98,39 @@
         domReady,
         esriId,
         ServerInfo,
-        on
+        on,
+        jsonUtils
       ) {
-        var map = new Map({
-          basemap: "hybrid"
-        })
+        // 底图
+        const defaultBasemap = new Basemap({})
+        // 底图图层
+        defaultBasemap.baseLayers.push(
+          new WMTSLayer({
+            url: "http://www.cdtye.com:6080/arcgis/rest/services/BASE_IMG/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+          })
+        )
+        // 底图标注
+        defaultBasemap.referenceLayers.push(
+          new WMTSLayer({
+            url:
+              "http://www.cdtye.com:6080/arcgis/rest/services/BASE_IMG_ANNO/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+          })
+        )
+
+        const map = new Map({ basemap: defaultBasemap })
 
         var view = new MapView({
           container: "viewDiv",
           map: map,
-          center: [113.2682, 23.136], // longitude, latitude
-          zoom: 10
+          // center: [113.2682, 23.136], // longitude, latitude
+          // zoom: 10,
+          extent: jsonUtils.fromJSON({
+            xmin: 8222082,
+            ymin: 2456877,
+            xmax: 14846879,
+            ymax: 6626854,
+            spatialReference: { wkid: 3857 }
+          })
         })
 
         // 隐藏放大缩小组件
@@ -116,14 +140,16 @@
         var scalebar = new ScaleBar({ view: view })
         view.ui.add(scalebar, "bottom-left")
 
-        //获取Token
-
         esriConfig.request.corsEnabledServers.push("https://192.168.230.180:6443")
-        // esri.addProxyRule({
-        //   //urlPrefix: "https://192.168.230.180:6443/rest/services",
-        //   proxyUrl: "https://192.168.230.180:6443/rest/services"
-        // })
 
+        view.watch("extent", function(a, b, c, d) {
+          console.log(a)
+          console.log(b)
+          console.log(c)
+          console.log(d)
+        })
+
+        //获取Token
         $.post(
           "https://192.168.230.180:6443/arcgis/tokens/",
           {
