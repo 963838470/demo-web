@@ -100,23 +100,28 @@
         on,
         jsonUtils
       ) {
-        // 底图
-        const defaultBasemap = new Basemap({})
-        // 底图图层
-        defaultBasemap.baseLayers.push(
-          new WMTSLayer({
-            url: "http://www.cdtye.com:6080/arcgis/rest/services/BASE_IMG/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
-          })
-        )
-        // 底图标注
-        defaultBasemap.referenceLayers.push(
-          new WMTSLayer({
-            url:
-              "http://www.cdtye.com:6080/arcgis/rest/services/BASE_IMG_ANNO/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
-          })
-        )
+        var baseLayer =
+          "http://www.cdtye.com:6080/arcgis/rest/services/BASE_IMG/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
 
-        const map = new Map({ basemap: defaultBasemap })
+        var referenceLayer =
+          "http://www.cdtye.com:6080/arcgis/rest/services/BASE_IMG_ANNO/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+
+        const basemap = new Basemap({
+          // 底图图层
+          baseLayers: [
+            new WMTSLayer({
+              url: baseLayer
+            })
+          ],
+          // 底图标注
+          referenceLayers: [
+            new WMTSLayer({
+              url: referenceLayer
+            })
+          ]
+        })
+
+        const map = new Map({ basemap: basemap })
 
         var view = new MapView({
           container: "viewDiv",
@@ -132,113 +137,118 @@
           })
         })
 
-        var zoomOutAction = {
-          // This text is displayed as a tooltip
-          title: "Zoom out",
-          // The ID by which to reference the action in the event handler
-          id: "zoom-out",
-          // Sets the icon font used to style the action button
-          className: "esri-icon-zoom-out-magnifying-glass"
-        }
-        // Adds the custom action to the popup.
-        view.popup.actions.push(zoomOutAction)
-        view.popup.autoOpenEnabled = false
-        var i = 1
-        view.on("click", function(event) {
-          // Get the coordinates of the click on the view
-          // around the decimals to 3 decimals
-          var lat = Math.round(event.mapPoint.latitude * 1000) / 1000
-          var lon = Math.round(event.mapPoint.longitude * 1000) / 1000
+        // 延迟执行
+        var tempTimeOut = null
+        view.watch("extent", function(extend, b, event, map) {
+          clearTimeout(tempTimeOut)
+          tempTimeOut = setTimeout(() => {
+            console.log(JSON.stringify(extend))
+          }, 800)
+        })
 
-          view.popup.open({
-            // Set the popup's title to the coordinates of the clicked location
-            title: "Reverse geocode: [" + lon + ", " + lat + "]",
-            location: event.mapPoint, // Set the location of the popup to the clicked location
-            actions: [
-              {
-                title: "Zoom out",
-                id: "zoom-out",
-                className: "esri-icon-zoom-out-magnifying-glass"
-              }
-            ]
+        // 地图初始化完成
+        view.when(() => {
+          view.popup.autoOpenEnabled = false
+          var i = 1
+          view.on("click", function(event) {
+            // Get the coordinates of the click on the view
+            // around the decimals to 3 decimals
+            var lat = Math.round(event.mapPoint.latitude * 1000) / 1000
+            var lon = Math.round(event.mapPoint.longitude * 1000) / 1000
+
+            view.popup.open({
+              // Set the popup's title to the coordinates of the clicked location
+              title: "当前坐标: [" + lon + ", " + lat + "]",
+              location: event.mapPoint, // Set the location of the popup to the clicked location
+              actions: [
+                {
+                  title: "Zoom out",
+                  id: "zoom-out",
+                  className: "esri-icon-zoom-out-magnifying-glass"
+                }
+              ]
+            })
           })
-        })
 
-        view.popup.on("trigger-action", function(event) {
-          // If the zoom-out action is clicked, fire the zoomOut() function
-          if (event.action.id === "zoom-out") {
-            console.log("弹窗自定义事件触发！！")
-          }
-        })
-
-        // 隐藏放大缩小组件
-        view.ui._removeComponents(["zoom"])
-
-        // 比例尺
-        var scalebar = new ScaleBar({ view: view })
-        view.ui.add(scalebar, "bottom-left")
-
-        esriConfig.request.corsEnabledServers.push("https://192.168.230.180:6443")
-
-        view.watch("extent", function(a, b, c, d) {
-          console.log(a)
-          console.log(b)
-          console.log(c)
-          console.log(d)
-        })
-
-        $.post(
-          "https://192.168.230.180:6443/arcgis/tokens/",
-          {
-            request: "getToken",
-            username: "hw",
-            password: "hw2019",
-            expiration: "60",
-            f: "json"
-          },
-          function(data) {
-            console.log(data)
-            if (data.token.length > 0) {
-              esriId.registerToken({ server: "https://192.168.230.180:6443/arcgis/rest/services", token: data.token })
-
-              var worldCitiesURL = "https://192.168.230.180:6443/arcgis/rest/services/gt/GT_RAILWAY_LINE/MapServer/0"
-              var layer = new FeatureLayer({ url: worldCitiesURL })
-              map.add(layer)
+          view.popup.on("trigger-action", function(event) {
+            // If the zoom-out action is clicked, fire the zoomOut() function
+            if (event.action.id === "zoom-out") {
+              console.log("弹窗自定义事件触发！！")
             }
-          },
-          "json"
-        )
+          })
 
-        // var serverInfo = new ServerInfo()
-        // serverInfo.serverString = "https://192.168.230.180:6443/arcgis/rest/services" //这里配置ArcGIS Server的REST服务地址
-        // serverInfo.tokenServiceUrl = "https://192.168.230.180:6443/arcgis/tokens" //由于GIS Server和Portal联合了，所以使用Portal的token生成地址
-        // var userInfo = { username: "hw", password: "hw2019" } //这里填写Portal的用户和密码
-        // esriId.generateToken(serverInfo, userInfo).then(
-        //   function(data) {
-        //     // This is called when the promise resolves
-        //     var tokenValue = data.token
-        //     //注册Token，注册之后，在Portal里的所有资源，只要该用户由权限访问，就可以直接使用，之前的所有安全服务请求都将会把token值作为参数发送到服务器端
-        //     esriId.registerToken({ server: "https://192.168.230.180:6443/rest/services", token: tokenValue })
-        //   },
-        //   function(error) {
-        //     // This function is called when the promise is rejected
-        //     console.error(error) // Logs the error message
-        //   }
-        // )
+          // 隐藏放大缩小组件
+          view.ui._removeComponents(["zoom"])
 
-        // var view
-        // var defaultBasemap = new Basemap({})
-        // defaultBasemap.baseLayers.push(
-        //   new WMTSLayer({ url: "http://www.cdtye.com:6080/arcgis/rest/services/BASE_VECTOR/MapServer/WMTS/1.0.0/WMTSCapabilities.xml" })
-        // )
-        // var map = new Map({ basemap: defaultBasemap })
-        // view = new MapView({
-        //   container: "viewDiv",
-        //   map: map,
-        //   center:[113.663221, 34.7568711],
-        //   zoom: 14,
-        //   extends:{ 'xmin': 8222082, 'ymin': 2456877, 'xmax': 14846879, 'ymax': 6626854, 'spatialReference': { 'wkid': 3857 }}
-        // })
+          // 比例尺
+          var scalebar = new ScaleBar({ view: view })
+          view.ui.add(scalebar, "bottom-left")
+
+          esri.config.defaults.io.proxyUrl = "https://192.168.230.180:6443"
+          esri.config.defaults.io.alwaysUseProxy = false
+          esriConfig.request.corsEnabledServers.push("https://192.168.230.180:6443")
+          //esri.config.defaults.io.corsEnabledServers.push("https://192.168.230.180:6443")
+          //esri.config.defaults.io.corsDetection = false
+
+          var serverInfo = new ServerInfo()
+          serverInfo.serverString = "https://192.168.230.180:6443" //这里配置ArcGIS Server的REST服务地址
+          serverInfo.tokenServiceUrl = "https://192.168.230.180:6443/arcgis/tokens" //由于GIS Server和Portal联合了，所以使用Portal的token生成地址
+          var userInfo = { username: "hw", password: "hw2019" } //这里填写Portal的用户和密码
+
+          esriId.generateToken(serverInfo, userInfo).then(
+            function(data) {
+              // This is called when the promise resolves
+              var tokenValue = data.token
+              //注册Token，注册之后，在Portal里的所有资源，只要该用户由权限访问，就可以直接使用，之前的所有安全服务请求都将会把token值作为参数发送到服务器端
+              esriId.registerToken({ server: "http://webgis106.gzs.gd/gisserver/rest/services", token: tokenValue })
+            },
+            function(error) {
+              // This function is called when the promise is rejected
+              console.error(error) // Logs the error message
+            }
+          )
+
+          var worldCitiesURL = "http://webgis106.gzs.gd/gisserver/rest/services/SampleWorldCities/MapServer"
+          var layer = new MapImageLayer({ url: worldCitiesURL })
+          map.add(layer)
+
+          esriId.generateToken(serverInfo, userInfo).then(
+            function(data) {
+              console.log(data)
+              debugger
+              // This is called when the promise resolves
+              var tokenValue = data.token
+              //注册Token，注册之后，在Portal里的所有资源，只要该用户由权限访问，就可以直接使用，之前的所有安全服务请求都将会把token值作为参数发送到服务器端
+              esriId.registerToken({ server: "https://192.168.230.180:6443/rest/services", token: tokenValue })
+            },
+            function(error) {
+              // This function is called when the promise is rejected
+              console.error(error) // Logs the error message
+            }
+          )
+
+          // $.post(
+          //   "https://192.168.230.180:6443/arcgis/tokens/",
+          //   {
+          //     request: "getToken",
+          //     username: "hw",
+          //     password: "hw2019",
+          //     expiration: "60",
+          //     f: "json"
+          //   },
+          //   function(data) {
+          //     console.log(data)
+          //     if (data.token.length > 0) {
+          //       esriId.registerToken({ server: "https://192.168.230.180:6443/arcgis/rest/services", token: data.token })
+
+          //       var worldCitiesURL = "https://192.168.230.180:6443/arcgis/rest/services/gt/GT_RAILWAY_LINE/MapServer/0"
+          //       var layer = new FeatureLayer({ url: worldCitiesURL })
+          //       map.add(layer)
+          //     }
+          //   },
+          //   "json"
+          // )
+        })
       })
     </script>
   </body>
