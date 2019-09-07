@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>消息发送者</title>
+  <script src="lsbridge.js" ></script>
+  <script>
+    lsbridge.subscribe('my-namespace', function(data){
+      console.log(data)
+      document.getElementById("list").innerHTML +=  "<li>"+data.message+"</li>";
+    });
+
+    function send(){
+      var msg = document.getElementById("msg").value;
+      lsbridge.send('my-namespace', { message: msg });
+    }
+  </script>
+</head>
+<body>
+    <input type="text" id="msg" value="Hello world!" />
+    <button type="button" onclick="send()">发送</button>
+    <ul id="list"></ul>
+</body>
+</html>
