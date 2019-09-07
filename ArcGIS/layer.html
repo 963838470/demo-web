@@ -63,12 +63,12 @@
         "esri/layers/SceneLayer",
         "esri/layers/WMTSLayer",
         "esri/symbols/PictureMarkerSymbol",
-        "esri/tasks/Locator",
         "dojo/domReady!",
         "esri/identity/IdentityManager",
         "esri/identity/ServerInfo",
         "dojo/on",
-        "esri/geometry/support/jsonUtils"
+        "esri/geometry/support/jsonUtils",
+        "esri/tasks/Locator"
       ], function(
         Map,
         Basemap,
@@ -93,19 +93,19 @@
         SceneLayer,
         WMTSLayer,
         PictureMarkerSymbol,
-        Locator,
         domReady,
         esriId,
         ServerInfo,
         on,
-        jsonUtils
+        jsonUtils,
+        Locator
       ) {
-        var baseLayer =
-          "http://www.cdtye.com:6080/arcgis/rest/services/BASE_IMG/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
-
-        var referenceLayer =
-          "http://www.cdtye.com:6080/arcgis/rest/services/BASE_IMG_ANNO/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
-
+        var SERVICE_BASE_URL = "http://www.cdtye.com:6080/arcgis/"
+        var locatorTask = new Locator({
+          url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+        });
+        var baseLayer = SERVICE_BASE_URL+"rest/services/BASE_IMG/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+        var referenceLayer = SERVICE_BASE_URL+"rest/services/BASE_IMG_ANNO/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
         const basemap = new Basemap({
           // 底图图层
           baseLayers: [
@@ -123,7 +123,7 @@
 
         const map = new Map({ basemap: basemap })
 
-        var view = new MapView({
+        var view = new SceneView({
           container: "viewDiv",
           map: map,
           // center: [113.2682, 23.136], // longitude, latitude
@@ -156,18 +156,43 @@
             var lat = Math.round(event.mapPoint.latitude * 1000) / 1000
             var lon = Math.round(event.mapPoint.longitude * 1000) / 1000
 
-            view.popup.open({
+            // Execute a reverse geocode using the clicked location
+            locatorTask
+              .locationToAddress(event.mapPoint)
+              .then(function(response) {
+                // If an address is successfully found, show it in the popup's content
+                  view.popup.open({
+                    // Set the popup's title to the coordinates of the clicked location
+                    title: "当前坐标: [" + lon + ", " + lat + "]",
+                    content:response.address,
+                    location: event.mapPoint, // Set the location of the popup to the clicked location
+                    actions: [
+                      {
+                        title: "Zoom out",
+                        id: "zoom-out",
+                        className: "esri-icon-zoom-out-magnifying-glass"
+                      }
+                    ]
+                  })
+                view.popup.content = response.address;
+              })
+              .catch(function(error) {
+                // If the promise fails and no result is found, show a generic message
+                view.popup.content = "No address was found for this location";
+                view.popup.open({
               // Set the popup's title to the coordinates of the clicked location
-              title: "当前坐标: [" + lon + ", " + lat + "]",
-              location: event.mapPoint, // Set the location of the popup to the clicked location
-              actions: [
-                {
-                  title: "Zoom out",
-                  id: "zoom-out",
-                  className: "esri-icon-zoom-out-magnifying-glass"
-                }
-              ]
-            })
+                  title: "当前坐标: [" + lon + ", " + lat + "]",
+                  content:"找不到当前位置！",
+                  location: event.mapPoint, // Set the location of the popup to the clicked location
+                  actions: [
+                    {
+                      title: "Zoom out",
+                      id: "zoom-out",
+                      className: "esri-icon-zoom-out-magnifying-glass"
+                    }
+                  ]
+                })
+              });
           })
 
           view.popup.on("trigger-action", function(event) {
@@ -184,70 +209,30 @@
           var scalebar = new ScaleBar({ view: view })
           view.ui.add(scalebar, "bottom-left")
 
-          esri.config.defaults.io.proxyUrl = "https://192.168.230.180:6443"
-          esri.config.defaults.io.alwaysUseProxy = false
-          esriConfig.request.corsEnabledServers.push("https://192.168.230.180:6443")
-          //esri.config.defaults.io.corsEnabledServers.push("https://192.168.230.180:6443")
-          //esri.config.defaults.io.corsDetection = false
-
-          var serverInfo = new ServerInfo()
-          serverInfo.serverString = "https://192.168.230.180:6443" //这里配置ArcGIS Server的REST服务地址
-          serverInfo.tokenServiceUrl = "https://192.168.230.180:6443/arcgis/tokens" //由于GIS Server和Portal联合了，所以使用Portal的token生成地址
-          var userInfo = { username: "hw", password: "hw2019" } //这里填写Portal的用户和密码
-
-          esriId.generateToken(serverInfo, userInfo).then(
-            function(data) {
-              // This is called when the promise resolves
-              var tokenValue = data.token
-              //注册Token，注册之后，在Portal里的所有资源，只要该用户由权限访问，就可以直接使用，之前的所有安全服务请求都将会把token值作为参数发送到服务器端
-              esriId.registerToken({ server: "http://webgis106.gzs.gd/gisserver/rest/services", token: tokenValue })
+          $.post(
+            SERVICE_BASE_URL + "tokens/",
+            {
+              request: "getToken",
+              username: "hw",
+              password: "hw2019",
+              expiration: "60",
+              f: "json"
             },
-            function(error) {
-              // This function is called when the promise is rejected
-              console.error(error) // Logs the error message
-            }
-          )
-
-          var worldCitiesURL = "http://webgis106.gzs.gd/gisserver/rest/services/SampleWorldCities/MapServer"
-          var layer = new MapImageLayer({ url: worldCitiesURL })
-          map.add(layer)
-
-          esriId.generateToken(serverInfo, userInfo).then(
             function(data) {
               console.log(data)
-              debugger
-              // This is called when the promise resolves
-              var tokenValue = data.token
-              //注册Token，注册之后，在Portal里的所有资源，只要该用户由权限访问，就可以直接使用，之前的所有安全服务请求都将会把token值作为参数发送到服务器端
-              esriId.registerToken({ server: "https://192.168.230.180:6443/rest/services", token: tokenValue })
+              if (data.token.length > 0) {
+                esriId.registerToken({ server: SERVICE_BASE_URL + "rest/services", token: data.token })
+              }
             },
-            function(error) {
-              // This function is called when the promise is rejected
-              console.error(error) // Logs the error message
-            }
+            "json"
           )
-
-          // $.post(
-          //   "https://192.168.230.180:6443/arcgis/tokens/",
-          //   {
-          //     request: "getToken",
-          //     username: "hw",
-          //     password: "hw2019",
-          //     expiration: "60",
-          //     f: "json"
-          //   },
-          //   function(data) {
-          //     console.log(data)
-          //     if (data.token.length > 0) {
-          //       esriId.registerToken({ server: "https://192.168.230.180:6443/arcgis/rest/services", token: data.token })
-
-          //       var worldCitiesURL = "https://192.168.230.180:6443/arcgis/rest/services/gt/GT_RAILWAY_LINE/MapServer/0"
-          //       var layer = new FeatureLayer({ url: worldCitiesURL })
-          //       map.add(layer)
-          //     }
-          //   },
-          //   "json"
-          // )
+          var worldCitiesURL = SERVICE_BASE_URL + "rest/services/GT_RAILWAY_LINE/MapServer/0?geometryOrgeojson=geojson&wkid=4326&xmin=109.3044522512288&ymin=22.074161229317234&xmax=117.22301932311755&ymax=23.904581019802375&maxCount=3000"
+          var layer = new FeatureLayer({ url: worldCitiesURL })
+          //map.add(layer)
+          layer.when(function() {
+            console.log("图层加载完毕")
+            view.goTo(layer.fullExtent)
+          })
         })
       })
     </script>
