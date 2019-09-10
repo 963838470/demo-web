@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>Intro to SceneView - Create a 3D map</title>
+    <title>测试绘制元素</title>
     <style>
       html,
       body,
@@ -16,20 +16,7 @@
     </style>
     <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/4.12/"></script>
-    <script>
-      require(["esri/Map", "esri/views/SceneView"], function(Map, SceneView) {
-        var map = new Map({
-          basemap: "streets",
-          ground: "world-elevation"
-        })
-        var view = new SceneView({
-          container: "viewDiv", // Reference to the scene div created in step 5
-          map: map, // Reference to the map object created before the scene
-          scale: 1000, // Sets the initial scale to 1:50,000,000
-          center: [113.267957, 23.139696] // Sets the center point of view with lon/lat
-        })
-      })
-    </script>
+    <script src="js/router.js"></script>
   </head>
   <body>
     <div id="viewDiv"></div>
