@@ -4,8 +4,9 @@ require([
   "esri/geometry/Polyline",
   "esri/Graphic",
   "esri/layers/GraphicsLayer",
-  "esri/Graphic"
-], function(Map, SceneView, Polyline, Graphic, GraphicsLayer, Graphic) {
+  "esri/Graphic",
+  "esri/widgets/LayerList"
+], function(Map, SceneView, Polyline, Graphic, GraphicsLayer, Graphic, LayerList) {
   var map = new Map({
     basemap: "hybrid"
   })
@@ -16,10 +17,21 @@ require([
     center: [113.267957, 23.139696] // Sets the center point of view with lon/lat
   })
 
+  // 点图层
+  var pointLayer = new GraphicsLayer({ graphics: [], visible: true, title: "点" })
+  map.layers.add(pointLayer, 0)
+
+  // 线图层
+  var lineLayer = new GraphicsLayer({ graphics: [], visible: true, title: "线" })
+  map.layers.add(lineLayer, 1)
+
+  // 多边形
+  var polygonLayer = new GraphicsLayer({ graphics: [], visible: true, title: "多边形" })
+  map.layers.add(polygonLayer, 2)
+
   // 其它元素图层
   var otherLayer = new GraphicsLayer({ graphics: [], visible: true, title: "其它" })
   map.layers.add(otherLayer, 3)
-
   const polylineGraphic = {
     geometry: {
       type: "point",
@@ -56,17 +68,9 @@ require([
   }
   otherLayer.graphics.add(polylineGraphic)
 
-  // 点图层
-  var pointLayer = new GraphicsLayer({ graphics: [], visible: true, title: "其它1" })
-  map.layers.add(pointLayer, 0)
-
-  // 线图层
-  var lineLayer = new GraphicsLayer({ graphics: [], visible: true, title: "其它2" })
-  map.layers.add(lineLayer, 1)
-
-  // 多边形
-  var polygonLayer = new GraphicsLayer({ graphics: [], visible: true, title: "其它3" })
-  map.layers.add(polygonLayer, 2)
+  // 图层开关组件
+  const layerList = new LayerList({ view: view })
+  view.ui.add(layerList, "top-right")
 
   addPoint(113.267957, 23.139696)
   addLine([[113.267958, 23.139696, 0], [113.268, 23.139696, 0]])
