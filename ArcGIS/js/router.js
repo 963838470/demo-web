@@ -16,7 +16,10 @@ require([
     center: [113.267957, 23.139696] // Sets the center point of view with lon/lat
   })
 
-  // 添加点
+  // 其它元素图层
+  var otherLayer = new GraphicsLayer({ graphics: [], visible: true, title: "其它" })
+  map.layers.add(otherLayer, 3)
+
   const polylineGraphic = {
     geometry: {
       type: "point",
@@ -51,21 +54,28 @@ require([
       ]
     }
   }
-  view.graphics.add(polylineGraphic)
-  // debugger
-  // view.graphics.remove(polylineGraphic) 无法删除
+  otherLayer.graphics.add(polylineGraphic)
 
-  var graphicsLayer = new GraphicsLayer()
-  map.add(graphicsLayer)
+  // 点图层
+  var pointLayer = new GraphicsLayer({ graphics: [], visible: true, title: "其它1" })
+  map.layers.add(pointLayer, 0)
+
+  // 线图层
+  var lineLayer = new GraphicsLayer({ graphics: [], visible: true, title: "其它2" })
+  map.layers.add(lineLayer, 1)
+
+  // 多边形
+  var polygonLayer = new GraphicsLayer({ graphics: [], visible: true, title: "其它3" })
+  map.layers.add(polygonLayer, 2)
 
   addPoint(113.267957, 23.139696)
-  addLine([[-0.178, 51.48791, 0], [-0.178, 51.48791, 1000]])
+  addLine([[113.267958, 23.139696, 0], [113.268, 23.139696, 0]])
   addPolygon([
-    [-0.184, 51.48391, 400],
-    [-0.184, 51.49091, 500],
-    [-0.172, 51.49091, 500],
-    [-0.172, 51.48391, 400],
-    [-0.184, 51.48391, 400]
+    [113.267, 23.138, 0],
+    [113.267, 23.139, 0],
+    [113.268, 23.139, 0],
+    [113.268, 23.138, 0],
+    [113.267, 23.138, 0]
   ])
   /**
    * 绘制点
@@ -93,7 +103,7 @@ require([
       geometry: point,
       symbol: markerSymbol
     })
-    graphicsLayer.add(pointGraphic)
+    pointLayer.graphics.add(pointGraphic)
   }
 
   /**
@@ -114,7 +124,7 @@ require([
       geometry: polyline,
       symbol: lineSymbol
     })
-    graphicsLayer.add(polylineGraphic)
+    lineLayer.graphics.add(polylineGraphic)
   }
 
   /**
@@ -139,6 +149,6 @@ require([
       geometry: polygon,
       symbol: fillSymbol
     })
-    graphicsLayer.add(polygonGraphic)
+    polygonLayer.graphics.add(polygonGraphic)
   }
 })
