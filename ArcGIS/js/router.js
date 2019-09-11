@@ -68,51 +68,40 @@ require([
   }
   otherLayer.graphics.add(polylineGraphic)
 
-  function defineActions(event) {
-    // The event object contains an item property.
-    // is is a ListItem referencing the associated layer
-    // and other properties. You can control the visibility of the
-    // item, its title, and actions using this object.
-
-    var item = event.item
-
-    if (item.title === "点") {
-      // An array of objects defining actions to place in the LayerList.
-      // By making this array two-dimensional, you can separate similar
-      // actions into separate groups with a breaking line.
-
-      item.actionsSections = [
-        [
-          {
-            title: "Go to full extent",
-            className: "esri-icon-zoom-out-fixed",
-            id: "full-extent"
-          }
-        ],
-        [
-          {
-            title: "Increase opacity",
-            className: "esri-icon-up",
-            id: "increase-opacity"
-          },
-          {
-            title: "Decrease opacity",
-            className: "esri-icon-down",
-            id: "decrease-opacity"
-          }
-        ]
-      ]
-    }
-  }
-
   // 图层开关组件
   const layerList = new LayerList({
     view: view,
     container: document.getElementById("container"),
-    listItemCreatedFunction: defineActions
+    listItemCreatedFunction: function(event) {
+      if (event.item.title === "点") {
+        event.item.panel = {
+          content: [document.getElementById("infoDiv"), "legend"],
+          open: true
+        }
+        event.item.actionsSections = [
+          [
+            {
+              title: "Go to full extent",
+              className: "esri-icon-zoom-out-fixed",
+              id: "full-extent"
+            }
+          ],
+          [
+            {
+              title: "Increase opacity",
+              className: "esri-icon-up",
+              id: "increase-opacity"
+            },
+            {
+              title: "Decrease opacity",
+              className: "esri-icon-down",
+              id: "decrease-opacity"
+            }
+          ]
+        ]
+      }
+    }
   })
-  view.ui.add(layerList, "top-right")
-
   layerList.on("trigger-action", function(event) {
     // Capture the action id.
     var id = event.action.id
@@ -137,6 +126,7 @@ require([
       }
     }
   })
+  view.ui.add(layerList, "top-right")
 
   addPoint(113.267957, 23.139696)
   addLine([[113.267958, 23.139696, 0], [113.268, 23.139696, 0]])

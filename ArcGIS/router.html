@@ -13,6 +13,18 @@
         height: 100%;
         width: 100%;
       }
+
+      #infoDiv {
+        text-align: center;
+      }
+
+      #infoDiv button {
+        font-size: 15px;
+        border-radius: 8px;
+        border: 1px solid lightgray;
+        padding: 5px 10px;
+        outline: none;
+      }
     </style>
     <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/4.12/"></script>
@@ -21,5 +33,8 @@
   <body>
     <div id="viewDiv"></div>
     <div id="container"></div>
+    <div id="infoDiv">
+      <button onclick="console.log('1')">切换控制</button>
+    </div>
   </body>
 </html>
