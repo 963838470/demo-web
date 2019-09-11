@@ -68,9 +68,75 @@ require([
   }
   otherLayer.graphics.add(polylineGraphic)
 
+  function defineActions(event) {
+    // The event object contains an item property.
+    // is is a ListItem referencing the associated layer
+    // and other properties. You can control the visibility of the
+    // item, its title, and actions using this object.
+
+    var item = event.item
+
+    if (item.title === "点") {
+      // An array of objects defining actions to place in the LayerList.
+      // By making this array two-dimensional, you can separate similar
+      // actions into separate groups with a breaking line.
+
+      item.actionsSections = [
+        [
+          {
+            title: "Go to full extent",
+            className: "esri-icon-zoom-out-fixed",
+            id: "full-extent"
+          }
+        ],
+        [
+          {
+            title: "Increase opacity",
+            className: "esri-icon-up",
+            id: "increase-opacity"
+          },
+          {
+            title: "Decrease opacity",
+            className: "esri-icon-down",
+            id: "decrease-opacity"
+          }
+        ]
+      ]
+    }
+  }
+
   // 图层开关组件
-  const layerList = new LayerList({ view: view })
+  const layerList = new LayerList({
+    view: view,
+    container: document.getElementById("container"),
+    listItemCreatedFunction: defineActions
+  })
   view.ui.add(layerList, "top-right")
+
+  layerList.on("trigger-action", function(event) {
+    // Capture the action id.
+    var id = event.action.id
+
+    if (id === "full-extent") {
+      // if the full-extent action is triggered then navigate
+      // to the full extent of the visible layer
+      view.goTo(polygonLayer.fullExtent)
+    } else if (id === "increase-opacity") {
+      // if the increase-opacity action is triggered, then
+      // increase the opacity of the GroupLayer by 0.25
+
+      if (pointLayer.opacity < 1) {
+        pointLayer.opacity += 0.25
+      }
+    } else if (id === "decrease-opacity") {
+      // if the decrease-opacity action is triggered, then
+      // decrease the opacity of the GroupLayer by 0.25
+
+      if (pointLayer.opacity > 0) {
+        pointLayer.opacity -= 0.25
+      }
+    }
+  })
 
   addPoint(113.267957, 23.139696)
   addLine([[113.267958, 23.139696, 0], [113.268, 23.139696, 0]])
