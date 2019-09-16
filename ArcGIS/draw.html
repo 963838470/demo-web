@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>路线导航</title>
+    <title>测试绘制元素</title>
     <style>
       html,
       body,
@@ -26,13 +26,15 @@
         outline: none;
       }
     </style>
-    <!-- <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.12/"></script> -->
-    <link rel="stylesheet" href="http://www.cdtye.com:6040/arcgis_js_api/4x/4.11/esri/css/main.css" />
-    <script src="http://www.cdtye.com:6040/arcgis_js_api/4x/4.11/dojo/dojo.js"></script>
-    <script src="js/router.js"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.12/"></script>
+    <script src="js/draw.js"></script>
   </head>
   <body>
     <div id="viewDiv"></div>
+    <div id="container"></div>
+    <div id="infoDiv">
+      <button onclick="console.log('1')">切换控制</button>
+    </div>
   </body>
 </html>
