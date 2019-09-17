@@ -1,12 +1,22 @@
+// 初始化模拟数据
 var points = []
+// 预测路径微调数据
+var calculatePoints = []
 var initPoint = [113.267957, 23.139696, 0]
-for (let index = 0; index < 10; index++) {
+for (let index = 0; index < 30; index++) {
   initPoint[0] += Math.random() * 0.0001 - 0 * Math.random() * 0.0001
   initPoint[1] += Math.random() * 0.0001 - 0 * Math.random() * 0.0001
   var newPoint = []
   Object.assign(newPoint, initPoint)
   points.push(newPoint)
+  var newCalculatePoints = []
+  Object.assign(newCalculatePoints, newPoint)
+  newCalculatePoints[0] += Math.random() * 0.00001 * (index % 7)
+  newCalculatePoints[1] += Math.random() * 0.00001 * (index % 7)
+  calculatePoints.push(newCalculatePoints)
 }
+console.log(JSON.stringify(points))
+console.log(JSON.stringify(calculatePoints))
 
 require([
   "esri/Map",
@@ -43,10 +53,9 @@ require([
   for (let index = 0; index < points.length; index++) {
     ;(function(index) {
       setTimeout(() => {
-        console.log(index)
         drawPoint(pointLayer, points[index][0], points[index][1])
         drawStartLine(startLayer, points.slice(0, index + 1))
-        drawEndLine(endLayer, points.slice(index, points.length))
+        drawEndLine(endLayer, [points[index]].concat(calculatePoints.slice(index, calculatePoints.length)))
         if (index === 0) {
           view.goTo(endLayer.graphics)
         }
@@ -73,7 +82,7 @@ require([
       outline: {
         // autocasts as new SimpleLineSymbol()
         color: [255, 255, 255],
-        width: 2
+        width: 1
       }
     }
     var pointGraphic = new Graphic({
@@ -85,10 +94,11 @@ require([
   }
 
   /**
-   * 绘制路径,清除前一条路径
+   * 绘制开始路径,并清除前一条路径
+   * @param {Object} layer 图层
    * @param {Array} paths 路径
    */
-  function drawStartLine(layer, paths, color) {
+  function drawStartLine(layer, paths) {
     var polyline = new Polyline({
       type: "polyline", // autocasts as new Polyline()
       paths: paths
@@ -96,7 +106,7 @@ require([
     var lineSymbol = new SimpleLineSymbol({
       type: "simple-line", // autocasts as SimpleLineSymbol()
       color: [255, 255, 255],
-      width: 4
+      width: 2
     })
     var polylineGraphic = new Graphic({
       geometry: polyline,
@@ -109,10 +119,11 @@ require([
   }
 
   /**
-   * 绘制路径,清除前一条路径
+   * 绘制预测路径,并清除前一条路径
+   * @param {Object} layer 图层
    * @param {Array} paths 路径
    */
-  function drawEndLine(layer, paths, color) {
+  function drawEndLine(layer, paths) {
     var polyline = new Polyline({
       type: "polyline", // autocasts as new Polyline()
       paths: paths
@@ -120,7 +131,7 @@ require([
     var lineSymbol = new SimpleLineSymbol({
       type: "simple-line", // autocasts as SimpleLineSymbol()
       color: [66, 255, 66],
-      width: "1px",
+      width: 2,
       style: "short-dot"
     })
     // debugger
