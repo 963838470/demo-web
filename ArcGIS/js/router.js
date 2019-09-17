@@ -12,11 +12,12 @@ require([
   "esri/Map",
   "esri/views/SceneView",
   "esri/geometry/Polyline",
+  "esri/symbols/SimpleLineSymbol",
   "esri/Graphic",
   "esri/layers/GraphicsLayer",
   "esri/Graphic",
   "esri/widgets/LayerList"
-], function(Map, SceneView, Polyline, Graphic, GraphicsLayer, Graphic, LayerList) {
+], function(Map, SceneView, Polyline, SimpleLineSymbol, Graphic, GraphicsLayer, Graphic, LayerList) {
   var map = new Map({
     basemap: "hybrid"
   })
@@ -43,13 +44,9 @@ require([
     ;(function(index) {
       setTimeout(() => {
         console.log(index)
-        pointLayer.graphics.removeAll()
-        addPoint(points[index][0], points[index][1])
-        startLayer.graphics.removeAll()
-        addStartLine(points.slice(0, index + 1))
-        endLayer.graphics.removeAll()
-        addEndLine(points.slice(index, points.length))
-        //view.goTo(endLayer.fullExtent)
+        drawPoint(pointLayer, points[index][0], points[index][1])
+        drawStartLine(startLayer, points.slice(0, index + 1))
+        drawEndLine(endLayer, points.slice(index, points.length))
         if (index === 0) {
           view.goTo(endLayer.graphics)
         }
@@ -63,14 +60,14 @@ require([
    * @param {number} y y轴坐标
    * @param {number} z z轴坐标，若不穿则为0
    */
-  function addPoint(x, y, z) {
+  function drawPoint(layer, x, y, z) {
     var point = {
       type: "point", // autocasts as new Point()
       x: x,
       y: y,
       z: z ? z : 0
     }
-    markerSymbol = {
+    var markerSymbol = {
       type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
       color: [226, 119, 40],
       outline: {
@@ -83,48 +80,63 @@ require([
       geometry: point,
       symbol: markerSymbol
     })
-    pointLayer.graphics.add(pointGraphic)
+    layer.graphics.removeAll()
+    layer.graphics.add(pointGraphic)
   }
 
   /**
-   * 绘制路径
+   * 绘制路径,清除前一条路径
    * @param {Array} paths 路径
    */
-  function addStartLine(paths) {
-    var polyline = {
+  function drawStartLine(layer, paths, color) {
+    var polyline = new Polyline({
       type: "polyline", // autocasts as new Polyline()
       paths: paths
-    }
-    lineSymbol = {
+    })
+    var lineSymbol = new SimpleLineSymbol({
       type: "simple-line", // autocasts as SimpleLineSymbol()
       color: [255, 255, 255],
       width: 4
-    }
+    })
     var polylineGraphic = new Graphic({
       geometry: polyline,
       symbol: lineSymbol
     })
-    startLayer.graphics.add(polylineGraphic)
+    layer.graphics.removeAll()
+    if (paths.length > 1) {
+      layer.graphics.add(polylineGraphic)
+    }
   }
 
   /**
-   * 绘制路径
+   * 绘制路径,清除前一条路径
    * @param {Array} paths 路径
    */
-  function addEndLine(paths) {
-    var polyline = {
+  function drawEndLine(layer, paths, color) {
+    var polyline = new Polyline({
       type: "polyline", // autocasts as new Polyline()
       paths: paths
-    }
-    lineSymbol = {
+    })
+    var lineSymbol = new SimpleLineSymbol({
       type: "simple-line", // autocasts as SimpleLineSymbol()
       color: [66, 255, 66],
-      width: 4
-    }
+      width: "1px",
+      style: "short-dot"
+    })
+    // debugger
+    // lineSymbol.setMarker({
+    //   style: "arrow",
+    //   placement: "end"
+    // })
+    //lineSymbol.setColor(new Color([250, 150, 0, 1]));
+
     var polylineGraphic = new Graphic({
       geometry: polyline,
       symbol: lineSymbol
     })
-    endLayer.graphics.add(polylineGraphic)
+    layer.graphics.removeAll()
+    if (paths.length > 1) {
+      layer.graphics.add(polylineGraphic)
+    }
   }
 })
