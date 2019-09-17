@@ -15,8 +15,6 @@ for (let index = 0; index < 30; index++) {
   newCalculatePoints[1] += Math.random() * 0.00001 * (index % 7)
   calculatePoints.push(newCalculatePoints)
 }
-console.log(JSON.stringify(points))
-console.log(JSON.stringify(calculatePoints))
 
 require([
   "esri/Map",
@@ -65,9 +63,10 @@ require([
 
   /**
    * 绘制点
+   * @param {Object} layer 图层
    * @param {number} x x轴坐标
    * @param {number} y y轴坐标
-   * @param {number} z z轴坐标，若不穿则为0
+   * @param {number} z z轴坐标，若不传则为0
    */
   function drawPoint(layer, x, y, z) {
     var point = {
@@ -134,7 +133,6 @@ require([
       width: 2,
       style: "short-dot"
     })
-    // debugger
     // lineSymbol.setMarker({
     //   style: "arrow",
     //   placement: "end"
