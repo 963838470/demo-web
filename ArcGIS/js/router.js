@@ -18,18 +18,18 @@ for (let index = 0; index < 30; index++) {
 
 require([
   "esri/Map",
-  "esri/views/SceneView",
+  "esri/views/MapView",
   "esri/geometry/Polyline",
   "esri/symbols/SimpleLineSymbol",
   "esri/Graphic",
   "esri/layers/GraphicsLayer",
   "esri/Graphic",
   "esri/widgets/LayerList"
-], function(Map, SceneView, Polyline, SimpleLineSymbol, Graphic, GraphicsLayer, Graphic, LayerList) {
+], function(Map, MapView, Polyline, SimpleLineSymbol, Graphic, GraphicsLayer, Graphic, LayerList) {
   var map = new Map({
     basemap: "hybrid"
   })
-  var view = new SceneView({
+  var view = new MapView({
     container: "viewDiv", // Reference to the scene div created in step 5
     map: map, // Reference to the map object created before the scene
     scale: 1000, // Sets the initial scale to 1:50,000,000
@@ -38,11 +38,11 @@ require([
 
   // 点图层
   var pointLayer = new GraphicsLayer({ graphics: [], visible: true, title: "点" })
-  map.layers.add(pointLayer, 0)
+  map.layers.add(pointLayer, 2)
 
   // 开始线图层
   var startLayer = new GraphicsLayer({ graphics: [], visible: true, title: "线" })
-  map.layers.add(startLayer, 1)
+  map.layers.add(startLayer, 0)
 
   // 结束线图层
   var endLayer = new GraphicsLayer({ graphics: [], visible: true, title: "线" })
@@ -54,9 +54,9 @@ require([
         drawPoint(pointLayer, points[index][0], points[index][1])
         drawStartLine(startLayer, points.slice(0, index + 1))
         drawEndLine(endLayer, [points[index]].concat(calculatePoints.slice(index, calculatePoints.length)))
-        if (index === 0) {
-          view.goTo(endLayer.graphics)
-        }
+        // if (index === 0) {
+        //   view.goTo(endLayer.graphics)
+        // }
       }, 1000 * index)
     })(index)
   }
@@ -76,20 +76,33 @@ require([
       z: z ? z : 0
     }
     var markerSymbol = {
-      type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-      color: [226, 119, 40],
-      outline: {
-        // autocasts as new SimpleLineSymbol()
-        color: [255, 255, 255],
-        width: 1
+      type: "picture-marker", // autocasts as new SimpleMarkerSymbol()
+      url: "./image/gis_ground.png",
+      width: "25px",
+      height: "25px"
+    }
+    var fontSymbol = {
+      type: "text",
+      color: "white",
+      text: "地线1组",
+      yoffset: "40px",
+      font: {
+        size: "22px",
+        family: "sans-serif",
+        weight: "bold"
       }
     }
     var pointGraphic = new Graphic({
       geometry: point,
       symbol: markerSymbol
     })
+    var fontGraphic = new Graphic({
+      geometry: point,
+      symbol: fontSymbol
+    })
     layer.graphics.removeAll()
     layer.graphics.add(pointGraphic)
+    layer.graphics.add(fontGraphic)
   }
 
   /**
@@ -105,7 +118,12 @@ require([
     var lineSymbol = new SimpleLineSymbol({
       type: "simple-line", // autocasts as SimpleLineSymbol()
       color: [255, 255, 255],
-      width: 2
+      width: 2,
+      join: "round",
+      marker: {
+        style: "arrow",
+        placement: "end"
+      }
     })
     var polylineGraphic = new Graphic({
       geometry: polyline,
@@ -131,7 +149,12 @@ require([
       type: "simple-line", // autocasts as SimpleLineSymbol()
       color: [66, 255, 66],
       width: 2,
-      style: "short-dot"
+      style: "short-dash-dot-dot",
+      join: "bevel"
+      // marker: {
+      //   style: "arrow",
+      //   placement: "end"
+      // }
     })
     // lineSymbol.setMarker({
     //   style: "arrow",
