@@ -3,7 +3,9 @@ var points = []
 // 预测路径微调数据
 var calculatePoints = []
 var initPoint = [113.267957, 23.139696, 0]
-for (let index = 0; index < 30; index++) {
+// 生成的轨迹长度
+var maxCount = 30;
+for (let index = 0; index < maxCount; index++) {
   initPoint[0] += Math.random() * 0.0001 - 0 * Math.random() * 0.0001
   initPoint[1] += Math.random() * 0.0001 - 0 * Math.random() * 0.0001
   var newPoint = []
@@ -11,8 +13,10 @@ for (let index = 0; index < 30; index++) {
   points.push(newPoint)
   var newCalculatePoints = []
   Object.assign(newCalculatePoints, newPoint)
-  newCalculatePoints[0] += Math.random() * 0.00001 * (index % 7)
-  newCalculatePoints[1] += Math.random() * 0.00001 * (index % 7)
+  if(index !== maxCount -1){
+    newCalculatePoints[0] += Math.random() * 0.00001 * (index % 7)
+    newCalculatePoints[1] += Math.random() * 0.00001 * (index % 7)
+  }
   calculatePoints.push(newCalculatePoints)
 }
 
@@ -149,7 +153,7 @@ require([
       type: "simple-line", // autocasts as SimpleLineSymbol()
       color: [66, 255, 66],
       width: 2,
-      style: "short-dash-dot-dot",
+      style: "short-dot",
       join: "bevel"
       // marker: {
       //   style: "arrow",
