@@ -89,21 +89,20 @@ require([
       type: "text",
       color: "white",
       text: "地线1组",
-      yoffset: "40px",
+      yoffset: 14,
       font: {
-        size: "22px",
-        family: "sans-serif",
-        weight: "bold"
+        size: 12,
+        family: 'sans-serif'
       }
     }
-    var pointGraphic = new Graphic({
+    var pointGraphic ={
       geometry: point,
       symbol: markerSymbol
-    })
-    var fontGraphic = new Graphic({
+    }
+    var fontGraphic = {
       geometry: point,
       symbol: fontSymbol
-    })
+    }
     layer.graphics.removeAll()
     layer.graphics.add(pointGraphic)
     layer.graphics.add(fontGraphic)
@@ -115,11 +114,11 @@ require([
    * @param {Array} paths 路径
    */
   function drawStartLine(layer, paths) {
-    var polyline = new Polyline({
+    var polyline = {
       type: "polyline", // autocasts as new Polyline()
       paths: paths
-    })
-    var lineSymbol = new SimpleLineSymbol({
+    }
+    var lineSymbol = {
       type: "simple-line", // autocasts as SimpleLineSymbol()
       color: [255, 255, 255],
       width: 2,
@@ -128,11 +127,11 @@ require([
         style: "arrow",
         placement: "end"
       }
-    })
-    var polylineGraphic = new Graphic({
+    }
+    var polylineGraphic = { // autocasts as Graphic()
       geometry: polyline,
       symbol: lineSymbol
-    })
+    }
     layer.graphics.removeAll()
     if (paths.length > 1) {
       layer.graphics.add(polylineGraphic)
@@ -145,12 +144,12 @@ require([
    * @param {Array} paths 路径
    */
   function drawEndLine(layer, paths) {
-    var polyline = new Polyline({
-      type: "polyline", // autocasts as new Polyline()
+    var polyline = {
+      type: "polyline",
       paths: paths
-    })
-    var lineSymbol = new SimpleLineSymbol({
-      type: "simple-line", // autocasts as SimpleLineSymbol()
+    }
+    var lineSymbol = {
+      type: "simple-line",
       color: [66, 255, 66],
       width: 2,
       style: "short-dot",
@@ -159,17 +158,17 @@ require([
       //   style: "arrow",
       //   placement: "end"
       // }
-    })
+    }
     // lineSymbol.setMarker({
     //   style: "arrow",
     //   placement: "end"
     // })
     //lineSymbol.setColor(new Color([250, 150, 0, 1]));
 
-    var polylineGraphic = new Graphic({
+    var polylineGraphic ={
       geometry: polyline,
       symbol: lineSymbol
-    })
+    }
     layer.graphics.removeAll()
     if (paths.length > 1) {
       layer.graphics.add(polylineGraphic)
