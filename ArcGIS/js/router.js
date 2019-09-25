@@ -4,7 +4,7 @@ var points = []
 var calculatePoints = []
 var initPoint = [113.267957, 23.139696, 0]
 // 生成的轨迹长度
-var maxCount = 30;
+var maxCount = 30
 for (let index = 0; index < maxCount; index++) {
   initPoint[0] += Math.random() * 0.0001 - 0 * Math.random() * 0.0001
   initPoint[1] += Math.random() * 0.0001 - 0 * Math.random() * 0.0001
@@ -13,7 +13,7 @@ for (let index = 0; index < maxCount; index++) {
   points.push(newPoint)
   var newCalculatePoints = []
   Object.assign(newCalculatePoints, newPoint)
-  if(index !== maxCount -1){
+  if (index !== maxCount - 1) {
     newCalculatePoints[0] += Math.random() * 0.00001 * (index % 7)
     newCalculatePoints[1] += Math.random() * 0.00001 * (index % 7)
   }
@@ -40,30 +40,32 @@ require([
     center: [113.267957, 23.139696] // Sets the center point of view with lon/lat
   })
 
-  // 点图层
-  var pointLayer = new GraphicsLayer({ graphics: [], visible: true, title: "点" })
-  map.layers.add(pointLayer, 2)
+  view.when(function() {
+    // 点图层
+    var pointLayer = new GraphicsLayer({ graphics: [], visible: true, title: "点" })
+    map.layers.add(pointLayer, 2)
 
-  // 开始线图层
-  var startLayer = new GraphicsLayer({ graphics: [], visible: true, title: "线" })
-  map.layers.add(startLayer, 0)
+    // 开始线图层
+    var startLayer = new GraphicsLayer({ graphics: [], visible: true, title: "线" })
+    map.layers.add(startLayer, 0)
 
-  // 结束线图层
-  var endLayer = new GraphicsLayer({ graphics: [], visible: true, title: "线" })
-  map.layers.add(endLayer, 1)
+    // 结束线图层
+    var endLayer = new GraphicsLayer({ graphics: [], visible: true, title: "线" })
+    map.layers.add(endLayer, 1)
 
-  for (let index = 0; index < points.length; index++) {
-    ;(function(index) {
-      setTimeout(() => {
-        drawPoint(pointLayer, points[index][0], points[index][1])
-        drawStartLine(startLayer, points.slice(0, index + 1))
-        drawEndLine(endLayer, [points[index]].concat(calculatePoints.slice(index, calculatePoints.length)))
-        // if (index === 0) {
-        //   view.goTo(endLayer.graphics)
-        // }
-      }, 1000 * index)
-    })(index)
-  }
+    for (let index = 0; index < points.length; index++) {
+      ;(function(index) {
+        setTimeout(() => {
+          drawPoint(pointLayer, points[index][0], points[index][1])
+          drawStartLine(startLayer, points.slice(0, index + 1))
+          drawEndLine(endLayer, [points[index]].concat(calculatePoints.slice(index, calculatePoints.length)))
+          //if (index === 0) {
+            view.goTo(endLayer.graphics)
+          //}
+        }, 1000 * index)
+      })(index)
+    }
+  })
 
   /**
    * 绘制点
@@ -89,13 +91,15 @@ require([
       type: "text",
       color: "white",
       text: "地线1组",
-      yoffset: 14,
+      haloColor: "black",
+      haloSize: "1px",
+      yoffset: "20px",
       font: {
         size: 12,
-        family: 'sans-serif'
+        family: "sans-serif"
       }
     }
-    var pointGraphic ={
+    var pointGraphic = {
       geometry: point,
       symbol: markerSymbol
     }
@@ -128,7 +132,8 @@ require([
         placement: "end"
       }
     }
-    var polylineGraphic = { // autocasts as Graphic()
+    var polylineGraphic = {
+      // autocasts as Graphic()
       geometry: polyline,
       symbol: lineSymbol
     }
@@ -165,7 +170,7 @@ require([
     // })
     //lineSymbol.setColor(new Color([250, 150, 0, 1]));
 
-    var polylineGraphic ={
+    var polylineGraphic = {
       geometry: polyline,
       symbol: lineSymbol
     }
