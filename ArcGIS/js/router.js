@@ -37,7 +37,12 @@ require([
     container: "viewDiv", // Reference to the scene div created in step 5
     map: map, // Reference to the map object created before the scene
     scale: 1000, // Sets the initial scale to 1:50,000,000
-    center: [113.267957, 23.139696] // Sets the center point of view with lon/lat
+    center: [113.267957, 23.139696], // Sets the center point of view with lon/lat
+    popup: {
+      actionsMenuEnabled: false,
+      crashEnabled: false,
+      dockEnabled :false
+    }
   })
 
   view.when(function() {
@@ -62,7 +67,7 @@ require([
           //if (index === 0) {
             view.goTo(endLayer.graphics)
           //}
-        }, 1000 * index)
+        }, 5000 * index)
       })(index)
     }
   })
@@ -101,7 +106,34 @@ require([
     }
     var pointGraphic = {
       geometry: point,
-      symbol: markerSymbol
+      symbol: markerSymbol,
+      attributes: {
+        title: '小组成员',
+        name: '张麻子',
+        age: 18
+      },
+      popupTemplate: {
+        title: '{title}',
+        content: [
+          {
+            type: 'fields',
+            fieldInfos: [
+              {
+                fieldName: 'name',
+                label: '姓名'
+              },
+              {
+                fieldName: 'age',
+                label: '年龄'
+              }]
+          }
+        ],
+        actions: [{
+          title: '查看详情',
+          id: 'actionShowDetail',
+          image: "./image/show-detail.png"
+        }]
+      }
     }
     var fontGraphic = {
       geometry: point,
