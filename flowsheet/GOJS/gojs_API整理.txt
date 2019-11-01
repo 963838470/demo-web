@@ -1,0 +1,111 @@
+画布:
+获取当前画布的json	myDiagram.model.toJson();
+加载json刷新画布	myDiagram.model = go.Model.fromJson(model);
+删除选中节点或线	myDiagram.commandHandler.deleteSelection();
+获取选中的节点或线	
+myDiagram.selection
+
+//用例获取选中的节点或线
+var objList=myDiagram.selection;
+objList.each(function(val) {
+console.log(val.data);
+});
+//获取第一个选中的节点
+
+
+
+
+节点
+添加节点	myDiagram.model.addNodeData(nodeData);
+删除节点	myDiagram.model.removeNodeData(nodeData);
+获取节点data	myDiagram.model.findNodeDataForKey('key');
+更改属性值	myDiagram.model.setDataProperty(nodeData, 'color', "#ededed");
+根据节点数据对象
+
+更改节点属性
+updateTargetBindings
+
+var nodeData = myDiagram.model.findNodeDataForKey('4.1');
+nodeData.text = "2333"
+nodeData.color = "#000000";
+myDiagram.model.updateTargetBindings(nodeData);
+获取节点对象	myDiagram.findNodeForKey('key');
+
+批量删除节点
+removeNodeDataCollection()
+
+var removeNodes = []; 
+var aNodeData = myDiagram.model.findNodeDataForKey('Akey');
+var bNodeData = myDiagram.model.findNodeDataForKey('Bkey');
+removeNodes.push(aNodeData );
+removeNodes.push(bNodeData);
+
+myDiagram.model.removeNodeDataCollection(removeNodes);
+
+
+
+
+线
+添加线	myDiagram.model.addLinkData(linkData);
+删除线	myDiagram.model.removeLinkData(linkData);
+批量删除线
+
+{Array|iterator} removeLinks
+
+removeLinkDataCollection(removeLinks);
+
+var removeLinks=[];
+var node = myDiagram.findNodeForKey('key');//首先拿到这个节点的对象
+
+//获取节点所有线
+var links=node.findLinksConnected().each(function(link) { 
+                             removeLinks.push(link.data);
+                        }
+ );
+myDiagram.model.removeLinkDataCollection(removeLinks);
+
+模糊获取线(1.68)	myDiagram.model.findLinksByExample(linkData);
+更改属性值	myDiagram.model.setDataProperty(linkData, 'from', "-2");
+获取节点的线
+
+{string | null =} PID 端口ID
+
+findLinksConnected(PID)
+
+var node=myDiagram.findNodeForKey('key');
+
+node.findLinksConnected();
+
+获取进入节点的线
+
+{string | null =} PID 端口ID
+
+findLinksInto(PID)
+
+var node=myDiagram.findNodeForKey('key');
+
+node.findLinksInto();
+
+获取从节点出来的线
+
+{string | null =} PID 端口ID
+
+findLinksOutOf(PID)
+
+var node=myDiagram.findNodeForKey('key');
+
+node.findLinksOutOf();
+
+获取A-B节点之间的线
+{node } othernode B节点对象
+{string | null =} PID 端口ID
+{string | null =} otherPID B节点端口ID
+
+findLinksTo(othernode, PID, otherPID)
+
+var nodeA=myDiagram.findNodeForKey('key');
+
+var nodeB=myDiagram.findNodeForKey('key');
+
+nodeA.findLinksTo(nodeB);
+

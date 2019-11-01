@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)http://www.jtopo.com/demo/helloworld.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+	<meta name="Viewport" content="width=device-width; user-scaleable=no; initial-scale=1.0">
+	<title>jTopo Demo</title>
+	<meta name="description" content="jTopo免费的基于HTML5 Canvas的网络拓扑、关系图形库">
+	<meta name="keyword" content="jTopo 网络 拓扑 图形库 HTML5 Canvas 免费 关系图形库 javascript topology">	
+
+	<link rel="stylesheet" type="text/css" href="./jTopo Demo_files/base.css">
+	<link href="./jTopo Demo_files/jquery.snippet.min.css" rel="stylesheet">
+	
+	<script src="./jTopo Demo_files/jquery.js.下载"></script>
+	<script src="./jTopo Demo_files/site.js.下载"></script>
+	<script src="./jTopo Demo_files/demo.js.下载"></script>
+	
+	<script type="text/javascript" src="./jTopo Demo_files/jquery.snippet.min.js.下载"></script>
+	<script type="text/javascript" src="./jTopo Demo_files/jtopo-min.js.下载"></script>
+	<script type="text/javascript" src="./jTopo Demo_files/toolbar.js.下载"></script>
+	
+	<script id="code">
+		$(document).ready(function(){
+			var canvas = document.getElementById('canvas');			
+			var stage = new JTopo.Stage(canvas);
+			//显示工具栏
+			showJTopoToobar(stage);
+			var scene = new JTopo.Scene(stage);
+			scene.background = './img/bg.jpg';
+			
+			var node = new JTopo.Node("Hello");							
+			node.setLocation(409, 269);
+			scene.add(node);
+
+			node.mousedown(function(event){
+				if(event.button == 2){
+					node.text = '按下右键';					
+				}else if(event.button == 1){
+					node.text = '按下中键';					
+				}else if(event.button == 0){
+					node.text = '按下左键';	
+				}				
+			});
+			
+			node.mouseup(function(event){				
+				if(event.button == 2){
+					node.text = '松开右键';					
+				}else if(event.button == 1){
+					node.text = '松开中键';					
+				}else if(event.button == 0){
+					node.text = '松开左键';	
+				}
+			});	
+			node.click(function(event){					
+				console.log("单击");				
+			});	
+			node.dbclick(function(event){				
+				console.log("双击");				
+			});
+			node.mousedrag(function(event){				
+				console.log("拖拽");
+			});	
+			node.mouseover(function(event){				
+				console.log("mouseover");				
+			});
+			node.mousemove(function(event){				
+				console.log("mousemove");				
+			});	
+			node.mouseout(function(event){				
+				console.log("mouseout");				
+			});	
+
+		});
+		
+		
+	</script>
+  </head>
+
+  <body>
+	<center>
+	<div class="wrap_div">
+		<div class="head_nav">
+			<h2 class="logo"><a href="http://www.jtopo.com/demo/index.html" title="jTopo">jTopo</a></h2>
+		</div>		
+		<div class="head_nav_second">			
+			<ul class="menu" id="nav_menu"><li class="menu-item"><a href="http://www.jtopo.com/index.html" title="">首页</a></li><li class="menu-item"><a href="http://www.jtopo.com/download.html" title="">下载</a></li><li class="menu-item"><a href="http://www.jtopo.com/api.html" title="">API 文档</a></li><li class="menu-item"><a href="http://www.jtopo.com/introduction-in-5-minutes.html" title="">五分钟入门</a></li><li class="menu-item"><a href="http://www.jtopo.com/demo/helloworld.html" title="" class="active">在线演示</a></li></ul>
+		</div>
+		<div class="content">
+		  <div class="left">
+			<ul id="menu"><li class="cat-item cat-item-1"><a>核心对象</a><ul class="children"><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/helloworld.html">Hello world</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/node.html">节点</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/link.html">连线</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/bundlelink.html">连线组</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/node-label-position.html">文字定位</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/container.html">容器分组</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/performance_test.html">性能测试</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/animate_stepbystep.html">动画</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/animation_performance.html">动画性能测试</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/eagle-eye.html">鹰眼</a></li></ul></li><li class="cat-item cat-item-1"><a>网络拓扑</a><ul class="children"><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/statictis.html">设备关系</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/pstn.html">PSTN</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/matrix.html">矩阵</a></li></ul></li><li class="cat-item cat-item-1"><a>拓扑图形</a><ul class="children"><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/layout-circle.html">圆形布局</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/layout-tree.html">树形布局</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/layout-mix.html">混合布局</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/topo.html">树形布局(全自动)</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/topo-alarm.html">告警</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/edit.html">在线编辑</a></li></ul></li><li class="cat-item cat-item-1"><a>统计图表</a><ul class="children"><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/topo-pieChart.html">饼图</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/topo-barChart.html">柱状图</a></li></ul></li><li class="cat-item cat-item-1"><a>动画效果</a><ul class="children"><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/animate_grivty.html">重力</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/animate_spring_mass.html">美丽星空</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/animate_spring.html">弹性-简单</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/animate_spring_chain.html">弹性-弹簧链</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/animate_spring_circle.html">弹性-多节点</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/animate_spring_multi_target.html">弹性-控制点</a></li></ul></li><li class="cat-item cat-item-1"><a>其他</a><ul class="children"><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/right-menu.html">右键菜单</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/naotu.html">在线脑图</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/cutFruit.html">切水果</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/paopao.html">泡泡堂</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/map.html">GIS地图</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/serialized.html">序列化反序列化</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/scence_event.html">场景切换</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/animate_gif.html">Gif模拟</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/topo-desktop.html">Win7桌面</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/hello-logo.html">乌龟绘图</a></li><li class="cat-item cat-item-5"><a href="http://www.jtopo.com/demo/contact.html">联系作者</a></li></ul></li></ul>
+		  </div>
+		  <div class="right">
+				<div id="content" style="width: 850px;"><div class="jtopo_toolbar"><input type="radio" name="modeRadio" value="normal" checked="" id="r1"><label for="r1"> 默认</label>&nbsp;<input type="radio" name="modeRadio" value="select" id="r2"><label for="r2"> 框选</label>&nbsp;<input type="radio" name="modeRadio" value="edit" id="r4"><label for="r4"> 加线</label>&nbsp;&nbsp;<input type="button" id="centerButton" value="居中显示"><input type="button" id="fullScreenButton" value="全屏显示"><input type="button" id="zoomOutButton" value=" 放 大 "><input type="button" id="zoomInButton" value=" 缩 小 ">&nbsp;&nbsp;<input type="checkbox" id="zoomCheckbox"><label for="zoomCheckbox">鼠标缩放</label>&nbsp;&nbsp;<input type="text" id="findText" style="width: 100px;" value="" onkeydown="enterPressHandler(event)"><input type="button" id="findButton" value=" 查 询 ">&nbsp;&nbsp;<input type="button" id="cloneButton" value="选中克隆">&nbsp;&nbsp;<input type="button" id="exportButton" value="导出PNG">&nbsp;&nbsp;<input type="button" id="printButton" value="导出PDF"></div>
+					<canvas width="850" height="550" id="canvas" style="background-color: rgb(238, 238, 238); border: 1px solid rgb(68, 68, 68); cursor: default;"></canvas>	
+									
+				<div class="snippet-container" style="margin-top:3px;;"><div class="sh_acid snippet-wrap" style="display: none;"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre><a class="snippet-copy sh_url" href="http://www.jtopo.com/demo/helloworld.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://www.jtopo.com/demo/helloworld.html#">text</a><a class="snippet-window sh_url" href="http://www.jtopo.com/demo/helloworld.html#">pop-up</a></pre></div><pre width="600" class="sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$<span class="sh_symbol">(</span>document<span class="sh_symbol">).</span><span class="sh_function">ready</span><span class="sh_symbol">(</span><span class="sh_keyword">function</span><span class="sh_symbol">()</span><span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_keyword">var</span> canvas <span class="sh_symbol">=</span> document<span class="sh_symbol">.</span><span class="sh_function">getElementById</span><span class="sh_symbol">(</span><span class="sh_string">'canvas'</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_keyword">var</span> stage <span class="sh_symbol">=</span> <span class="sh_keyword">new</span> JTopo<span class="sh_symbol">.</span><span class="sh_function">Stage</span><span class="sh_symbol">(</span>canvas<span class="sh_symbol">);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//显示工具栏</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_function">showJTopoToobar</span><span class="sh_symbol">(</span>stage<span class="sh_symbol">);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_keyword">var</span> scene <span class="sh_symbol">=</span> <span class="sh_keyword">new</span> JTopo<span class="sh_symbol">.</span><span class="sh_function">Scene</span><span class="sh_symbol">(</span>stage<span class="sh_symbol">);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scene<span class="sh_symbol">.</span>background <span class="sh_symbol">=</span> <span class="sh_string">'./img/bg.jpg'</span><span class="sh_symbol">;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_keyword">var</span> node <span class="sh_symbol">=</span> <span class="sh_keyword">new</span> JTopo<span class="sh_symbol">.</span><span class="sh_function">Node</span><span class="sh_symbol">(</span><span class="sh_string">"Hello"</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span><span class="sh_function">setLocation</span><span class="sh_symbol">(</span><span class="sh_number">409</span><span class="sh_symbol">,</span> <span class="sh_number">269</span><span class="sh_symbol">);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scene<span class="sh_symbol">.</span><span class="sh_function">add</span><span class="sh_symbol">(</span>node<span class="sh_symbol">);</span></li><li><span style="display:none;">&nbsp;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span><span class="sh_function">mousedown</span><span class="sh_symbol">(</span><span class="sh_keyword">function</span><span class="sh_symbol">(</span>event<span class="sh_symbol">)</span><span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_keyword">if</span><span class="sh_symbol">(</span>event<span class="sh_symbol">.</span>button <span class="sh_symbol">==</span> <span class="sh_number">2</span><span class="sh_symbol">)</span><span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span>text <span class="sh_symbol">=</span> <span class="sh_string">'按下右键'</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_keyword">else</span> <span class="sh_keyword">if</span><span class="sh_symbol">(</span>event<span class="sh_symbol">.</span>button <span class="sh_symbol">==</span> <span class="sh_number">1</span><span class="sh_symbol">)</span><span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span>text <span class="sh_symbol">=</span> <span class="sh_string">'按下中键'</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_keyword">else</span> <span class="sh_keyword">if</span><span class="sh_symbol">(</span>event<span class="sh_symbol">.</span>button <span class="sh_symbol">==</span> <span class="sh_number">0</span><span class="sh_symbol">)</span><span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span>text <span class="sh_symbol">=</span> <span class="sh_string">'按下左键'</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_symbol">);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span><span class="sh_function">mouseup</span><span class="sh_symbol">(</span><span class="sh_keyword">function</span><span class="sh_symbol">(</span>event<span class="sh_symbol">)</span><span class="sh_cbracket">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_keyword">if</span><span class="sh_symbol">(</span>event<span class="sh_symbol">.</span>button <span class="sh_symbol">==</span> <span class="sh_number">2</span><span class="sh_symbol">)</span><span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span>text <span class="sh_symbol">=</span> <span class="sh_string">'松开右键'</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_keyword">else</span> <span class="sh_keyword">if</span><span class="sh_symbol">(</span>event<span class="sh_symbol">.</span>button <span class="sh_symbol">==</span> <span class="sh_number">1</span><span class="sh_symbol">)</span><span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span>text <span class="sh_symbol">=</span> <span class="sh_string">'松开中键'</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_keyword">else</span> <span class="sh_keyword">if</span><span class="sh_symbol">(</span>event<span class="sh_symbol">.</span>button <span class="sh_symbol">==</span> <span class="sh_number">0</span><span class="sh_symbol">)</span><span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span>text <span class="sh_symbol">=</span> <span class="sh_string">'松开左键'</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span><span class="sh_function">click</span><span class="sh_symbol">(</span><span class="sh_keyword">function</span><span class="sh_symbol">(</span>event<span class="sh_symbol">)</span><span class="sh_cbracket">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console<span class="sh_symbol">.</span><span class="sh_function">log</span><span class="sh_symbol">(</span><span class="sh_string">"单击"</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span><span class="sh_function">dbclick</span><span class="sh_symbol">(</span><span class="sh_keyword">function</span><span class="sh_symbol">(</span>event<span class="sh_symbol">)</span><span class="sh_cbracket">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console<span class="sh_symbol">.</span><span class="sh_function">log</span><span class="sh_symbol">(</span><span class="sh_string">"双击"</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_symbol">);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span><span class="sh_function">mousedrag</span><span class="sh_symbol">(</span><span class="sh_keyword">function</span><span class="sh_symbol">(</span>event<span class="sh_symbol">)</span><span class="sh_cbracket">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console<span class="sh_symbol">.</span><span class="sh_function">log</span><span class="sh_symbol">(</span><span class="sh_string">"拖拽"</span><span class="sh_symbol">);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span><span class="sh_function">mouseover</span><span class="sh_symbol">(</span><span class="sh_keyword">function</span><span class="sh_symbol">(</span>event<span class="sh_symbol">)</span><span class="sh_cbracket">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console<span class="sh_symbol">.</span><span class="sh_function">log</span><span class="sh_symbol">(</span><span class="sh_string">"mouseover"</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_symbol">);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span><span class="sh_function">mousemove</span><span class="sh_symbol">(</span><span class="sh_keyword">function</span><span class="sh_symbol">(</span>event<span class="sh_symbol">)</span><span class="sh_cbracket">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console<span class="sh_symbol">.</span><span class="sh_function">log</span><span class="sh_symbol">(</span><span class="sh_string">"mousemove"</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node<span class="sh_symbol">.</span><span class="sh_function">mouseout</span><span class="sh_symbol">(</span><span class="sh_keyword">function</span><span class="sh_symbol">(</span>event<span class="sh_symbol">)</span><span class="sh_cbracket">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console<span class="sh_symbol">.</span><span class="sh_function">log</span><span class="sh_symbol">(</span><span class="sh_string">"mouseout"</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span style="display:none;">&nbsp;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_cbracket">}</span><span class="sh_symbol">);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">		$(document).ready(function(){
+			var canvas = document.getElementById('canvas');			
+			var stage = new JTopo.Stage(canvas);
+			//显示工具栏
+			showJTopoToobar(stage);
+			var scene = new JTopo.Scene(stage);
+			scene.background = './img/bg.jpg';
+			
+			var node = new JTopo.Node("Hello");							
+			node.setLocation(409, 269);
+			scene.add(node);
+
+			node.mousedown(function(event){
+				if(event.button == 2){
+					node.text = '按下右键';					
+				}else if(event.button == 1){
+					node.text = '按下中键';					
+				}else if(event.button == 0){
+					node.text = '按下左键';	
+				}				
+			});
+			
+			node.mouseup(function(event){				
+				if(event.button == 2){
+					node.text = '松开右键';					
+				}else if(event.button == 1){
+					node.text = '松开中键';					
+				}else if(event.button == 0){
+					node.text = '松开左键';	
+				}
+			});	
+			node.click(function(event){					
+				console.log("单击");				
+			});	
+			node.dbclick(function(event){				
+				console.log("双击");				
+			});
+			node.mousedrag(function(event){				
+				console.log("拖拽");
+			});	
+			node.mouseover(function(event){				
+				console.log("mouseover");				
+			});
+			node.mousemove(function(event){				
+				console.log("mousemove");				
+			});	
+			node.mouseout(function(event){				
+				console.log("mouseout");				
+			});	
+
+		});
+		
+		
+	</pre><div class="sh_sourceCode snippet-hide"><pre><a href="http://www.jtopo.com/demo/helloworld.html#" class="snippet-revealed snippet-toggle sh_url">Collapse Code</a></pre></div></div><div class="snippet-reveal sh_acid snippet-wrap"><pre class="sh_sourceCode"><a href="http://www.jtopo.com/demo/helloworld.html#" class="snippet-toggle sh_url">Expand Code</a></pre></div></div></div>
+		  </div>
+		  <div class="clear"></div>
+		</div>
+	</div>
+	</center>
+	<div class="footer">
+		&nbsp;
+	</div>
+
+  
+	<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000418207'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/z_stat.php%3Fid%3D1000418207%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script><span id="cnzz_stat_icon_1000418207"><a href="http://www.cnzz.com/stat/website.php?web_id=1000418207" target="_blank" title="站长统计"><img border="0" hspace="0" vspace="0" src="./jTopo Demo_files/pic1.gif"></a></span><script src="./jTopo Demo_files/z_stat.php" type="text/javascript"></script><script src="./jTopo Demo_files/core.php" charset="utf-8" type="text/javascript"></script>
+
+
+</body></html>

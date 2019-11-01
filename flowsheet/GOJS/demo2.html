@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Draggable Link</title>
+  <meta name="description" content="Drag a link to reconnect it. Nodes have custom Adornments for selection, resizing, and reshaping."
+  />
+  <meta charset="UTF-8">
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.7.15/go-debug.js"></script> -->
+  <script src="./go.js"></script>
+  <!--<script src="../assets/js/goSamples.js"></script>  &lt;!&ndash; this is only for the GoJS Samples framework &ndash;&gt;-->
+  <script>
+    function init() {
+      var $ = go.GraphObject.make;  // 为了简洁定义模板
+      var showLinkLabel = true;
+      myDiagram = $(go.Diagram, "myDiagramDiv",  // 必须命名或引用div HTML元素
+        {
+          grid: $(go.Panel, "Grid",
+            $(go.Shape, "LineH", { stroke: "lightgray", strokeWidth: 0.5 }),
+            $(go.Shape, "LineH", { stroke: "gray", strokeWidth: 0.5, interval: 10 }),
+            $(go.Shape, "LineV", { stroke: "lightgray", strokeWidth: 0.5 }),
+            $(go.Shape, "LineV", { stroke: "gray", strokeWidth: 0.5, interval: 10 })
+          ),
+          allowDrop: true,  // 必须是真的才能接受调色板中的液滴
+          isReadOnly: true, // 只读
+          // "LinkDrawn": showLinkLabel,
+          // "LinkRelinked": showLinkLabel,
+          "draggingTool.dragsLink": true,
+          "draggingTool.isGridSnapEnabled": true,
+          "linkingTool.isUnconnectedLinkValid": true,
+          "linkingTool.portGravity": 20,
+          "relinkingTool.isUnconnectedLinkValid": true,
+          "relinkingTool.portGravity": 20,
+          "relinkingTool.fromHandleArchetype":
+            $(go.Shape, "Diamond", {
+              segmentIndex: 0,
+              cursor: "pointer",
+              desiredSize: new go.Size(8, 8),
+              fill: "tomato",
+              stroke: "darkred"
+            }),
+          "relinkingTool.toHandleArchetype":
+            $(go.Shape, "Diamond", {
+              segmentIndex: -1,
+              cursor: "pointer",
+              desiredSize: new go.Size(8, 8),
+              fill: "darkred",
+              stroke: "tomato"
+            }),
+          "linkReshapingTool.handleArchetype":
+            $(go.Shape, "Diamond", {
+              desiredSize: new go.Size(7, 7),
+              fill: "lightblue",
+              stroke: "deepskyblue"
+            }),
+          "undoManager.isEnabled": true
+        });
+      // 当文档被修改时，为标题添加一个“*”并启用“保存”按钮
+      myDiagram.addDiagramListener("Modified", function (e) {
+        var button = document.getElementById("SaveButton");
+        if (button) button.disabled = !myDiagram.isModified;
+        var idx = document.title.indexOf("*");
+        if (myDiagram.isModified) {
+          if (idx < 0) document.title += "*";
+        } else {
+          if (idx >= 0) document.title = document.title.substr(0, idx);
+        }
+      });
+
+
+      var nodeSelectionAdornmentTemplate =
+        $(go.Adornment, "Auto",
+          $(go.Shape, { fill: null, stroke: "deepskyblue", strokeWidth: 1.5, strokeDashArray: [4, 2] }),
+          $(go.Placeholder)
+        );
+      var nodeResizeAdornmentTemplate =
+        $(go.Adornment, "Spot",
+          { locationSpot: go.Spot.Right },
+          $(go.Placeholder),
+          $(go.Shape, {
+            alignment: go.Spot.TopLeft,
+            cursor: "nw-resize",
+            desiredSize: new go.Size(6, 6),
+            fill: "lightblue",
+            stroke: "deepskyblue"
+          }),
+          $(go.Shape, {
+            alignment: go.Spot.Top,
+            cursor: "n-resize",
+            desiredSize: new go.Size(6, 6),
+            fill: "lightblue",
+            stroke: "deepskyblue"
+          }),
+          $(go.Shape, {
+            alignment: go.Spot.TopRight,
+            cursor: "ne-resize",
+            desiredSize: new go.Size(6, 6),
+            fill: "lightblue",
+            stroke: "deepskyblue"
+          }),
+          $(go.Shape, {
+            alignment: go.Spot.Left,
+            cursor: "w-resize",
+            desiredSize: new go.Size(6, 6),
+            fill: "lightblue",
+            stroke: "deepskyblue"
+          }),
+          $(go.Shape, {
+            alignment: go.Spot.Right,
+            cursor: "e-resize",
+            desiredSize: new go.Size(6, 6),
+            fill: "lightblue",
+            stroke: "deepskyblue"
+          }),
+          $(go.Shape, {
+            alignment: go.Spot.BottomLeft,
+            cursor: "se-resize",
+            desiredSize: new go.Size(6, 6),
+            fill: "lightblue",
+            stroke: "deepskyblue"
+          }),
+          $(go.Shape, {
+            alignment: go.Spot.Bottom,
+            cursor: "s-resize",
+            desiredSize: new go.Size(6, 6),
+            fill: "lightblue",
+            stroke: "deepskyblue"
+          }),
+          $(go.Shape, {
+            alignment: go.Spot.BottomRight,
+            cursor: "sw-resize",
+            desiredSize: new go.Size(6, 6),
+            fill: "lightblue",
+            stroke: "deepskyblue"
+          })
+        );
+      var nodeRotateAdornmentTemplate =
+        $(go.Adornment,
+          { locationSpot: go.Spot.Center, locationObjectName: "CIRCLE" },
+          $(go.Shape, "Circle", {
+            name: "CIRCLE",
+            cursor: "pointer",
+            desiredSize: new go.Size(7, 7),
+            fill: "lightblue",
+            stroke: "deepskyblue"
+          }),
+          $(go.Shape, {
+            geometryString: "M3.5 7 L3.5 30",
+            isGeometryPositioned: true,
+            stroke: "deepskyblue",
+            strokeWidth: 1.5,
+            strokeDashArray: [4, 2]
+          })
+        );
+      myDiagram.nodeTemplate =
+        $(go.Node, "Spot",
+          { locationSpot: go.Spot.Center },
+          new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+          { selectable: true, selectionAdornmentTemplate: nodeSelectionAdornmentTemplate },
+          { resizable: true, resizeObjectName: "PANEL", resizeAdornmentTemplate: nodeResizeAdornmentTemplate },
+          { rotatable: true, rotateAdornmentTemplate: nodeRotateAdornmentTemplate },
+          new go.Binding("angle").makeTwoWay(),
+          //主要对象是围绕具有形状的TextBlock的面板
+          $(go.Panel, "Auto",
+            { name: "PANEL" },
+            new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
+            $(go.Shape, "Rectangle",  // 默认数字
+              {
+                portId: "", // 默认端口：如果链接数据没有位置，请使用最近端
+                fromLinkable: true, toLinkable: true, cursor: "pointer",
+                fill: "white",  // default color
+                strokeWidth: 2
+              },
+              new go.Binding("figure"),
+              new go.Binding("fill")),
+            $(go.TextBlock,
+              {
+                font: "bold 11pt Helvetica, Arial, sans-serif",
+                margin: 8,
+                maxSize: new go.Size(160, NaN),
+                wrap: go.TextBlock.WrapFit,
+                editable: true
+              },
+              new go.Binding("text").makeTwoWay())
+          ),
+        );
+
+      function showSmallPorts(node, show) {
+        node.ports.each(function (port) {
+          if (port.portId !== "") {  // 不要更改默认端口，这是一个很大的形状
+            port.fill = show ? "rgba(0,0,0,.3)" : null;
+          }
+        });
+      }
+
+      var linkSelectionAdornmentTemplate =
+        $(go.Adornment, "Link",
+          $(go.Shape,
+            // isPanelMain声明这个Shape共享Link.geometry
+            { isPanelMain: true, fill: null, stroke: "deepskyblue", strokeWidth: 0 })  // 使用选择对象的strokeWidth
+        );
+      myDiagram.linkTemplate =
+        $(go.Link,  // 整个链接面板
+          { selectable: true, selectionAdornmentTemplate: linkSelectionAdornmentTemplate },
+          { relinkableFrom: true, relinkableTo: true, reshapable: true },
+          {
+            routing: go.Link.AvoidsNodes,
+            curve: go.Link.JumpOver,
+            corner: 5,
+            toShortLength: 4
+          },
+          new go.Binding("points").makeTwoWay(),
+          $(go.Shape,  // the link path shape
+            { isPanelMain: true, strokeWidth: 2 }),
+          $(go.Shape,  // the arrowhead
+            { toArrow: "Standard", stroke: null }),
+          $(go.Panel, "Auto",
+            new go.Binding("visible", "isSelected").ofObject(),
+            $(go.Shape, "RoundedRectangle",  // 链接形状
+              { fill: "#F8F8F8", stroke: null }),
+            $(go.TextBlock,
+              {
+                textAlign: "center",
+                font: "10pt helvetica, arial, sans-serif",
+                stroke: "#919191",
+                margin: 2,
+                minSize: new go.Size(10, NaN),
+                editable: true
+              },
+              new go.Binding("text").makeTwoWay())
+          )
+        );
+      var Select_Port = null;
+      myDiagram.addDiagramListener("ObjectSingleClicked", function (e) {
+        Select_Port = e.subject.part.data.text;    //e.subject.part.data即获取到的data
+        console.log(Select_Port);
+      });
+      myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+      // 设置Diagram.initialPosition而不是Diagram.position，以处理初始化副作用
+      var pos = myDiagram.model.modelData.position;
+      if (pos) myDiagram.initialPosition = go.Point.parse(pos);
+      myDiagram.zoomToFit();  // 缩放到合适大小
+    }
+  </script>
+</head>
+<body onload="init()">
+  <div id="sample">
+    <div style="width: 100%; display: flex; justify-content: center">
+      <div id="myDiagramDiv" style="flex-grow: 1; height: 620px; border: solid 1px black"></div>
+    </div>
+    <div>
+      <div>
+        以JSON格式保存的图表模型：
+      </div>
+      <textarea id="mySavedModel" style="width:100%;height:425px">
+        { "class": "go.GraphLinksModel",
+  "linkFromPortIdProperty": "fromPort",
+  "linkToPortIdProperty": "toPort",
+  "modelData": {"position":"0 0"},
+  "nodeDataArray": [ 
+{"text":"①工前准备", "figure":"Rectangle", "fill":"#339933", "size":"110 60", "key":-1, "loc":"0 0"},
+{"figure":"Arrow", "fill":"#339933", "size":"30 50", "key":-4, "loc":"100 0"},
+{"text":"②上道环节", "figure":"Rectangle", "fill":"#339933", "size":"110 60", "key":-2, "loc":"200 0"},
+{"figure":"Arrow", "fill":"#339933", "size":"30 50", "key":-5, "loc":"300 0"},
+{"text":"③位置确认", "figure":"Rectangle", "fill":"#1BA1E2", "size":"110 60", "key":-6, "loc":"400 0"},
+{"figure":"Arrow", "fill":"#D8D8D8", "size":"30 50", "key":-7, "loc":"500 0"},
+{"text":"④下达命令", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 60", "key":-3, "loc":"600 0"},
+{"figure":"Arrow", "fill":"#D8D8D8", "size":"30 50", "key":-9, "loc":"700 0"},
+{"text":"⑤验电接地", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 60", "key":-8, "loc":"800 0"},
+{"figure":"Arrow", "fill":"#D8D8D8", "size":"30 50", "key":-11, "loc":"900 0"},
+{"text":"⑥作业过程", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 60", "key":-10, "loc":"1000 0"},
+{"figure":"Arrow", "fill":"#D8D8D8", "size":"30 50", "key":-12, "loc":"1100 0"},
+{"text":"⑦拆除命令", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 60", "key":-13, "loc":"1200 0"},
+{"figure":"Arrow", "fill":"#D8D8D8", "size":"30 50", "key":-16, "loc":"1300 0"},
+{"text":"⑧拆除地线", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 60", "key":-14, "loc":"1400 0"},
+{"figure":"Arrow", "fill":"#D8D8D8", "size":"30 50", "key":-17, "loc":"1500 0"},
+{"text":"⑨撤离现场", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 60", "key":-15, "loc":"1600 0"},
+{"figure":"Arrow", "fill":"#D8D8D8", "size":"30 50", "key":-19, "loc":"1700 0"},
+{"text":"⑩消令", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 60", "key":-18, "loc":"1800 0"},
+{"text":"料具准备", "figure":"Rectangle", "fill":"#339933", "size":"110 36", "key":-20, "loc":"0 100"},
+{"text":"车辆准备", "figure":"Rectangle", "fill":"#339933", "size":"110 36", "key":-21, "loc":"0 200"},
+{"text":"确认行车防护", "figure":"Rectangle", "fill":"#339933", "size":"110 36", "key":-22, "loc":"200 100"},
+{"text":"上道通知", "figure":"Rectangle", "fill":"#339933", "size":"110 36", "key":-23, "loc":"200 200"},
+{"text":"上道确认", "figure":"Rectangle", "fill":"#339933", "size":"110 36", "key":-24, "loc":"200 300"},
+{"text":"Y/N", "figure":"Diamond", "size":"97 70", "fill":"#ffff00", "key":-25, "loc":"400 100"},
+{"text":"确认接地位置", "figure":"Rectangle", "fill":"#1BA1E2", "size":"110 36", "key":-27, "loc":"400 200"},
+{"text":"提交接地位置", "figure":"Rectangle", "fill":"#339933", "size":"110 36", "key":-28, "loc":"400 300"},
+{"text":"下达接挂命令", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-29, "loc":"600 100"},
+{"text":"确认收到命令", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-30, "loc":"600 200"},
+{"text":"确认接地完成", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-31, "loc":"800 100"},
+{"text":"完成验电接地", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-32, "loc":"800 200"},
+{"text":"开始作业", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-33, "loc":"1000 100"},
+{"text":"各小组作业", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-34, "loc":"1000 200"},
+{"text":"满足运行条件", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-35, "loc":"1000 300"},
+{"text":"料具已清点", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-36, "loc":"1000 400"},
+{"text":"人员已撤离", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-37, "loc":"1000 500"},
+{"text":"确认接受命令", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-40, "loc":"1200 100"},
+{"text":"下达拆除命令", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-39, "loc":"1200 200"},
+{"text":"Y/N", "figure":"Diamond", "size":"97 70", "fill":"#ffff00", "key":-38, "loc":"1200 400"},
+{"text":"拆除地线", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-41, "loc":"1400 100"},
+{"text":"确认拆除", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-42, "loc":"1400 200"},
+{"text":"下道通知", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-43, "loc":"1600 100"},
+{"text":"确认料具安全", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-44, "loc":"1600 200"},
+{"text":"确认人员安全", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-45, "loc":"1600 300"},
+{"text":"Y/N", "figure":"Diamond", "size":"97 70", "fill":"#ffff00", "key":-46, "loc":"1600 470"},
+{"text":"通知消令", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-47, "loc":"1800 200"},
+{"text":"接收消令", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-48, "loc":"1800 300"},
+{"text":"消令", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-49, "loc":"1799.9999999999989 398.99999999999994"},
+{"text":"签认、通报", "figure":"Rectangle", "fill":"#D8D8D8", "size":"110 36", "key":-50, "loc":"1800 500"}
+ ],
+  "linkDataArray": [ 
+{"from":-27, "fromPort":"", "toPort":"", "points":[400,182,400,172,400,158.5,400,158.5,400,145,400,135], "to":-25},
+{"from":-28, "to":-27, "fromPort":"", "toPort":"", "points":[400,282,400,272,400,250,400,250,400,228,400,218]},
+{"from":-25, "to":-29, "fromPort":"R", "toPort":"L", "points":[448.5,100,458.5,100,496.75,100,496.75,100,535,100,545,100], "text":"Y"},
+{"from":-29, "to":-30, "fromPort":"B", "toPort":"T", "points":[600,118,600,128,600,150,600,150,600,172,600,182]},
+{"from":-30, "to":-32, "fromPort":"R", "toPort":"L", "points":[655,200,665,200,700,200,700,200,735,200,745,200]},
+{"from":-32, "to":-31, "fromPort":"", "toPort":"", "points":[800,182,800,172,800,150,800,150,800,128,800,118]},
+{"from":-31, "to":-33, "fromPort":"R", "toPort":"L", "points":[855,100,865,100,900.0000000000002,100,900.0000000000002,99.99999999999997,935.0000000000005,99.99999999999997,945.0000000000005,99.99999999999997]},
+{"from":-33, "to":-34, "fromPort":"B", "toPort":"T", "points":[1000.0000000000005,117.99999999999997,1000.0000000000005,127.99999999999997,1000.0000000000005,150,1000,150,1000,172,1000,182]},
+{"from":-36, "to":-38, "fromPort":"R", "toPort":"L", "points":[1055,400,1065,400,1103.25,400,1103.25,400,1141.5,400,1151.5,400]},
+{"from":-35, "to":-38, "fromPort":"R", "toPort":"", "points":[1055,300,1065,300,1103.25,300,1103.25,400,1141.5,400,1151.5,400]},
+{"from":-37, "to":-38, "fromPort":"R", "toPort":"", "points":[1055,500,1065,500,1103.25,500,1103.25,400,1141.5,400,1151.5,400]},
+{"from":-38, "to":-39, "fromPort":"", "toPort":"", "points":[1200,365,1200,355,1200,291.5,1200.0000000000005,291.5,1200.0000000000005,228.00000000000006,1200.0000000000005,218.00000000000006]},
+{"from":-39, "to":-40, "fromPort":"", "toPort":"", "points":[1200.0000000000005,182.00000000000006,1200.0000000000005,172.00000000000006,1200.0000000000005,150,1200.0000000000005,150,1200.0000000000005,127.99999999999994,1200.0000000000005,117.99999999999994]},
+{"from":-40, "to":-41, "fromPort":"", "toPort":"L", "points":[1255,100,1265,100,1300,100,1300,100,1335,100,1345,100]},
+{"from":-42, "to":-43, "fromPort":"R", "toPort":"L", "points":[1455,200,1465,200,1500,200,1500,100,1535,100,1545,100]},
+{"from":-41, "to":-42, "fromPort":"B", "toPort":"T", "points":[1400,118,1400,128,1400,150,1400,150,1400,172,1400,182]},
+{"from":-43, "to":-44, "fromPort":"B", "toPort":"T", "points":[1600,118,1600,128,1600,150,1600,150,1600,172,1600,182]},
+{"from":-48, "to":-49, "fromPort":"B", "toPort":"T", "points":[1800,318,1800,328,1800,350,1800,350,1800,372,1800,382]},
+{"from":-46, "to":-47, "fromPort":"R", "toPort":"L", "points":[1648.5,470,1658.5,470,1696.75,470,1696.75,200,1735,200,1745,200]},
+{"from":-44, "to":-45, "fromPort":"B", "toPort":"T", "points":[1600,218,1600,228,1600,250,1600,250,1600,272,1600,282]},
+{"from":-45, "to":-46, "fromPort":"B", "toPort":"T", "points":[1600,318,1600,328,1600,376.5,1600,376.5,1600,425,1600,435]},
+{"from":-47, "to":-48, "fromPort":"B", "toPort":"T", "points":[1800,218,1800,228,1800,250,1800,250,1800,272,1800,282]},
+{"from":-22, "to":-23, "fromPort":"B", "toPort":"T", "points":[200,118,200,128,200,150,200,150,200,172,200,182]},
+{"from":-20, "to":-22, "fromPort":"R", "toPort":"L", "points":[55,100,65,100,100,100,100,100,135,100,145,100]},
+{"from":-23, "to":-24, "fromPort":"B", "toPort":"T", "points":[200,218,200,228,200,250,200,250,200,272,200,282]},
+{"from":-24, "to":-28, "fromPort":"R", "toPort":"L", "points":[255,300,265,300,300,300,300,300,335,300,345,300]},
+{"from":-49, "to":-50, "fromPort":"", "toPort":"T", "points":[1799.9999999999989,416.99999999999994,1799.9999999999989,426.99999999999994,1799.9999999999989,449.5,1800,449.5,1800,472,1800,482]}
+ ]}
+    </textarea>
+    </div>
+    <p>
+      此示例演示了用户像链接节点一样拖动链接的功能。当链接的任一端经过有效端口时，端口将突出显示。。
+    </p>
+    <p>
+      此示例演示了用户像链接节点一样拖动链接的功能。当链接的任一端经过有效端口时，端口将突出显示。。
+    </p>
+    <p>
+      通过设置部分或全部以下属性可启用链接拖动功能：
+      <a>DraggingTool.dragsLink</a>,
+      <a>LinkingTool.isUnconnectedLinkValid</a>,and
+      <a>RelinkingTool.isUnconnectedLinkValid</a>.
+    </p>
+    <p>
+      请注意，Link中存在
+      <a>Palette</a>这样它也可以拖出来并放到主图上。 因为当任何一端没有与节点连接时链路不会自动路由，所以在定义该组件选项时显式提供路由。
+    </p>
+    <p>
+      这也演示了几个习惯修饰：
+      <a>Part.selectionAdornmentTemplate</a>,
+      <a>Part.resizeAdornmentTemplate</a>, and
+      <a>Part.rotateAdornmentTemplate</a>.
+    </p>
+    <p>
+      最后这个例子演示了保存和恢复
+      <a>Diagram.position</a>作为财产
+      <a>Model.modelData</a>调用时会自动保存并恢复的对象
+      <a>Model.toJson</a>
+      和
+      <a>Model.fromJson</a>.
+    </p>
+  </div>
+</body>
+</html>

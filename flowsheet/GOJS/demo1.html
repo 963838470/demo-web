@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>demo1</title>
+  <script src="./go-debug.js"></script>
+  <style>
+    html,
+    body,
+    #myDiagramDiv {
+      height: 100%;
+      margin: 0;
+      /* background-color: #DAE4E4; */
+    }
+  </style>
+</head>
+<body onload="init()">
+  <div id="myDiagramDiv"></div>
+
+  <script>
+    var myDiagram;
+    function init() {
+      var $ = go.GraphObject.make;
+      myDiagram = $(go.Diagram, "myDiagramDiv", {
+        initialContentAlignment: go.Spot.Center, //启动视口中间的所有内容
+        "toolManager.mouseWheelBehavior": go.ToolManager.WheelNone,//鼠标滚轮事件禁止
+        // "toolManager.draggingTool.isEnabled": false,//鼠标滚轮事件禁止
+        "DraggingTool.dragsLink": false,
+        "undoManager.isEnabled": true, // enable Ctrl-Z to undo and Ctrl-Y to redo
+        allowDrop: false,  // 必须是真的才能接受调色板中的液滴
+      });
+      var myModel = $(go.Model);
+      // in the model data, each node is represented by a JavaScript object:
+      myModel.nodeDataArray = [
+        { key: "Alpha" },
+        { key: "Beta" },
+        { key: "Gamma" }
+      ];
+      myDiagram.model = myModel;
+      load();
+    }
+
+
+    function load() {
+      var data = {
+        "class": "go.GraphLinksModel",
+        "linkFromPortIdProperty": "fromPort",
+        "linkToPortIdProperty": "toPort",
+        "modelData": { "position": "-35 35" },
+        "nodeDataArray": [
+          { "text": "①工前准备", "figure": "Rectangle", "fill": "#339933", "size": "100 60", "key": -1, "loc": "50 70" },
+          { "text": "②上道环节", "figure": "Rectangle", "fill": "#339933", "size": "100 60", "key": -2, "loc": "220 70" },
+          { "figure": "Arrow", "fill": "#339933", "size": "30 50", "key": -4, "loc": "130 70" },
+          { "figure": "Arrow", "fill": "#339933", "size": "30 50", "key": -5, "loc": "300 70" },
+          { "text": "③位置确认", "figure": "Rectangle", "fill": "#1BA1E2", "size": "100 60", "key": -6, "loc": "380 70" },
+          { "figure": "Arrow", "fill": "#D8D8D8", "size": "30 50", "key": -7, "loc": "460 70" },
+          { "text": "④下达命令", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 60", "key": -3, "loc": "540 70" },
+          { "text": "⑤验电接地", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 60", "key": -8, "loc": "700 70" },
+          { "figure": "Arrow", "fill": "#D8D8D8", "size": "30 50", "key": -9, "loc": "610 70" },
+          { "text": "⑥作业过程", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 60", "key": -10, "loc": "870 70" },
+          { "figure": "Arrow", "fill": "#D8D8D8", "size": "30 50", "key": -11, "loc": "780 70" },
+          { "figure": "Arrow", "fill": "#D8D8D8", "size": "30 50", "key": -12, "loc": "970 70" },
+          { "text": "⑦拆除命令", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 60", "key": -13, "loc": "1070 70" },
+          { "text": "⑧拆除地线", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 60", "key": -14, "loc": "1240 70" },
+          { "text": "⑨撤离现场", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 60", "key": -15, "loc": "1410 70" },
+          { "figure": "Arrow", "fill": "#D8D8D8", "size": "30 50", "key": -16, "loc": "1160 70" },
+          { "figure": "Arrow", "fill": "#D8D8D8", "size": "30 50", "key": -17, "loc": "1330 70" },
+          { "text": "⑩消令", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 60", "key": -18, "loc": "1590 70" },
+          { "figure": "Arrow", "fill": "#D8D8D8", "size": "30 50", "key": -19, "loc": "1500 70" },
+          { "text": "料具准备\n", "figure": "Rectangle", "fill": "#339933", "size": "100 36", "key": -20, "loc": "50 148" },
+          { "text": "车辆准备", "figure": "Rectangle", "fill": "#339933", "size": "100 36", "key": -21, "loc": "50 198" },
+          {
+            "text": "确认行车防护",
+            "figure": "Rectangle",
+            "fill": "#339933",
+            "size": "109 32",
+            "key": -22,
+            "loc": "224.5 148"
+          },
+          { "text": "上道通知", "figure": "Rectangle", "fill": "#339933", "size": "100 36", "key": -23, "loc": "220 220" },
+          { "text": "上道确认", "figure": "Rectangle", "fill": "#339933", "size": "100 36", "key": -24, "loc": "220 300" },
+          { "text": "Y/N", "figure": "Diamond", "size": "97 70", "fill": "#ffff00", "key": -25, "loc": "380 150" },
+          {
+            "text": "确认接地位置",
+            "figure": "Rectangle",
+            "fill": "#1BA1E2",
+            "size": "113 36",
+            "key": -27,
+            "loc": "386.5 230"
+          },
+          {
+            "text": "提交接地位置",
+            "figure": "Rectangle",
+            "fill": "#339933",
+            "size": "110 37",
+            "key": -28,
+            "loc": "385 300.5"
+          },
+          {
+            "text": "下达接挂命令",
+            "figure": "Rectangle",
+            "fill": "#D8D8D8",
+            "size": "107 36",
+            "key": -29,
+            "loc": "560 150"
+          },
+          {
+            "text": "确认收到命令",
+            "figure": "Rectangle",
+            "fill": "#D8D8D8",
+            "size": "109 34",
+            "key": -30,
+            "loc": "554.5 229"
+          },
+          {
+            "text": "确认接地完成",
+            "figure": "Rectangle",
+            "fill": "#D8D8D8",
+            "size": "111 34",
+            "key": -31,
+            "loc": "705.5 149"
+          },
+          {
+            "text": "完成验电接地",
+            "figure": "Rectangle",
+            "fill": "#D8D8D8",
+            "size": "106 35",
+            "key": -32,
+            "loc": "713 229.5"
+          },
+          { "text": "开始作业", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 36", "key": -33, "loc": "880 230" },
+          {
+            "text": "各小组作业\n",
+            "figure": "Rectangle",
+            "fill": "#D8D8D8",
+            "size": "100 36",
+            "key": -34,
+            "loc": "880 300"
+          },
+          {
+            "text": "满足运行条件\n",
+            "figure": "Rectangle",
+            "fill": "#D8D8D8",
+            "size": "115 40",
+            "key": -35,
+            "loc": "887.5 372"
+          },
+          { "text": "料具已清点", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 36", "key": -36, "loc": "880 430" },
+          { "text": "人员已撤离", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 36", "key": -37, "loc": "890 500" },
+          { "text": "Y/N", "figure": "Diamond", "size": "97 70", "fill": "#ffff00", "key": -38, "loc": "1040 430" },
+          {
+            "text": "下达拆除命令",
+            "figure": "Rectangle",
+            "fill": "#D8D8D8",
+            "size": "112 34",
+            "key": -39,
+            "loc": "1070 310"
+          },
+          {
+            "text": "确认接受命令\n",
+            "figure": "Rectangle",
+            "fill": "#D8D8D8",
+            "size": "120 37",
+            "key": -40,
+            "loc": "1070 220"
+          },
+          { "text": "拆除地线", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 36", "key": -41, "loc": "1260 220" },
+          { "text": "确认拆除", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 36", "key": -42, "loc": "1260 310" },
+          { "text": "下道通知", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 36", "key": -43, "loc": "1410 140" },
+          {
+            "text": "确认料具安全",
+            "figure": "Rectangle",
+            "fill": "#D8D8D8",
+            "size": "109 35",
+            "key": -44,
+            "loc": "1414.5 219.5"
+          },
+          {
+            "text": "确认人员安全",
+            "figure": "Rectangle",
+            "fill": "#D8D8D8",
+            "size": "112 34",
+            "key": -45,
+            "loc": "1416 309"
+          },
+          { "text": "Y/N", "figure": "Diamond", "size": "97 70", "fill": "#ffff00", "key": -46, "loc": "1430 420" },
+          { "text": "通知消令", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 36", "key": -47, "loc": "1610 210" },
+          { "text": "接收消令\n", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 36", "key": -48, "loc": "1610 300" },
+          { "text": "消令", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 36", "key": -49, "loc": "1620 370" },
+          { "text": "签认、通报", "figure": "Rectangle", "fill": "#D8D8D8", "size": "100 36", "key": -50, "loc": "1620 450" }
+        ],
+        "linkDataArray": [
+          {
+            "from": -20,
+            "to": -22,
+            "fromPort": "",
+            "toPort": "L",
+            "points": [100, 148, 110, 148, 135, 148, 135, 148, 160, 148, 170, 148]
+          },
+          {
+            "from": -22,
+            "to": -23,
+            "fromPort": "",
+            "toPort": "T",
+            "points": [224.5, 164, 224.5, 174, 224.5, 183, 220, 183, 220, 192, 220, 202]
+          },
+          {
+            "from": -23,
+            "to": -24,
+            "fromPort": "",
+            "toPort": "T",
+            "points": [220, 238, 220, 248, 220, 260, 220, 260, 220, 272, 220, 282]
+          },
+          {
+            "from": -27,
+            "to": -25,
+            "fromPort": "",
+            "toPort": "",
+            "points": [386.5, 212, 386.5, 202, 386.5, 198.5, 380, 198.5, 380, 195, 380, 185]
+          },
+          {
+            "from": -28,
+            "to": -27,
+            "fromPort": "",
+            "toPort": "",
+            "points": [385, 282, 385, 272, 385, 265, 386.5, 265, 386.5, 258, 386.5, 248]
+          },
+          {
+            "from": -25,
+            "to": -29,
+            "fromPort": "",
+            "toPort": "L",
+            "points": [428.5, 150, 438.5, 150, 467.5, 150, 467.5, 150, 496.5, 150, 506.5, 150],
+            "text": "Y"
+          },
+          {
+            "from": -29,
+            "to": -30,
+            "fromPort": "B",
+            "toPort": "T",
+            "points": [560, 168, 560, 178, 560, 190, 554.5, 190, 554.5, 202, 554.5, 212]
+          },
+          {
+            "from": -30,
+            "to": -32,
+            "fromPort": "",
+            "toPort": "L",
+            "points": [609, 229, 619, 229, 634.5, 229, 634.5, 229.5, 650, 229.5, 660, 229.5]
+          },
+          {
+            "from": -32,
+            "to": -31,
+            "fromPort": "",
+            "toPort": "",
+            "points": [713, 212, 713, 202, 713, 189, 705.5, 189, 705.5, 176, 705.5, 166]
+          },
+          {
+            "from": -31,
+            "to": -33,
+            "fromPort": "",
+            "toPort": "T",
+            "points": [761, 149, 771, 149, 880, 149, 880, 175.5, 880, 202, 880, 212]
+          },
+          {
+            "from": -33,
+            "to": -34,
+            "fromPort": "",
+            "toPort": "",
+            "points": [880, 248, 880, 258, 880, 265, 880, 265, 880, 272, 880, 282]
+          },
+          {
+            "from": -36,
+            "to": -38,
+            "fromPort": "",
+            "toPort": "",
+            "points": [930, 430, 940, 430, 960.75, 430, 960.75, 430, 981.5, 430, 991.5, 430]
+          },
+          {
+            "from": -35,
+            "to": -38,
+            "fromPort": "",
+            "toPort": "",
+            "points": [945, 372, 955, 372, 968.25, 372, 968.25, 430, 981.5, 430, 991.5, 430]
+          },
+          {
+            "from": -37,
+            "to": -38,
+            "fromPort": "R",
+            "toPort": "",
+            "points": [940, 500, 950, 500, 965.75, 500, 965.75, 430, 981.5, 430, 991.5, 430]
+          },
+          {
+            "from": -38,
+            "to": -39,
+            "fromPort": "",
+            "toPort": "",
+            "points": [1040, 395, 1040, 385, 1040, 361, 1070, 361, 1070, 337, 1070, 327]
+          },
+          {
+            "from": -39,
+            "to": -40,
+            "fromPort": "",
+            "toPort": "",
+            "points": [1070, 293, 1070, 283, 1070, 265.75, 1070, 265.75, 1070, 248.5, 1070, 238.5]
+          },
+          {
+            "from": -40,
+            "to": -41,
+            "fromPort": "",
+            "toPort": "",
+            "points": [1130, 220, 1140, 220, 1170, 220, 1170, 220, 1200, 220, 1210, 220]
+          },
+          {
+            "from": -41,
+            "to": -42,
+            "fromPort": "",
+            "toPort": "T",
+            "points": [1260, 238, 1260, 248, 1260, 265, 1260, 265, 1260, 282, 1260, 292]
+          },
+          {
+            "from": -42,
+            "to": -43,
+            "fromPort": "R",
+            "toPort": "L",
+            "points": [1310, 310, 1320, 310, 1335, 310, 1335, 140, 1350, 140, 1360, 140]
+          },
+          {
+            "from": -43,
+            "to": -44,
+            "fromPort": "",
+            "toPort": "",
+            "points": [1410, 158, 1410, 168, 1410, 180, 1414.5, 180, 1414.5, 192, 1414.5, 202]
+          },
+          {
+            "from": -44,
+            "to": -45,
+            "fromPort": "",
+            "toPort": "",
+            "points": [1414.5, 237, 1414.5, 247, 1414.5, 264.5, 1416, 264.5, 1416, 282, 1416, 292]
+          },
+          {
+            "from": -45,
+            "to": -46,
+            "fromPort": "",
+            "toPort": "T",
+            "points": [1416, 326, 1416, 336, 1416, 355.5, 1430, 355.5, 1430, 375, 1430, 385]
+          },
+          {
+            "from": -46,
+            "to": -47,
+            "fromPort": "R",
+            "toPort": "L",
+            "points": [1478.5, 420, 1488.5, 420, 1519.25, 420, 1519.25, 210, 1550, 210, 1560, 210]
+          },
+          {
+            "from": -47,
+            "to": -48,
+            "fromPort": "",
+            "toPort": "T",
+            "points": [1610, 228, 1610, 238, 1610, 255, 1610, 255, 1610, 272, 1610, 282]
+          },
+          {
+            "from": -48,
+            "to": -49,
+            "fromPort": "B",
+            "toPort": "T",
+            "points": [1610, 318, 1610, 328, 1610, 335, 1620, 335, 1620, 342, 1620, 352]
+          },
+          {
+            "from": -49,
+            "to": -50,
+            "fromPort": "",
+            "toPort": "",
+            "points": [1620, 388, 1620, 398, 1620, 410, 1620, 410, 1620, 422, 1620, 432]
+          }
+        ]
+      };
+      myDiagram.model = go.Model.fromJson(data);
+      // 设置Diagram.initialPosition而不是Diagram.position，以处理初始化副作用
+      var pos = myDiagram.model.modelData.position;
+      if (pos) myDiagram.initialPosition = go.Point.parse(pos);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<title>工作流</title>
+
+<link rel="stylesheet" href="demo.css">
+<script src="d3.min.js" charset="utf-8"></script>
+<script src="dagre-d3.js"></script>
+<script src="diag.js"></script>
+
+
+<style id="css">
+  body {
+    font: 300 14px 'Helvetica Neue',
+    Helvetica;
+  }
+
+  .node rect {
+    stroke: #333;
+    fill: #999;
+  }
+
+  .edgePath path {
+    stroke: #333;
+    fill: #333;
+    stroke-width: 1.5px;
+  }
+</style>
+
+<svg width=960 height=600>
+  <g/>
+</svg>
+
+<script id="js">
+  // Create a new directed graph
+  var g = new dagreD3.graphlib.Graph().setGraph({});
+
+  var step1 = "上道前准备\n已完成";
+  // States and transitions from RFC 793
+  var states = [step1, "上道环节", "杆号确认", "接挂地线命令", "接挂地线", "拆除地线命令", "拆除地线", "下道环节"];
+
+  // Automatically label each of the nodes
+  states.forEach(function (state) { g.setNode(state, { label: state }); });
+
+  // Set up the edges
+  g.setEdge(step1, "上道环节", { label: "", lineInterpolate: 'basis' });
+  g.setEdge("上道环节", "杆号确认", { label: "" });
+  g.setEdge("杆号确认", "接挂地线命令", { label: "" });
+  g.setEdge("接挂地线命令", "接挂地线", { label: "" });
+  g.setEdge("接挂地线", "杆号确认", { label: "审核拒绝", lineInterpolate: 'basis' });
+  g.setEdge("接挂地线", "拆除地线命令", { label: "" });
+  g.setEdge("拆除地线命令", "拆除地线", { label: "" });
+  g.setEdge("拆除地线", "下道环节", { label: "" });
+
+  // Set some general styles
+  g.nodes().forEach(function (v) {
+    var node = g.node(v);
+    node.rx = node.ry = 5;
+  });
+
+  // Add some custom colors based on state
+  g.node(step1).style = "fill: #3EBB44";
+  g.node('上道环节').style = "fill: #E93A3A";
+
+  var svg = d3.select("svg"),
+    inner = svg.select("g");
+
+  // Set up zoom support
+  // var zoom = d3.behavior.zoom().on("zoom", function () {
+  //   inner.attr("transform", "translate(" + d3.event.translate + ")" +
+  //     "scale(" + d3.event.scale + ")");
+  // });
+  // svg.call(zoom);
+
+  // Create the renderer
+  var render = new dagreD3.render();
+
+  // Run the renderer. This is what draws the final graph.
+  render(inner, g);
+
+  // Center the graph
+  var initialScale = 0.75;
+  initialScale = 1;
+  // zoom
+  //   .translate([(svg.attr("width") - g.graph().width * initialScale) / 2, 20])
+  //   .scale(initialScale)
+  //   .event(svg);
+  svg.attr('height', g.graph().height * initialScale + 40);
+</script>
