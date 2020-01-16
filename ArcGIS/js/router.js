@@ -64,10 +64,10 @@ require([
           drawPoint(pointLayer, points[index][0], points[index][1])
           drawStartLine(startLayer, points.slice(0, index + 1))
           drawEndLine(endLayer, [points[index]].concat(calculatePoints.slice(index, calculatePoints.length)))
-          //if (index === 0) {
+          if (index === 0) {
             view.goTo(endLayer.graphics)
-          //}
-        }, 5000 * index)
+          }
+        }, 1000 * index)
       })(index)
     }
   })
@@ -86,27 +86,14 @@ require([
       y: y,
       z: z ? z : 0
     }
-    var markerSymbol = {
-      type: "picture-marker", // autocasts as new SimpleMarkerSymbol()
-      url: "./image/gis_ground.png",
-      width: "25px",
-      height: "25px"
-    }
-    var fontSymbol = {
-      type: "text",
-      color: "white",
-      text: "地线1组",
-      haloColor: "black",
-      haloSize: "1px",
-      yoffset: "20px",
-      font: {
-        size: 12,
-        family: "sans-serif"
-      }
-    }
     var pointGraphic = {
       geometry: point,
-      symbol: markerSymbol,
+      symbol: {
+        type: "picture-marker", // autocasts as new SimpleMarkerSymbol()
+        url: "./image/gis_ground.png",
+        width: "25px",
+        height: "25px"
+      },
       attributes: {
         title: '小组成员',
         name: '张麻子',
@@ -137,7 +124,18 @@ require([
     }
     var fontGraphic = {
       geometry: point,
-      symbol: fontSymbol
+      symbol: {
+        type: "text",
+        color: "white",
+        text: "地线1组",
+        haloColor: "black",
+        haloSize: "1px",
+        yoffset: "20px",
+        font: {
+          size: 12,
+          family: "sans-serif"
+        }
+      }
     }
     layer.graphics.removeAll()
     layer.graphics.add(pointGraphic)
@@ -150,24 +148,22 @@ require([
    * @param {Array} paths 路径
    */
   function drawStartLine(layer, paths) {
-    var polyline = {
-      type: "polyline", // autocasts as new Polyline()
-      paths: paths
-    }
-    var lineSymbol = {
-      type: "simple-line", // autocasts as SimpleLineSymbol()
-      color: [255, 255, 255],
-      width: 2,
-      join: "round",
-      marker: {
-        style: "arrow",
-        placement: "end"
-      }
-    }
     var polylineGraphic = {
       // autocasts as Graphic()
-      geometry: polyline,
-      symbol: lineSymbol
+      geometry: {
+        type: "polyline", // autocasts as new Polyline()
+        paths: paths
+      },
+      symbol: {
+        type: "simple-line", // autocasts as SimpleLineSymbol()
+        color: [255, 255, 255],
+        width: 2,
+        join: "round",
+        marker: {
+          style: "arrow",
+          placement: "end"
+        }
+      }
     }
     layer.graphics.removeAll()
     if (paths.length > 1) {
@@ -181,30 +177,18 @@ require([
    * @param {Array} paths 路径
    */
   function drawEndLine(layer, paths) {
-    var polyline = {
-      type: "polyline",
-      paths: paths
-    }
-    var lineSymbol = {
-      type: "simple-line",
-      color: [66, 255, 66],
-      width: 2,
-      style: "short-dot",
-      join: "bevel"
-      // marker: {
-      //   style: "arrow",
-      //   placement: "end"
-      // }
-    }
-    // lineSymbol.setMarker({
-    //   style: "arrow",
-    //   placement: "end"
-    // })
-    //lineSymbol.setColor(new Color([250, 150, 0, 1]));
-
     var polylineGraphic = {
-      geometry: polyline,
-      symbol: lineSymbol
+      geometry: {
+        type: "polyline",
+        paths: paths
+      },
+      symbol: {
+        type: "simple-line",
+        color: [66, 255, 66],
+        width: 2,
+        style: "short-dot",
+        join: "bevel"
+      }
     }
     layer.graphics.removeAll()
     if (paths.length > 1) {
