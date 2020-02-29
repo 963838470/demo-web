@@ -1,0 +1,110 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<title>Dagre D3 Demo: Sentence Tokenization</title>
+
+<link rel="stylesheet" href="demo.css">
+<script src="d3.min.js" charset="utf-8"></script>
+<script src="dagre-d3.js"></script>
+<script src="diag.js"></script>
+
+
+<style id="css">
+  /* This sets the color for "TK" nodes to a light blue green. */
+
+  .node text {
+    font-weight: 300;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+    font-size: 12px;
+    pointer-events: none;
+    text-anchor: middle;
+    fill: white;
+  }
+
+  .label g text tspan:last-child {
+    font-size: 10px;
+    margin-top: 5px;
+    dy: 1.5em;
+  }
+
+  .label g {
+    transform: translate(0, -13px);
+  }
+
+  .node rect {
+    fill: lightgray;
+    stroke-width: 0px;
+    color: white;
+  }
+
+  .edgePath path {
+    stroke: rgb(78, 78, 78);
+    stroke-width: 1px;
+  }
+
+  g.right>rect {
+    fill: #2f937a;
+  }
+
+  g.warning>rect {
+    fill: rgb(251, 157, 10);
+  }
+
+  g.error>rect {
+    fill: #f94138;
+  }
+
+  .type-freeze text {
+    fill: #999999;
+  }
+
+  #myMenu {
+    position: absolute;
+    display: none;
+    width: 100px;
+    height: 100px;
+    background: #999999;
+  }
+</style>
+
+<svg id="svgCanvas" width=960 height=900></svg>
+<ul id="myMenu">
+  <li>xx</li>
+  <li>xx</li>
+</ul>
+
+<script id="js">
+  var state = [
+    { id: 1, label: '上道前准备\n已完成', class: 'right' },
+    { id: 2, label: '上道环节\n已完成', class: 'right' },
+    { id: 3, label: '杆号确认\n已完成', class: 'right' },
+    { id: 4, label: '接挂地线命令\n已完成', class: 'right' },
+    { id: 5, label: '接挂地线\n已拒绝', class: 'error' },
+    { id: 6, label: '拆除地线命令\n', class: '' },
+    { id: 7, label: '拆除地线\n', class: '' },
+    { id: 8, label: '下道环节\n', class: '' },
+  ]
+  var edg = [
+    { start: 1, end: 2, option: {} },
+    { start: 2, end: 3, option: {} },
+    { start: 3, end: 4, option: {} },
+    { start: 4, end: 5, option: {} },
+    { start: 5, end: 5, option: { label: '拒绝' } },
+    { start: 5, end: 6, option: {} },
+    { start: 6, end: 7, option: {} },
+    { start: 7, end: 8, option: {} },
+  ]
+  var statePoint = 1; // 当前选中的点
+  diagGraph.init(statePoint, state, edg); //创建关系图
+
+  var svgCanvas = document.getElementById('svgCanvas'); //绑定事件鼠标点击
+
+  var myMenu = document.getElementById("myMenu"); //鼠标右键
+  svgCanvas.addEventListener("click", (event) => { //鼠标右击事件
+    event.preventDefault();
+    if (event.target.tagName === 'rect') {
+      alert(event.target)
+    }
+  });
+
+</script>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="http://www.softwhy.com/" />
+<title>矩形环绕效果</title>
+<style type="text/css">
+body {
+  width:100%;
+  height:100%;
+  background:lightgray;
+}
+.antzone, .antzone::before, .antzone::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.antzone {
+  width: 400px;
+  height: 200px;
+  margin: auto;
+  color: white;
+  background-color: #0088f1;
+  box-shadow: inset 0 0 0 1px rgba(105, 202, 98, 0.5);
+}
+.antzone::before, .antzone::after {
+  content: '';
+  z-index: -1;
+  /* margin: -5%; */
+  box-shadow: inset 0 0 0 2px;
+  animation: clipMe 8s linear infinite;
+}
+/* .antzone::before {
+  animation-delay: -4s;
+} */
+@keyframes clipMe {
+  0%, 100% {
+    clip: rect(0px, 200.0px, 2px, 0px);
+  }
+  16% {
+    clip: rect(0px, 2px, 400.0px, 0px);
+  }
+  33% {
+    clip: rect(198px, 200.0px, 400.0px, 0px);
+  }
+  50% {
+    clip: rect(198px, 400.0px, 400.0px, 200px);
+  }
+  66% {
+    clip: rect(0px, 400px, 400.0px, 398px);
+  }
+  83% {
+    clip: rect(0px, 400.0px, 2px, 200px);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="antzone"></div>
+</body>
+</html>

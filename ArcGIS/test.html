@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>测试使用</title>
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="http://www.cdtye.com:6040/arcgis_js_api/4x/4.11/esri/css/main.css" />
+    <link href="style/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./style/font-awesome.css" />
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="body">
+      <div id="viewDiv"></div>
+    </div>
+
+    <script src="./js/jquery.js"></script>
+    <script src="http://www.cdtye.com:6040/arcgis_js_api/4x/4.11/dojo/dojo.js"></script>
+    <script>
+      // 菜单
+      $(document).ready(function() {
+        $.ajaxSetup({ cache: false })
+      })
+
+      // 地图
+      require([
+        "esri/Map",
+        "esri/Basemap",
+        "esri/config",
+        "esri/request",
+        "esri/Color",
+        "esri/Graphic",
+        "esri/WebScene",
+        "esri/geometry/Point",
+        "esri/views/MapView",
+        "esri/views/SceneView",
+        "esri/layers/MapImageLayer",
+        "esri/widgets/LayerList",
+        "esri/widgets/ScaleBar",
+        "esri/widgets/BasemapToggle",
+        "esri/widgets/BasemapGallery",
+        "esri/layers/BaseTileLayer",
+        "esri/layers/KMLLayer",
+        "esri/layers/GraphicsLayer",
+        "esri/layers/FeatureLayer",
+        "esri/layers/support/LabelClass",
+        "esri/layers/SceneLayer",
+        "esri/layers/WMTSLayer",
+        "esri/symbols/PictureMarkerSymbol",
+        "dojo/domReady!",
+        "esri/identity/IdentityManager",
+        "esri/identity/ServerInfo",
+        "dojo/on",
+        "esri/geometry/support/jsonUtils",
+        "esri/tasks/Locator"
+      ], function(
+        Map,
+        Basemap,
+        esriConfig,
+        esriRequest,
+        Color,
+        Graphic,
+        WebScene,
+        Point,
+        MapView,
+        SceneView,
+        MapImageLayer,
+        LayerList,
+        ScaleBar,
+        BasemapToggle,
+        BasemapGallery,
+        BaseTileLayer,
+        KMLLayer,
+        GraphicsLayer,
+        FeatureLayer,
+        LabelClass,
+        SceneLayer,
+        WMTSLayer,
+        PictureMarkerSymbol,
+        domReady,
+        esriId,
+        ServerInfo,
+        on,
+        jsonUtils,
+        Locator
+      ) {
+        var SERVICE_BASE_URL = "http://www.cdtye.com:6080/arcgis/"
+        var locatorTask = new Locator({
+          url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+        });
+        var baseLayer = SERVICE_BASE_URL+"rest/services/BASE_IMG/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+        var referenceLayer = SERVICE_BASE_URL+"rest/services/BASE_IMG_ANNO/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+        const basemap = new Basemap({
+          // 底图图层
+          baseLayers: [
+            new WMTSLayer({
+              url: baseLayer
+            })
+          ],
+          // 底图标注
+          referenceLayers: [
+            new WMTSLayer({
+              url: referenceLayer
+            })
+          ]
+        })
+
+        const map = new Map({ basemap: basemap })
+
+        var view = new SceneView({
+          container: "viewDiv",
+          map: map,
+          // center: [113.2682, 23.136], // longitude, latitude
+          // zoom: 10,
+          extent: jsonUtils.fromJSON({
+            xmin: 8222082,
+            ymin: 2456877,
+            xmax: 14846879,
+            ymax: 6626854,
+            spatialReference: { wkid: 3857 }
+          })
+        })
+
+        // 延迟执行
+        var tempTimeOut = null
+        view.watch("extent", function(extend, b, event, map) {
+          clearTimeout(tempTimeOut)
+          tempTimeOut = setTimeout(() => {
+            console.log(JSON.stringify(extend))
+          }, 800)
+        })
+
+        // 地图初始化完成
+        view.when(() => {
+          view.popup.autoOpenEnabled = false
+          var i = 1
+          view.on("click", function(event) {
+            // Get the coordinates of the click on the view
+            // around the decimals to 3 decimals
+            var lat = Math.round(event.mapPoint.latitude * 1000) / 1000
+            var lon = Math.round(event.mapPoint.longitude * 1000) / 1000
+
+            // Execute a reverse geocode using the clicked location
+            locatorTask
+              .locationToAddress(event.mapPoint)
+              .then(function(response) {
+                // If an address is successfully found, show it in the popup's content
+                  view.popup.open({
+                    // Set the popup's title to the coordinates of the clicked location
+                    title: "当前坐标: [" + lon + ", " + lat + "]",
+                    content:response.address,
+                    location: event.mapPoint, // Set the location of the popup to the clicked location
+                    actions: [
+                      {
+                        title: "Zoom out",
+                        id: "zoom-out",
+                        className: "esri-icon-zoom-out-magnifying-glass"
+                      }
+                    ]
+                  })
+                view.popup.content = response.address;
+              })
+              .catch(function(error) {
+                // If the promise fails and no result is found, show a generic message
+                view.popup.content = "No address was found for this location";
+                view.popup.open({
+              // Set the popup's title to the coordinates of the clicked location
+                  title: "当前坐标: [" + lon + ", " + lat + "]",
+                  content:"找不到当前位置！",
+                  location: event.mapPoint, // Set the location of the popup to the clicked location
+                  actions: [
+                    {
+                      title: "Zoom out",
+                      id: "zoom-out",
+                      className: "esri-icon-zoom-out-magnifying-glass"
+                    }
+                  ]
+                })
+              });
+          })
+
+          view.popup.on("trigger-action", function(event) {
+            // If the zoom-out action is clicked, fire the zoomOut() function
+            if (event.action.id === "zoom-out") {
+              console.log("弹窗自定义事件触发！！")
+            }
+          })
+
+          // 隐藏放大缩小组件
+          view.ui._removeComponents(["zoom"])
+
+          // 比例尺
+          var scalebar = new ScaleBar({ view: view })
+          view.ui.add(scalebar, "bottom-left")
+
+          $.post(
+            SERVICE_BASE_URL + "tokens/",
+            {
+              request: "getToken",
+              username: "hw",
+              password: "hw2019",
+              expiration: "60",
+              f: "json"
+            },
+            function(data) {
+              console.log(data)
+              if (data.token.length > 0) {
+                esriId.registerToken({ server: SERVICE_BASE_URL + "rest/services", token: data.token })
+              }
+            },
+            "json"
+          )
+          var worldCitiesURL = SERVICE_BASE_URL + "rest/services/GT_RAILWAY_LINE/MapServer/0?geometryOrgeojson=geojson&wkid=4326&xmin=109.3044522512288&ymin=22.074161229317234&xmax=117.22301932311755&ymax=23.904581019802375&maxCount=3000"
+          var layer = new FeatureLayer({ url: worldCitiesURL })
+          //map.add(layer)
+          layer.when(function() {
+            console.log("图层加载完毕")
+            view.goTo(layer.fullExtent)
+          })
+        })
+      })
+    </script>
+  </body>
+</html>
