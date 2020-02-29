@@ -10,7 +10,7 @@ app.get("/", function(req, res) {
 io.on("connection", function(socket) {
   console.log("a user connected")
   // 广播，除了消息发送者
-  socket.broadcast.emit("hi")
+  socket.broadcast.emit("chat message", "hi")
   // 监听socket断开连接
   socket.on("disconnect", function() {
     console.log("user disconnected")
