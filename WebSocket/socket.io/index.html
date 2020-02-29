@@ -50,10 +50,15 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function() {
-        var socket = io()
+        var socket = io({
+          query: {
+            token: "test"
+          }
+        })
+        socket.join("room")
         $("form").submit(function(e) {
           e.preventDefault() // prevents page reloading
-          socket.emit("chat message", $("#m").val())
+          socket.broadcast.to("room").emit("chat message", $("#m").val())
           $("#m").val("")
           return false
         })

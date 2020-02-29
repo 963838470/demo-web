@@ -6,9 +6,23 @@ app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html")
 })
 
+function isValid() {
+  return true
+}
+
+// middleware
+io.use((socket, next) => {
+  let token = socket.handshake.query.token
+  if (isValid(token)) {
+    return next()
+  }
+  return next(new Error("授权异常"))
+})
+
 // 监听socket连接
 io.on("connection", function(socket) {
-  console.log("a user connected")
+  let token = socket.handshake.query.token
+  console.log("a user connected:", token)
   // 广播，除了消息发送者
   socket.broadcast.emit("chat message", "hi")
   // 监听socket断开连接
