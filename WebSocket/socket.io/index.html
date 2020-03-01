@@ -17,11 +17,16 @@
         position: fixed;
         bottom: 0;
         width: 100%;
+        color: white;
+      }
+      form label {
+        display: inline-block;
+        width: 10%;
       }
       form input {
         border: 0;
         padding: 10px;
-        width: 90%;
+        width: 80%;
         margin-right: 0.5%;
       }
       form button {
@@ -38,6 +43,12 @@
       #messages li {
         padding: 5px 10px;
       }
+      #messages li.tip {
+        text-align: center;
+        font-size: 12;
+        color: light-gray;
+      }
+
       #messages li:nth-child(odd) {
         background: #eee;
       }
@@ -45,33 +56,42 @@
   </head>
   <body>
     <ul id="messages"></ul>
-    <form action=""><input id="m" autocomplete="off" /><button>Send</button></form>
+    <form action=""><label id="label"></label><input id="m" autocomplete="off" /><button>Send</button></form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-      const roomid = "some room"
+      const roomname = "room2019"
+      const name = "test" + Math.floor(Math.random() * 100)
       $(function() {
         var socket = io("localhost:3000", {
           query: {
             token: "test",
-            name: "test" + Math.random().toFixed(2) * 100
+            name,
+            roomname
           }
         })
 
         socket.on("connect", () => {
+          addMsg({ type: "tip", msg: "您已加入房间：" + roomname })
           console.log(socket.id)
         })
 
-        //socket.join("room")
+        socket.on("disconnect", () => {
+          addMsg({ type: "tip", msg: "您已退出房间：" + roomname })
+        })
+
         $("form").submit(function(e) {
           e.preventDefault() // prevents page reloading
-          socket.emit("chat message", $("#m").val())
+          socket.emit("send", $("#m").val())
           $("#m").val("")
           return false
         })
-        socket.on("chat message", function(msg) {
-          $("#messages").append($("<li>").text(msg))
-        })
+        socket.on("send", addMsg)
+        function addMsg(msg) {
+          console.log(msg.msg)
+          $("#messages").append($(msg.type === "tip" ? "<li class='tip'>" : "<li>").text(msg.msg))
+        }
+        $("#label").text(name)
       })
     </script>
   </body>
