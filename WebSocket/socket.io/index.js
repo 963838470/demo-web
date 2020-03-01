@@ -23,7 +23,7 @@ io.on("connection", function(socket) {
   socket.join(roomname, () => {
     console.log(name + "进入房间" + roomname, socket.id)
     // 广播，除了消息发送者都可以收到
-    socket.broadcast.emit("send", { type: "tip", msg: name + "加入房间" })
+    socket.to(roomname).broadcast.emit("send", { type: "tip", msg: name + "加入房间," })
     // 将消息发送给所有人
     io.to(roomname).emit("send", { type: "tip", msg: "当前用户数量:" + Object.keys(socket.nsp.sockets).length })
   })
@@ -37,6 +37,7 @@ io.on("connection", function(socket) {
   socket.on("send", function(msg) {
     console.log(name + "发送消息: " + msg)
     io.to(roomname).emit("send", { type: "msg", msg: name + "说:" + msg })
+    console.log(socket)
   })
 })
 
