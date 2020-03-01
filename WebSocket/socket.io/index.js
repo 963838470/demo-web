@@ -19,17 +19,16 @@ io.use((socket, next) => {
   return next(new Error("授权异常"))
 })
 
-const roomid = "some room"
-
 // 监听socket连接
 io.on("connection", function(socket) {
+  let name = socket.handshake.query.name
+  let roomid = socket.handshake.query.roomid
   // 加入房间
   socket.join(roomid)
-  let name = socket.handshake.query.name
   console.log("a user connected:", socket.id, name)
-  // 广播，除了消息发送者
-  socket.to(roomid).broadcast.emit("chat message", "hi")
-  // 监听socket断开连接
+  // 广播，除了消息发送者都可以收到
+  socket.to(roomid).broadcast.emit("用户" + name + "加入房间")
+  // 监听掉线设备事件
   socket.on("disconnect", function() {
     console.log("user disconnected", socket.id, name)
   })
