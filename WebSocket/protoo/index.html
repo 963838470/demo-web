@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO Demo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font: 13px Helvetica, Arial;
+      }
+      form {
+        background: #000;
+        padding: 3px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        color: white;
+      }
+      form label {
+        display: inline-block;
+        width: 10%;
+      }
+      form input {
+        border: 0;
+        padding: 10px;
+        width: 80%;
+        margin-right: 0.5%;
+      }
+      form button {
+        width: 9%;
+        background: rgb(130, 224, 255);
+        border: none;
+        padding: 10px;
+      }
+      #messages {
+        list-style-type: none;
+        margin: 0 0 42px 0;
+        padding: 0;
+      }
+      #messages li {
+        padding: 5px 10px;
+      }
+      #messages li.tip {
+        text-align: center;
+        font-size: 12;
+        color: light-gray;
+      }
+
+      #messages li:nth-child(odd) {
+        background: #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form action=""><label id="label"></label><input id="m" autocomplete="off" /><button>Send</button></form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      $(function() {
+        const roomname = getQueryVariable("room") || "room2020"
+        const name = getQueryVariable("name") || "test" + Math.floor(Math.random() * 100)
+
+        var socket = io("localhost:3000", {
+          query: {
+            token: "test",
+            name,
+            roomname
+          }
+        })
+
+        socket.on("connect", () => {
+          addMsg({ type: "tip", msg: "您已加入房间：" + roomname })
+          console.log(socket.id)
+        })
+
+        socket.on("disconnect", () => {
+          addMsg({ type: "tip", msg: "您已退出房间：" + roomname })
+        })
+
+        $("form").submit(function(e) {
+          e.preventDefault() // prevents page reloading
+          socket.emit("send", $("#m").val())
+          $("#m").val("")
+          return false
+        })
+        socket.on("send", addMsg)
+        $("#label").text(name)
+        // 增加信息至页面
+        function addMsg(msg) {
+          console.log(msg.msg)
+          $("#messages").append($(msg.type === "tip" ? "<li class='tip'>" : "<li>").text(msg.msg))
+        }
+        // 获取查询参数
+        function getQueryVariable(variable) {
+          var query = window.location.search.substring(1)
+          var vars = query.split("&")
+          for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=")
+            if (pair[0] == variable) {
+              return pair[1]
+            }
+          }
+          return false
+        }
+      })
+    </script>
+  </body>
+</html>
