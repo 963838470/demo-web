@@ -25,7 +25,7 @@ io.on("connection", function(socket) {
     // 广播，除了消息发送者都可以收到
     socket.to(roomname).broadcast.emit("send", { type: "tip", msg: name + "加入房间," })
     // 将消息发送给所有人
-    io.to(roomname).emit("send", { type: "tip", msg: "当前用户数量:" + Object.keys(socket.nsp.sockets).length })
+    io.to(roomname).emit("send", { type: "tip", msg: "当前用户数量:" + socket.adapter.rooms[roomname].length })
   })
 
   // 监听掉线设备事件
@@ -37,7 +37,6 @@ io.on("connection", function(socket) {
   socket.on("send", function(msg) {
     console.log(name + "发送消息: " + msg)
     io.to(roomname).emit("send", { type: "msg", msg: name + "说:" + msg })
-    console.log(socket)
   })
 })
 
