@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Socket.IO Demo</title>
     <style>
       * {
         margin: 0;
@@ -49,16 +49,23 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+      const roomid = "some room"
       $(function() {
-        var socket = io({
+        var socket = io("localhost:3000", {
           query: {
-            token: "test"
+            token: "test",
+            name: "test" + Math.random().toFixed(2) * 100
           }
         })
-        socket.join("room")
+
+        socket.on("connect", () => {
+          console.log(socket.id)
+        })
+
+        //socket.join("room")
         $("form").submit(function(e) {
           e.preventDefault() // prevents page reloading
-          socket.broadcast.to("room").emit("chat message", $("#m").val())
+          socket.emit("chat message", $("#m").val())
           $("#m").val("")
           return false
         })
