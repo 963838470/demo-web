@@ -61,23 +61,23 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function() {
-        const roomname = getQueryVariable("room") || "room2020"
-        const name = getQueryVariable("name") || "test" + Math.floor(Math.random() * 100)
+        var roomname = getQueryVariable("room") || "room2020"
+        var name = getQueryVariable("name") || "test" + Math.floor(Math.random() * 100)
 
         var socket = io("localhost:3000", {
           query: {
             token: "test",
-            name,
-            roomname
+            name: name,
+            roomname: roomname
           }
         })
 
-        socket.on("connect", () => {
+        socket.on("connect", function() {
           addMsg({ type: "tip", msg: "您已加入房间：" + roomname })
           console.log(socket.id)
         })
 
-        socket.on("disconnect", () => {
+        socket.on("disconnect", function() {
           addMsg({ type: "tip", msg: "您已退出房间：" + roomname })
         })
 
