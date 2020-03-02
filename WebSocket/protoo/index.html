@@ -57,37 +57,39 @@
   <body>
     <ul id="messages"></ul>
     <form action=""><label id="label"></label><input id="m" autocomplete="off" /><button>Send</button></form>
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="/protoo-client/lib/index.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function() {
         const roomname = getQueryVariable("room") || "room2020"
         const name = getQueryVariable("name") || "test" + Math.floor(Math.random() * 100)
 
-        var socket = io("localhost:3000", {
-          query: {
-            token: "test",
-            name,
-            roomname
-          }
-        })
+        const protooTransport = new protooClient.WebSocketTransport("ws://localhost:3000")
+        const user = new protooClient.Peer(protooTransport)
+        // var socket = io("localhost:3000", {
+        //   query: {
+        //     token: "test",
+        //     name,
+        //     roomname
+        //   }
+        // })
 
-        socket.on("connect", () => {
-          addMsg({ type: "tip", msg: "您已加入房间：" + roomname })
-          console.log(socket.id)
-        })
+        // socket.on("connect", () => {
+        //   addMsg({ type: "tip", msg: "您已加入房间：" + roomname })
+        //   console.log(socket.id)
+        // })
 
-        socket.on("disconnect", () => {
-          addMsg({ type: "tip", msg: "您已退出房间：" + roomname })
-        })
+        // socket.on("disconnect", () => {
+        //   addMsg({ type: "tip", msg: "您已退出房间：" + roomname })
+        // })
 
-        $("form").submit(function(e) {
-          e.preventDefault() // prevents page reloading
-          socket.emit("send", $("#m").val())
-          $("#m").val("")
-          return false
-        })
-        socket.on("send", addMsg)
+        // $("form").submit(function(e) {
+        //   e.preventDefault() // prevents page reloading
+        //   socket.emit("send", $("#m").val())
+        //   $("#m").val("")
+        //   return false
+        // })
+        // socket.on("send", addMsg)
         $("#label").text(name)
         // 增加信息至页面
         function addMsg(msg) {
