@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./dayjs.min.js"></script>
+  </head>
+  <body>
+    <script>
+      var day = dayjs('2018-9-29')
+      var startTime = day
+      var endTime = day.add(1, 'day').add(-1, 'second')
+      console.log('日', startTime.format('YYYY-MM-DD HH:mm:ss'), endTime.format('YYYY-MM-DD HH:mm:ss'))
+
+      var day = dayjs('2018-9')
+      var startTime = day
+      var endTime = day.add(1, 'month').add(-1, 'second')
+      console.log('月', startTime.format('YYYY-MM-DD HH:mm:ss'), endTime.format('YYYY-MM-DD HH:mm:ss'))
+
+      var day = dayjs('2018')
+      var startTime = day
+      var endTime = day.add(1, 'year').add(-1, 'second')
+      console.log('年', startTime.format('YYYY-MM-DD HH:mm:ss'), endTime.format('YYYY-MM-DD HH:mm:ss'))
+    </script>
+  </body>
+</html>
