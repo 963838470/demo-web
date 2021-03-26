@@ -1,20 +1,20 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
-    <VuePhotoPreview />
+    <viewerjs />
     <HelloWorld msg="Welcome to Your Vue.js App" />
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-import VuePhotoPreview from './pages/vue-photo-preview'
+import viewerjs from './pages/viewerjs'
 
 export default {
   name: 'App',
   components: {
     HelloWorld,
-    VuePhotoPreview
+    viewerjs
   }
 }
 </script>
