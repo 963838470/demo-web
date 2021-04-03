@@ -5,6 +5,7 @@ import 'viewerjs/dist/viewer.css'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import router from '@/router'
+import '@/style/common.css'
 
 Vue.use(Viewer, {
   defaultOptions: {

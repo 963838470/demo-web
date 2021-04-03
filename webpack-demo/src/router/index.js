@@ -7,13 +7,23 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'element Upload',
-      component: () => import(/* webpackChunkName: "element" */ '@/pages/element/Upload.vue')
+      name: 'workflow',
+      component: () => import(/* webpackChunkName: "viewerjs" */ '@/views/workflow/index')
+    },
+    {
+      path: '/el-image',
+      name: 'el-image',
+      component: () => import(/* webpackChunkName: "photo" */ '@/views/photo/upload')
     },
     {
       path: '/viewerjs',
       name: 'viewerjs',
-      component: () => import(/* webpackChunkName: "viewerjs" */ '@/pages/viewerjs')
+      component: () => import(/* webpackChunkName: "viewerjs" */ '@/views/photo/viewerjs')
+    },
+    {
+      path: '/vue-photo-preview',
+      name: 'vue-photo-preview',
+      component: () => import(/* webpackChunkName: "viewerjs" */ '@/views/photo/vue-photo-preview')
     }
   ]
 })

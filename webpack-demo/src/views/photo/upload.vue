@@ -11,6 +11,7 @@
       <i class="el-icon-plus"></i>
       <div v-if="!disabled" slot="file" slot-scope="{ file }">
         <el-image class="el-upload-list__item-thumbnail" :src="file.url" :preview-src-list="filelist" />
+        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
       </div>
     </el-upload>
   </div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+xmlns:activiti="http://activiti.org/bpmn" 
+xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+xmlns:tns="http://www.activiti.org/testm1574124674914" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+expressionLanguage="http://www.w3.org/1999/XPath" id="m1574124674914" name="" 
+targetNamespace="http://www.activiti.org/testm1574124674914" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <process id="Process_1" isExecutable="false">
+    <startEvent id="StartEvent_1"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="412.0" y="240.0"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
