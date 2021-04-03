@@ -1,19 +1,18 @@
 <template>
   <div id="app">
-    <Upload></Upload>
-    <viewerjs />
+    <div class="menu">
+      <router-link v-for="r in $router.options.routes" :key="r.path" :to="r.path">{{ r.name }}</router-link>
+    </div>
+    <router-view />
   </div>
 </template>
 
 <script>
-import viewerjs from './pages/viewerjs'
-import Upload from './pages/element/Upload'
-
 export default {
   name: 'App',
-  components: {
-    viewerjs,
-    Upload
+  mounted() {
+    console.log(this.$router)
+    console.log(this.$route)
   }
 }
 </script>
@@ -26,5 +25,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.menu {
+  display: flex;
+  justify-content: space-around;
 }
 </style>

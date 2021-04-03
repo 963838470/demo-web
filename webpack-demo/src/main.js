@@ -4,6 +4,7 @@ import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import router from '@/router'
 
 Vue.use(Viewer, {
   defaultOptions: {
@@ -44,5 +45,6 @@ Vue.config.productionTip = false
 // Vue.use(preview, option)
 
 new Vue({
+  router,
   render: h => h(App)
 }).$mount('#app')
