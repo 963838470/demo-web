@@ -7,23 +7,28 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'workflow',
-      component: () => import(/* webpackChunkName: "viewerjs" */ '@/views/workflow/index')
+      name: 'Workflow',
+      component: () => import(/* webpackChunkName: "workflow" */ '@/views/workflow/Index')
     },
     {
-      path: '/el-image',
-      name: 'el-image',
-      component: () => import(/* webpackChunkName: "photo" */ '@/views/photo/upload')
+      path: '/Upload',
+      name: 'Upload',
+      component: () => import(/* webpackChunkName: "photo" */ '@/views/photo/Upload')
     },
     {
-      path: '/viewerjs',
-      name: 'viewerjs',
-      component: () => import(/* webpackChunkName: "viewerjs" */ '@/views/photo/viewerjs')
+      path: '/Viewerjs',
+      name: 'Viewerjs',
+      component: () => import(/* webpackChunkName: "photo" */ '@/views/photo/Viewerjs')
     },
     {
-      path: '/vue-photo-preview',
-      name: 'vue-photo-preview',
-      component: () => import(/* webpackChunkName: "viewerjs" */ '@/views/photo/vue-photo-preview')
+      path: '/VuePhotoPreview',
+      name: 'VuePhotoPreview',
+      component: () => import(/* webpackChunkName: "photo" */ '@/views/photo/VuePhotoPreview')
+    },
+    {
+      path: '/DialogVueImage',
+      name: 'DialogVueImage',
+      component: () => import(/* webpackChunkName: "photo" */ '@/views/photo/DialogVueImage')
     }
   ]
 })
